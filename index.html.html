@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TNA Pro Build | Ottawa's Family-Run Renovation Experts</title>
+<meta name="description" content="TNA Pro Build is Ottawa's trusted family-owned renovation company. Custom bathrooms, kitchens, basements, decks & more. Serving Ottawa, Kanata, Barrhaven, Manotick & surrounding areas."/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--dark:#181b1f;--red:#cc2222;--red2:#a81b1b;--silver:#b0b8c1;--light:#f5f5f5;--white:#fff;--mid:#2a2f36}
+html{scroll-behavior:smooth}
+body{font-family:'Open Sans',sans-serif;color:var(--dark);background:var(--white);overflow-x:hidden}
+h1,h2,h3,h4,.nav-brand{font-family:'Montserrat',sans-serif}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;width:100%;z-index:200;transition:background .3s,box-shadow .3s;padding:0 5%}
+nav.scrolled{background:var(--dark);box-shadow:0 2px 20px #0009}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+.nav-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+.nav-brand{color:var(--white);font-size:1.1rem;font-weight:800;letter-spacing:.02em}
+.nav-brand span{color:var(--red)}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:.82rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:color .2s;font-family:'Montserrat',sans-serif}
+.nav-links a:hover{color:var(--red)}
+.nav-social{font-size:1.1rem!important;padding:.2rem!important;letter-spacing:0!important;opacity:.8;transition:opacity .2s!important}
+.nav-social:hover{opacity:1;color:inherit!important}
+.nav-dropdown{position:relative}
+.nav-dropdown-toggle{cursor:pointer}
+.dropdown-menu{display:none;position:absolute;top:100%;left:0;background:var(--dark);border:1px solid #2e373f;border-radius:8px;min-width:200px;padding:.5rem 0;box-shadow:0 8px 32px #0008;z-index:300;list-style:none}
+.dropdown-menu li a{display:block;padding:.65rem 1.25rem;color:var(--silver)!important;font-size:.82rem!important;text-transform:none!important;letter-spacing:.02em!important;transition:all .2s;white-space:nowrap}
+.dropdown-menu li a:hover{color:var(--white)!important;background:rgba(204,34,34,.15)}
+.nav-dropdown:hover .dropdown-menu{display:block}
+.nav-cta{background:var(--red)!important;color:var(--white)!important;padding:.5rem 1.2rem!important;border-radius:4px;transition:background .2s!important}
+.nav-cta:hover{background:var(--red2)!important}
+.hamburger span{width:24px;height:2px;background:var(--white);border-radius:2px;transition:all .3s}
+.mobile-menu{display:none;position:fixed;top:72px;left:0;right:0;background:var(--dark);padding:1.5rem 5%;border-top:1px solid #2e373f;z-index:199}
+.mobile-menu.open{display:block}
+.mobile-menu ul{list-style:none;display:flex;flex-direction:column;gap:1rem}
+.mobile-menu a{color:var(--silver);text-decoration:none;font-size:.95rem;font-weight:600;font-family:'Montserrat',sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.mobile-cta-row{margin-top:1.25rem;display:flex;gap:.75rem}
+.mobile-cta-row a{flex:1;text-align:center;padding:.75rem;border-radius:4px;font-weight:700;font-size:.9rem;text-decoration:none;font-family:'Montserrat',sans-serif}
+.mob-call{background:var(--red);color:var(--white)}
+.mob-quote{border:2px solid var(--silver);color:var(--silver)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:var(--dark)}
+.hero-photo{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,12,14,.82) 0%,rgba(15,18,22,.62) 55%,rgba(10,12,14,.75) 100%);z-index:1}
+.hero-pattern{display:none}
+.hero-accent{display:none}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:860px;padding:2rem}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(204,34,34,.15);border:1px solid rgba(204,34,34,.4);color:var(--red);font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:.4rem 1rem;border-radius:30px;margin-bottom:1.75rem;font-family:'Montserrat',sans-serif}
+.hero h1{font-size:clamp(2.2rem,6vw,4.2rem);color:var(--white);font-weight:900;line-height:1.08;margin-bottom:1.25rem;letter-spacing:-.01em}
+.hero h1 .accent{color:var(--red)}
+.hero-sub{font-size:clamp(.95rem,2vw,1.15rem);color:rgba(255,255,255,.7);line-height:1.75;max-width:600px;margin:0 auto 2.5rem}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-red{background:var(--red);color:var(--white);padding:1rem 2.25rem;border-radius:5px;text-decoration:none;font-weight:700;font-size:1rem;font-family:'Montserrat',sans-serif;letter-spacing:.04em;transition:all .2s;display:inline-flex;align-items:center;gap:.5rem}
+.btn-red:hover{background:var(--red2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(204,34,34,.4)}
+.btn-ghost{border:2px solid rgba(255,255,255,.4);color:var(--white);padding:1rem 2.25rem;border-radius:5px;text-decoration:none;font-weight:700;font-size:1rem;font-family:'Montserrat',sans-serif;letter-spacing:.04em;transition:all .2s}
+.btn-ghost:hover{border-color:var(--white);background:rgba(255,255,255,.08)}
+.hero-stats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap}
+.hstat{text-align:center}
+.hstat-num{font-size:1.8rem;font-weight:900;color:var(--white);font-family:'Montserrat',sans-serif}
+.hstat-num span{color:var(--red)}
+.hstat-label{font-size:.72rem;color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.4);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,255,255,.4),transparent);animation:scrollpulse 2s infinite}
+@keyframes scrollpulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ── SECTION COMMONS ── */
+section{padding:6rem 5%}
+.s-inner{max-width:1140px;margin:0 auto}
+.s-eyebrow{color:var(--red);font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-family:'Montserrat',sans-serif;margin-bottom:.6rem}
+.s-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:800;color:var(--dark);line-height:1.15;margin-bottom:1rem}
+.s-title.wht{color:var(--white)}
+.s-body{color:#5a6472;line-height:1.8;max-width:620px;font-size:.97rem}
+.red-rule{width:48px;height:4px;background:var(--red);border-radius:2px;margin:1rem 0 2rem}
+
+/* ── SERVICES ── */
+.services{background:var(--light)}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:3rem}
+.svc-card{background:var(--white);border-radius:10px;padding:2rem 1.75rem;border:1px solid #e8eaed;transition:all .25s;position:relative;overflow:hidden}
+.svc-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--red);transform:scaleY(0);transform-origin:bottom;transition:transform .25s}
+.svc-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.1);border-color:transparent}
+.svc-card:hover::before{transform:scaleY(1)}
+.svc-icon-wrap{width:52px;height:52px;background:rgba(204,34,34,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem}
+.svc-card h3{font-size:1.05rem;font-weight:700;margin-bottom:.6rem;color:var(--dark)}
+.svc-card p{color:#6a7480;font-size:.88rem;line-height:1.7}
+
+/* ── ABOUT ── */
+.about{background:var(--dark);position:relative;overflow:hidden}
+.about::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(204,34,34,.1) 0%,transparent 65%)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-top:3rem}
+.about-text p{color:rgba(255,255,255,.65);line-height:1.9;margin-bottom:1.1rem;font-size:.96rem}
+.about-highlight{border-left:3px solid var(--red);padding:.75rem 1.25rem;margin:1.75rem 0;background:rgba(204,34,34,.07);border-radius:0 6px 6px 0}
+.about-highlight p{color:rgba(255,255,255,.85)!important;font-style:italic;font-size:1rem!important;margin:0!important}
+.about-right{}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.stat-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:1.5rem;text-align:center;transition:border-color .2s}
+.stat-box:hover{border-color:var(--red)}
+.stat-box .num{font-size:2.2rem;font-weight:900;color:var(--red);font-family:'Montserrat',sans-serif;line-height:1}
+.stat-box .lbl{color:rgba(255,255,255,.5);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem}
+.trust-badges{display:flex;flex-direction:column;gap:.75rem}
+.trust-item{display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.7);font-size:.88rem}
+.trust-icon{color:var(--red);font-size:1.1rem;width:1.5rem;flex-shrink:0}
+
+/* ── GALLERY ── */
+.gallery{background:var(--dark)}
+.gallery-filter{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:2rem;margin-bottom:1.5rem}
+.gf-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--silver);padding:.45rem 1.1rem;border-radius:30px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Montserrat',sans-serif;letter-spacing:.06em}
+.gf-btn:hover,.gf-btn.active{background:var(--red);border-color:var(--red);color:var(--white)}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.gal-item{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:4/3;background:#262d33;border:1px solid #2e373f;display:flex;align-items:center;justify-content:center}
+.gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.gal-item:hover img{transform:scale(1.06)}
+.gal-overlay{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.75));opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:1rem}
+.gal-item:hover .gal-overlay{opacity:1}
+.gal-label{color:var(--white);font-size:.82rem;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.04em}
+.gal-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;color:#4a5460;font-size:.8rem;text-align:center;padding:1rem;width:100%;height:100%}
+.gal-placeholder span{font-size:1.8rem}
+.gal-item.hidden{display:none}
+
+/* ── TESTIMONIALS ── */
+.testimonials{background:var(--light)}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:3rem}
+.testi-card{background:var(--white);border-radius:10px;padding:2rem;box-shadow:0 4px 20px rgba(0,0,0,.06);position:relative}
+.testi-card::after{content:'❝';position:absolute;top:1.25rem;right:1.5rem;font-size:3rem;color:rgba(204,34,34,.1);line-height:1;font-family:Georgia,serif}
+.stars{color:var(--red);font-size:.95rem;margin-bottom:1rem;letter-spacing:.05em}
+.testi-text{color:#4a5460;line-height:1.8;font-style:italic;margin-bottom:1.25rem;font-size:.93rem}
+.testi-meta{display:flex;align-items:center;gap:.75rem}
+.testi-avatar{width:40px;height:40px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:700;font-size:.9rem;flex-shrink:0;font-family:'Montserrat',sans-serif}
+.testi-name{font-weight:700;color:var(--dark);font-size:.88rem}
+.testi-loc{color:#9aa3ac;font-size:.78rem;margin-top:.1rem}
+
+/* ── AREAS ── */
+.areas{background:var(--white)}
+.areas-grid{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:2rem}
+.area-pill{background:var(--light);border:1.5px solid #e0e4e9;color:var(--dark);padding:.5rem 1.1rem;border-radius:30px;font-size:.85rem;font-weight:600;transition:all .2s;font-family:'Montserrat',sans-serif}
+.area-pill:hover{border-color:var(--red);color:var(--red);background:#fff5f5}
+
+/* ── CONTACT ── */
+.contact{background:var(--dark)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:4rem;margin-top:3rem;align-items:start}
+.contact-left h3{color:var(--white);font-size:1.15rem;font-weight:700;margin-bottom:1.5rem}
+.contact-item{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:1.5rem}
+.c-icon{width:42px;height:42px;background:rgba(204,34,34,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.c-label{color:rgba(255,255,255,.45);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-family:'Montserrat',sans-serif;margin-bottom:.2rem}
+.c-val{color:var(--white);font-size:.95rem;font-weight:600}
+.c-val a{color:var(--white);text-decoration:none;transition:color .2s}
+.c-val a:hover{color:var(--red)}
+.call-btn{display:flex;align-items:center;justify-content:center;gap:.6rem;background:var(--red);color:var(--white);padding:1rem 2rem;border-radius:6px;text-decoration:none;font-weight:800;font-size:1.1rem;font-family:'Montserrat',sans-serif;transition:all .2s;margin-top:2rem;letter-spacing:.03em}
+.call-btn:hover{background:var(--red2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(204,34,34,.4)}
+.social-row{display:flex;gap:.65rem;margin-top:1.25rem}
+.soc-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--silver);padding:.55rem 1rem;border-radius:6px;text-decoration:none;font-size:.82rem;font-weight:600;transition:all .2s;font-family:'Montserrat',sans-serif}
+.soc-btn:hover{border-color:var(--red);color:var(--red)}
+.contact-form{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:2.25rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fg{margin-bottom:1.1rem}
+.fg label{display:block;color:rgba(255,255,255,.55);font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;font-family:'Montserrat',sans-serif}
+.fg input,.fg textarea,.fg select{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);padding:.8rem 1rem;border-radius:6px;font-size:.93rem;font-family:'Open Sans',sans-serif;transition:border-color .2s;outline:none}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,.25)}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--red)}
+.fg select option{background:var(--dark)}
+.fg textarea{resize:vertical;min-height:100px}
+.submit-btn{width:100%;background:var(--red);color:var(--white);border:none;padding:1rem;border-radius:6px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Montserrat',sans-serif;letter-spacing:.05em;transition:all .2s;margin-top:.5rem}
+.submit-btn:hover{background:var(--red2);transform:translateY(-1px)}
+
+/* ── FOOTER ── */
+footer{background:#0f1113;padding:2.5rem 5%;text-align:center}
+.footer-logo{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.1rem;color:var(--white);margin-bottom:.4rem}
+.footer-logo span{color:var(--red)}
+.footer-tag{color:#3a4450;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.75rem;font-family:'Montserrat',sans-serif}
+.footer-copy{color:#2e373f;font-size:.78rem}
+
+/* ── STICKY CALL ── */
+.sticky-call{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;background:var(--red);color:var(--white);padding:.85rem 1.5rem;border-radius:50px;text-decoration:none;font-weight:800;font-size:.95rem;font-family:'Montserrat',sans-serif;box-shadow:0 6px 24px rgba(204,34,34,.5);display:flex;align-items:center;gap:.5rem;transition:all .2s;animation:pulse 2.5s infinite}
+.sticky-call:hover{background:var(--red2);transform:translateY(-2px)}
+@keyframes pulse{0%,100%{box-shadow:0 6px 24px rgba(204,34,34,.5)}50%{box-shadow:0 6px 36px rgba(204,34,34,.8)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .about-grid,.contact-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  section{padding:4rem 5%}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .hero-stats{gap:1.5rem}
+  .hstat-num{font-size:1.4rem}
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY CALL -->
+<a href="tel:6132525636" class="sticky-call">📞 Call Now</a>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,6 93,40 93,91 7,91 7,40" stroke="#cc2222" stroke-width="7" stroke-linejoin="round"/>
+        <line x1="7" y1="91" x2="93" y2="91" stroke="#cc2222" stroke-width="7"/>
+        <rect x="33" y="54" width="14" height="37" fill="#cc2222"/>
+        <rect x="53" y="54" width="14" height="37" fill="#cc2222"/>
+      </svg>
+      <span class="nav-brand">TNA <span>Pro</span> Build</span>
+    </a>
+    <ul class="nav-links">
+      <li class="nav-dropdown">
+        <a href="#services" class="nav-dropdown-toggle">Services ▾</a>
+        <ul class="dropdown-menu">
+          <li><a href="bathrooms.html">🛁 Bathrooms</a></li>
+          <li><a href="kitchens.html">🍳 Kitchens</a></li>
+          <li><a href="basements.html">🏠 Basements</a></li>
+          <li><a href="flooring.html">🪵 Flooring</a></li>
+          <li><a href="painting.html">🖌️ Painting</a></li>
+          <li><a href="decks-fences.html">🌿 Decks, Fences & Porches</a></li>
+          <li><a href="additions.html">🏗️ Additions</a></li>
+        </ul>
+      </li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#areas">Areas</a></li>
+      <li><a href="https://www.facebook.com/tnaprobuild/" target="_blank" class="nav-social">📘</a></li>
+      <li><a href="https://www.instagram.com/tna.probuild/" target="_blank" class="nav-social">📸</a></li>
+      <li><a href="#contact" class="nav-cta">Free Quote</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="#services" onclick="closeMenu()">Services</a></li>
+    <li><a href="#about" onclick="closeMenu()">About</a></li>
+    <li><a href="#gallery" onclick="closeMenu()">Gallery</a></li>
+    <li><a href="#testimonials" onclick="closeMenu()">Reviews</a></li>
+    <li><a href="#areas" onclick="closeMenu()">Service Areas</a></li>
+  </ul>
+  <div class="mobile-cta-row">
+    <a href="tel:6132525636" class="mob-call">📞 613-252-5636</a>
+    <a href="#contact" class="mob-quote" onclick="closeMenu()">Get a Quote</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-photo"><img src="https://i.ibb.co/zW48bZCm/482344672-1165675054918075-1751925420145915150-n.jpg" alt="Luxury bathroom renovation by TNA Pro Build"/></div>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">⭐ Ottawa's Trusted Family Renovation Company</div>
+    <h1>Ottawa's <span class="accent">Family-Run</span><br>Renovation Experts</h1>
+    <p class="hero-sub">From stunning custom bathrooms and kitchens to basements, decks, and beyond — we treat every home like it's our own. Quality craftsmanship, honest pricing, and a team that actually shows up.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-red">🏠 Get a Free Quote</a>
+      <a href="tel:6132525636" class="btn-ghost">📞 613-252-5636</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-num">15<span>+</span></div><div class="hstat-label">Areas Served</div></div>
+      <div class="hstat"><div class="hstat-num">6<span>+</span></div><div class="hstat-label">Services Offered</div></div>
+      <div class="hstat"><div class="hstat-num">100<span>%</span></div><div class="hstat-label">Family Owned</div></div>
+      <div class="hstat"><div class="hstat-num">★★★★★</div><div class="hstat-label">Client Rated</div></div>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div>Scroll</div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="services">
+  <div class="s-inner">
+    <p class="s-eyebrow">What We Do</p>
+    <h2 class="s-title">Home Renovation Services<br>in Ottawa & Surrounding Area</h2>
+    <div class="red-rule"></div>
+    <p class="s-body">We're a hands-on family team delivering high-quality renovations across Ottawa. No middlemen — just skilled tradespeople who take pride in their work.</p>
+    <div class="svc-grid">
+      <div class="svc-card"><div class="svc-icon-wrap">🛁</div><h3>Custom Bathrooms</h3><p>Luxury bathroom renovations built to last. We handle tile, glass, fixtures, vanities, freestanding tubs, saunas, and everything in between.</p><a href="bathrooms.html" style="display:inline-block;margin-top:1rem;color:var(--red);font-weight:700;font-size:.85rem;text-decoration:none;font-family:'Montserrat',sans-serif">Learn More →</a></div>
+      <div class="svc-card"><div class="svc-icon-wrap">🏠</div><h3>Basement Finishing</h3><p>Turn unused square footage into a space your family will love. Wet bars, home gyms, rec rooms — fully finished from framing to flooring.</p><a href="basements.html" style="display:inline-block;margin-top:1rem;color:var(--red);font-weight:700;font-size:.85rem;text-decoration:none;font-family:'Montserrat',sans-serif">Learn More →</a></div>
+      <div class="svc-card"><div class="svc-icon-wrap">🍳</div><h3>Kitchen Renovations</h3><p>Custom cabinetry, countertops, islands, and backsplashes. We rebuild kitchens that become the heart of your home.</p><a href="kitchens.html" style="display:inline-block;margin-top:1rem;color:var(--red);font-weight:700;font-size:.85rem;text-decoration:none;font-family:'Montserrat',sans-serif">Learn More →</a></div>
+      <div class="svc-card"><div class="svc-icon-wrap">🪵</div><h3>Flooring</h3><p>Hardwood, laminate, luxury vinyl plank, tile — we install all flooring types with clean, precise craftsmanship throughout your home.</p><a href="flooring.html" style="display:inline-block;margin-top:1rem;color:var(--red);font-weight:700;font-size:.85rem;text-decoration:none;font-family:'Montserrat',sans-serif">Learn More →</a></div>
+      <div class="svc-card"><div class="svc-icon-wrap">🖌️</div><h3>Painting</h3><p>Interior and exterior painting done right. Proper prep, clean edges, and a finish that stands up to Ottawa's seasons.</p><a href="painting.html" style="display:inline-block;margin-top:1rem;color:var(--red);font-weight:700;font-size:.85rem;text-decoration:none;font-family:'Montserrat',sans-serif">Learn More →</a></div>
+      <div class="svc-card"><div class="svc-icon-wrap">🌿</div><h3>Decks, Fences & Porches</h3><p>Custom-built cedar decks, wood fences, and porches designed to maximize your outdoor living space. Built tough to handle Ottawa winters.</p><a href="decks-fences.html" style="display:inline-block;margin-top:1rem;color:var(--red);font-weight:700;font-size:.85rem;text-decoration:none;font-family:'Montserrat',sans-serif">Learn More →</a></div>
+      <div class="svc-card"><div class="svc-icon-wrap">🏗️</div><h3>Home Additions</h3><p>Need more space without moving? We build seamless home additions — sunrooms, room additions, in-law suites, and more.</p><a href="additions.html" style="display:inline-block;margin-top:1rem;color:var(--red);font-weight:700;font-size:.85rem;text-decoration:none;font-family:'Montserrat',sans-serif">Learn More →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about">
+  <div class="s-inner">
+    <p class="s-eyebrow">Who We Are</p>
+    <h2 class="s-title wht">Not a Corporation.<br>A Family.</h2>
+    <div class="red-rule"></div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>TNA Pro Build is a family-owned renovation company rooted in Ottawa. When you hire us, you're not getting a call centre or a project manager who subcontracts everything out. You're getting the people who will actually show up, roll up their sleeves, and build something they're proud of.</p>
+        <p>We started with a simple belief: homeowners deserve honest tradespeople who communicate clearly, respect their space, and deliver what they promised. That hasn't changed.</p>
+        <div class="about-highlight">
+          <p>"Quality. Care. Trust." — these aren't just words on our business card. They're how we've built our reputation, one project at a time.</p>
+        </div>
+        <p>From a custom cedar sauna in Barrhaven to a full kitchen reno in Kanata — every project gets the same attention we'd give our own home.</p>
+      </div>
+      <div class="about-right">
+        <div class="stat-grid">
+          <div class="stat-box"><div class="num">100%</div><div class="lbl">Family Owned</div></div>
+          <div class="stat-box"><div class="num">15+</div><div class="lbl">Areas Served</div></div>
+          <div class="stat-box"><div class="num">★★★★★</div><div class="lbl">Client Satisfaction</div></div>
+          <div class="stat-box"><div class="num">0</div><div class="lbl">Middlemen</div></div>
+        </div>
+        <div class="trust-badges">
+          <div class="trust-item"><span class="trust-icon">✓</span>We show up when we say we will</div>
+          <div class="trust-item"><span class="trust-icon">✓</span>Transparent pricing — no surprise invoices</div>
+          <div class="trust-item"><span class="trust-icon">✓</span>We clean up every single day</div>
+          <div class="trust-item"><span class="trust-icon">✓</span>You talk directly to the people doing the work</div>
+          <div class="trust-item"><span class="trust-icon">✓</span>Fully insured for your peace of mind</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="gallery">
+  <div class="s-inner">
+    <p class="s-eyebrow">Our Work</p>
+    <h2 class="s-title wht">Real Projects.<br>Real Ottawa Homes.</h2>
+    <div class="red-rule"></div>
+    <div class="gallery-filter">
+      <button class="gf-btn active" onclick="filterG('all',this)">All Projects</button>
+      <button class="gf-btn" onclick="filterG('bath',this)">Bathrooms</button>
+      <button class="gf-btn" onclick="filterG('kitchen',this)">Kitchens</button>
+      <button class="gf-btn" onclick="filterG('basement',this)">Basements</button>
+      <button class="gf-btn" onclick="filterG('deck',this)">Decks</button>
+    </div>
+    <div class="gallery-grid" id="gGrid">
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545962/485891898_9189295057847265_3924235386776638889_n_dimt3m.jpg" alt="Bathroom renovation Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Bathroom</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545962/486123460_9189295064513931_6634381833141422553_n_mvks6e.jpg" alt="Bathroom renovation Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Bathroom</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545962/485878283_9189295037847267_5229734016441870940_n_nxqwqn.jpg" alt="Luxury bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Luxury Bathroom</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545961/485777881_9188162774627160_618574414696650511_n_qzrolg.jpg" alt="Custom sauna Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Cedar Sauna</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545960/485366997_9189295074513930_6900502744964980727_n_bldw1l.jpg" alt="Bathroom reno Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Renovation</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545961/485781709_9189295371180567_4974479443585641984_n_jvce0u.jpg" alt="Glass shower Ottawa"/><div class="gal-overlay"><div class="gal-label">Frameless Glass Shower</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545961/485381073_9189295061180598_7196457332716773534_n_xq0xdr.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545960/485054266_9144067215703383_6525831443209808380_n_aqbsbl.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545959/484558673_9144067075703397_8456587013273625812_n_zan7uw.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545960/484846908_9144067139036724_9083587698053443675_n_kdurbo.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545959/484758746_9144067242370047_1219756168678831030_n_tbdt8k.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545959/484347957_9144068602369911_4878718054086889473_n_uhigvl.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545959/484306998_9144067389036699_2811980102874913754_n_mnm3g8.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545959/484155460_9144067359036702_8955783346205925000_n_1_g2icwu.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545958/484070932_9144067199036718_3834986446442159036_n_gw6gvm.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545958/482344672_1165675054918075_1751925420145915150_n_f3xeom.jpg" alt="Marble bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Marble Bathroom</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545957/482009713_1155713645914216_8862306704021052250_n_rusgkr.jpg" alt="Bathroom transformation Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Transformation</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545957/481981662_1155712609247653_5950315645897323175_n_neu4bn.jpg" alt="Master bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Master Bathroom</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545957/481916913_1155713285914252_1469089466891177898_n_gtqtzj.jpg" alt="Soaker tub Ottawa"/><div class="gal-overlay"><div class="gal-label">Freestanding Soaker Tub</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545957/481900652_1155712509247663_5275058108100101804_n_bith7t.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545956/481770500_1155713652580882_3963266054405126769_n_hzzlri.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545956/481816103_1155712479247666_6582730593335744914_n_deh3wq.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545956/481678172_1156997412452506_1285946767070430225_n_l9gznw.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545954/481462016_1156997292452518_37270252899493057_n_lcr6ai.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545954/481455171_1155712582580989_3295122973322182563_n_ifi0l9.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545952/481311129_1155713385914242_7858072650635428362_n_dt5ogt.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545952/481279791_1155713655914215_6951978990340048853_n_frgzpa.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545950/481237934_1156997362452511_3024474460921461318_n_zdgmuo.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545950/481228576_1155714419247472_7980173929743124349_n_zseaow.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545950/481224568_1155714335914147_435154243887265403_n_uq2c3c.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="kitchen"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545949/481215222_1155712492580998_4209800741975665047_n_trisak.jpg" alt="Kitchen Ottawa"/><div class="gal-overlay"><div class="gal-label">Kitchen Renovation</div></div></div>
+      <div class="gal-item" data-cat="kitchen"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545949/481217541_1156997442452503_1547884075325406772_n_bt3wde.jpg" alt="Kitchen Ottawa"/><div class="gal-overlay"><div class="gal-label">Kitchen Renovation</div></div></div>
+      <div class="gal-item" data-cat="kitchen"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545949/481171229_1155713249247589_2981049139952325716_n_csxabd.jpg" alt="Kitchen Ottawa"/><div class="gal-overlay"><div class="gal-label">Kitchen Renovation</div></div></div>
+      <div class="gal-item" data-cat="kitchen"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545948/481160419_1155713445914236_415200922638535409_n_eisp4v.jpg" alt="Kitchen Ottawa"/><div class="gal-overlay"><div class="gal-label">Kitchen Renovation</div></div></div>
+      <div class="gal-item" data-cat="kitchen"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545948/481143682_1155713365914244_5162905080565992299_n_dm5utb.jpg" alt="Kitchen Ottawa"/><div class="gal-overlay"><div class="gal-label">Kitchen Renovation</div></div></div>
+      <div class="gal-item" data-cat="kitchen"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545948/481111133_1155712619247652_3996036755095096254_n_xdwjny.jpg" alt="Kitchen Ottawa"/><div class="gal-overlay"><div class="gal-label">Kitchen Renovation</div></div></div>
+      <div class="gal-item" data-cat="kitchen"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545947/481100085_1156997479119166_671181321270139983_n_yzcyei.jpg" alt="Kitchen Ottawa"/><div class="gal-overlay"><div class="gal-label">Kitchen Renovation</div></div></div>
+      <div class="gal-item" data-cat="kitchen"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545946/481077611_1155713692580878_2373242368470682769_n_x8qojl.jpg" alt="Kitchen Ottawa"/><div class="gal-overlay"><div class="gal-label">Kitchen Renovation</div></div></div>
+      <div class="gal-item" data-cat="kitchen"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545946/481074575_1155712639247650_8688268430002112626_n_s5zuff.jpg" alt="Kitchen Ottawa"/><div class="gal-overlay"><div class="gal-label">Kitchen Renovation</div></div></div>
+      <div class="gal-item" data-cat="kitchen"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545946/481073987_1155712642580983_8002488016788001470_n_zsdcmi.jpg" alt="Kitchen Ottawa"/><div class="gal-overlay"><div class="gal-label">Kitchen Renovation</div></div></div>
+      <div class="gal-item" data-cat="basement"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545945/481072277_1155712652580982_8657897418500883163_n_xooyyz.jpg" alt="Basement Ottawa"/><div class="gal-overlay"><div class="gal-label">Basement Finishing</div></div></div>
+      <div class="gal-item" data-cat="basement"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545946/481073859_1155712462581001_5327927680212357699_n_ajrvau.jpg" alt="Basement Ottawa"/><div class="gal-overlay"><div class="gal-label">Basement Finishing</div></div></div>
+      <div class="gal-item" data-cat="basement"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545945/481071390_1155712555914325_5410489853298309701_n_xrfofh.jpg" alt="Basement Ottawa"/><div class="gal-overlay"><div class="gal-label">Basement Finishing</div></div></div>
+      <div class="gal-item" data-cat="basement"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545944/481048317_1155713215914259_483410104219974022_n_kosrhc.jpg" alt="Basement Ottawa"/><div class="gal-overlay"><div class="gal-label">Basement Finishing</div></div></div>
+      <div class="gal-item" data-cat="basement"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545944/481037630_1155712675914313_7021038285967292317_n_xatkun.jpg" alt="Basement Ottawa"/><div class="gal-overlay"><div class="gal-label">Basement Wet Bar</div></div></div>
+      <div class="gal-item" data-cat="basement"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545944/481014442_1155713315914249_1531357579918135242_n_iirelw.jpg" alt="Basement Ottawa"/><div class="gal-overlay"><div class="gal-label">Basement Finishing</div></div></div>
+      <div class="gal-item" data-cat="basement"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545943/481005423_1155712655914315_7376131848509205057_n_fi7ml9.jpg" alt="Basement Ottawa"/><div class="gal-overlay"><div class="gal-label">Basement Finishing</div></div></div>
+      <div class="gal-item" data-cat="basement"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545943/480950351_1155712499247664_6366364321835232506_n_dwa5ye.jpg" alt="Basement Ottawa"/><div class="gal-overlay"><div class="gal-label">Basement Finishing</div></div></div>
+      <div class="gal-item" data-cat="basement"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545943/480974415_1155712559247658_1567225805919415670_n_vnmoit.jpg" alt="Basement Ottawa"/><div class="gal-overlay"><div class="gal-label">Basement Finishing</div></div></div>
+      <div class="gal-item" data-cat="basement"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545941/480949184_1155712495914331_3015166706420543_n_o9e68v.jpg" alt="Basement Ottawa"/><div class="gal-overlay"><div class="gal-label">Basement Finishing</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545941/480928277_1155713405914240_3824289761141915509_n_tcmxrs.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545941/480914382_1155713415914239_1000187644079618195_n_mznp52.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545941/480909928_1155712669247647_2462492691669405400_n_xbyieg.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545940/480908804_1155713479247566_7901746422035544520_n_g8ssjh.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545939/480880519_1155713659247548_3622567456249705092_n_nsytou.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545939/480876720_1155713662580881_2776807697831018429_n_lpcibn.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545938/480849130_1157008189118095_1255933191547013068_n_fxdl8b.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545937/480821252_1155713335914247_8137423327916629373_n_zns1ls.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545936/480815013_1155712502580997_3173924083884238849_n_vendpy.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545936/480809329_1155713389247575_2985949017714365213_n_xipq5r.jpg" alt="Fence Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Fence</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545936/480809676_1155712475914333_3477569966282526366_n_xekcwk.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545935/480807504_1155712512580996_6987423611310600055_n_akqhjm.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545935/480806262_1155713272580920_5310683071018027736_n_qqputp.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545935/480789618_1155712612580986_5122299411537964157_n_imjupc.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545932/480677441_1155713239247590_3116003948393612563_n_brelk4.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545932/480562350_1155713289247585_1614596148728316511_n_ebiyer.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545931/51604127_1876954962414681_4304274266792132608_n_v91jbf.jpg" alt="Custom deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Cedar Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545931/51527987_1876955059081338_6460976413552934912_n_dxmv02.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545930/51332203_1876955225747988_4066260446401789952_n_lplahn.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Deck & Fence</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545928/51107148_1876948725748638_2467864040500625408_n_jnlvgg.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545925/50969833_1876947239082120_2938096400304439296_n_1_leojr8.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="deck"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545924/50947238_1876954922414685_5468971085665927168_n_1_bxkpve.jpg" alt="Deck Ottawa"/><div class="gal-overlay"><div class="gal-label">Custom Deck</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545923/505675746_1233339071485006_1312978297668668083_n_rbxbgm.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545923/500424155_1223853629100217_6521123705587182076_n_tfwtd2.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545923/500070991_1221749772643936_4258470808398238840_n_j10kst.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545922/499898586_1218181243000789_7294065099248156943_n_mrkmfk.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545922/499934396_1219510416201205_7048913838237631461_n_efjcyk.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545922/499313964_1217405193078394_1005830032299100099_n_fmlj0b.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545921/498693594_1218181253000788_3888469341618992980_n_stwxjk.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545922/499225555_1221749769310603_8604503095047410077_n_ajw9ix.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545920/497860417_1218181239667456_1467648800441996466_n_e0tstt.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545920/494636339_1218181249667455_4151118890002382223_n_u7y5lr.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545920/486718305_9199672396809531_8170260623285270432_n_xvoa9c.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+      <div class="gal-item" data-cat="bath"><img src="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779545919/486392027_9208055655971205_5025108564938361342_n_hkatrh.jpg" alt="Bathroom Ottawa"/><div class="gal-overlay"><div class="gal-label">Bathroom Reno</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="testimonials">
+  <div class="s-inner">
+    <p class="s-eyebrow">Client Reviews</p>
+    <h2 class="s-title">What Ottawa Homeowners<br>Are Saying</h2>
+    <div class="red-rule"></div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"TNA did our full basement from framing to finishing and it turned out incredible. They were on time every day, communicated everything clearly, and the quality is outstanding. Wouldn't hesitate to call them again."</p>
+        <div class="testi-meta">
+          <div class="testi-avatar">S</div>
+          <div><div class="testi-name">Sarah M.</div><div class="testi-loc">Barrhaven, Ottawa</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Had them redo our bathroom and kitchen — the transformation was unbelievable. Professional the whole way through, fair pricing, and the work speaks for itself. Highly recommend to anyone in Ottawa looking for real craftsmanship."</p>
+        <div class="testi-meta">
+          <div class="testi-avatar">M</div>
+          <div><div class="testi-name">Mike & Karen T.</div><div class="testi-loc">Manotick, Ottawa</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"From the first call to the final walkthrough, TNA was a pleasure to work with. They built us a beautiful deck and fence — exactly what we envisioned. Family-run really does make a difference."</p>
+        <div class="testi-meta">
+          <div class="testi-avatar">J</div>
+          <div><div class="testi-name">Jason R.</div><div class="testi-loc">Kanata, Ottawa</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE AREAS -->
+<section id="areas" class="areas">
+  <div class="s-inner">
+    <p class="s-eyebrow">Where We Work</p>
+    <h2 class="s-title">Serving Ottawa &<br>the Surrounding Region</h2>
+    <div class="red-rule"></div>
+    <p class="s-body">Ottawa-based and proud to serve homeowners across the region. Not sure if we cover your area? Give us a call — chances are we do.</p>
+    <div class="areas-grid">
+      <span class="area-pill">Ottawa</span>
+      <span class="area-pill">South Ottawa</span>
+      <span class="area-pill">Manotick</span>
+      <span class="area-pill">Barrhaven</span>
+      <span class="area-pill">Kanata</span>
+      <span class="area-pill">Kanata North</span>
+      <span class="area-pill">Kanata South</span>
+      <span class="area-pill">Stittsville</span>
+      <span class="area-pill">Carp</span>
+      <span class="area-pill">Rockland</span>
+      <span class="area-pill">Wendover</span>
+      <span class="area-pill">Casselman</span>
+      <span class="area-pill">Arnprior</span>
+      <span class="area-pill">Almonte</span>
+      <span class="area-pill">Carleton Place</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <div class="s-inner">
+    <p class="s-eyebrow">Get In Touch</p>
+    <h2 class="s-title wht">Let's Talk About<br>Your Project</h2>
+    <div class="red-rule"></div>
+    <div class="contact-grid">
+      <div class="contact-left">
+        <h3>Reach Us Directly</h3>
+        <div class="contact-item">
+          <div class="c-icon">📞</div>
+          <div><div class="c-label">Phone</div><div class="c-val"><a href="tel:6132525636">613-252-5636</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="c-icon">✉️</div>
+          <div><div class="c-label">Email</div><div class="c-val"><a href="mailto:TNA.probuild@yahoo.com">TNA.probuild@yahoo.com</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="c-icon">📍</div>
+          <div><div class="c-label">Location</div><div class="c-val">Ottawa, ON & surrounding region</div></div>
+        </div>
+        <a href="tel:6132525636" class="call-btn">📞 Call Now — 613-252-5636</a>
+        <div class="social-row">
+          <a href="https://www.facebook.com/tnaprobuild/" target="_blank" class="soc-btn">📘 Facebook</a>
+          <a href="https://www.instagram.com/tna.probuild/" target="_blank" class="soc-btn">📸 Instagram</a>
+        </div>
+        <p style="color:#3a4450;font-size:.82rem;margin-top:1.5rem;line-height:1.7">We typically respond within one business day. For urgent inquiries, call us directly.</p>
+      </div>
+      <div class="contact-form">
+        <form action="https://formspree.io/f/mbdbkgjw" method="POST">
+        <input type="hidden" name="_subject" value="New Quote Request - TNA Pro Build"/>
+        <input type="hidden" name="_next" value="https://tnaprobuild.ca"/>
+        <div class="form-row">
+          <div class="fg"><label>First Name</label><input type="text" name="firstname" placeholder="John" required/></div>
+          <div class="fg"><label>Last Name</label><input type="text" name="lastname" placeholder="Smith" required/></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label>Phone</label><input type="tel" name="phone" placeholder="613-000-0000" required/></div>
+          <div class="fg"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required/></div>
+        </div>
+        <div class="fg"><label>Service Needed</label>
+          <select name="service" required>
+            <option value="">Select a service...</option>
+            <option>Custom Bathroom</option>
+            <option>Basement Finishing</option>
+            <option>Kitchen Renovation</option>
+            <option>Flooring</option>
+            <option>Painting</option>
+            <option>Deck / Fence</option>
+            <option>Multiple / Other</option>
+          </select>
+        </div>
+        <div class="fg"><label>Your City / Area</label><input type="text" name="city" placeholder="e.g. Kanata, Barrhaven, Manotick..." required/></div>
+        <div class="fg"><label>Tell Us About Your Project</label><textarea name="message" placeholder="Describe your project, timeline, budget range, or any questions..." required></textarea></div>
+        <button type="submit" class="submit-btn">Send My Request →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">TNA <span>Pro</span> Build</div>
+  <div class="footer-tag">Quality &nbsp;·&nbsp; Care &nbsp;·&nbsp; Trust</div>
+  <div class="footer-copy">© 2025 TNA Pro Build. Ottawa, Ontario. All rights reserved.</div>
+</footer>
+
+<script>
+function sendQuote(){
+  const fname=document.getElementById('fname').value;
+  const lname=document.getElementById('lname').value;
+  const phone=document.getElementById('phone').value;
+  const email=document.getElementById('email').value;
+  const service=document.getElementById('service').value;
+  const city=document.getElementById('city').value;
+  const message=document.getElementById('message').value;
+  if(!fname||!phone||!service){alert('Please fill in at least your name, phone number, and service needed.');return;}
+  const subject=encodeURIComponent('New Quote Request - TNA Pro Build');
+  const body=encodeURIComponent(
+    'NEW QUOTE REQUEST - TNA PRO BUILD\n\n'+
+    'Name: '+fname+' '+lname+'\n'+
+    'Phone: '+phone+'\n'+
+    'Email: '+email+'\n'+
+    'Service: '+service+'\n'+
+    'City/Area: '+city+'\n\n'+
+    'Project Details:\n'+message
+  );
+  window.location.href='mailto:TNA.probuild@yahoo.com?subject='+subject+'&body='+body;
+}
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);
+});
+
+// Mobile menu
+function toggleMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+// Gallery filter
+function filterG(cat,btn){
+  document.querySelectorAll('.gf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.gal-item').forEach(el=>{
+    el.classList.toggle('hidden', cat!=='all' && el.dataset.cat!==cat);
+  });
+}
+</script>
+</body>
+</html>
