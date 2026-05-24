@@ -127,8 +127,9 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 .empty-state span{font-size:2.5rem;display:block;margin-bottom:.75rem}
 .empty-state p{font-size:.9rem}
 .fab{position:fixed;bottom:90px;right:1.25rem;width:56px;height:56px;background:var(--red);border-radius:50%;border:none;color:var(--white);font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(204,34,34,.5);z-index:90;display:flex;align-items:center;justify-content:center}
-.tabs{display:flex;background:var(--card);border-radius:10px;padding:.3rem;margin-bottom:1rem;gap:.3rem;overflow-x:auto}
-.tab{flex:1;padding:.5rem .3rem;border-radius:7px;border:none;background:none;color:var(--muted);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;min-width:0}
+.tabs{display:flex;background:var(--card);border-radius:10px;padding:.3rem;margin-bottom:1rem;gap:.3rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:.5rem .9rem;border-radius:7px;border:none;background:none;color:var(--muted);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
 .tab.active{background:var(--red);color:var(--white)}
 .profit-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem}
 .profit-bar h4{font-size:.8rem;color:var(--muted);margin-bottom:.5rem}
@@ -223,10 +224,8 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
   <!-- DOCUMENTS -->
   <div class="page" id="pageInvoices">
     <div class="tabs">
-      <button class="tab active" onclick="switchDocTab('invoices',this)">Invoices</button>
-      <button class="tab" onclick="switchDocTab('estimates',this)">Estimates</button>
-      <button class="tab" onclick="switchDocTab('newEst',this)">+ Estimate</button>
-      <button class="tab" onclick="switchDocTab('newInv',this)">+ Invoice</button>
+      <button class="tab active" onclick="switchDocTab('invoices',this)">📋 Invoices</button>
+      <button class="tab" onclick="switchDocTab('estimates',this)">📝 Estimates</button>
     </div>
     <div id="tabInvoices"><div id="invoicesList"></div></div>
     <div id="tabEstimates" style="display:none"><div id="estimatesList"></div></div>
@@ -448,9 +447,24 @@ function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 function openFAB(){
   const p=document.getElementById('pageTitle').textContent;
-  if(p==='Expenses')openExpModal();
-  else if(p==='Documents'){switchDocTab('newEst',document.querySelectorAll('.tab')[2]);initDocForm('estimate');}
+  if(p==='Expenses') openExpModal();
+  else if(p==='Documents'){
+    const choice=confirm('Tap OK to create a New Estimate\nTap Cancel to create a New Invoice');
+    if(choice){showDocForm('estimate');}
+    else{showDocForm('invoice');}
+  }
   else openNewClient();
+}
+
+function showDocForm(type){
+  editingDocId=null;editingDocType=null;
+  // Show the correct hidden tab content
+  ['tabInvoices','tabEstimates','tabNewEst','tabNewInv'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='none';
+  });
+  const tabId=type==='estimate'?'tabNewEst':'tabNewInv';
+  document.getElementById(tabId).style.display='block';
+  initDocForm(type);
 }
 
 function renderAll(){
