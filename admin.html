@@ -415,12 +415,12 @@ function logout(){
 
 async function loadAll(){
   const [c,i,e,ex,l,p]=await Promise.all([
-    sb.from('Clients').select('*').order('created_at',{ascending:false}),
-    sb.from('Invoices').select('*').order('created_at',{ascending:false}),
-    sb.from('Estimates').select('*').order('created_at',{ascending:false}),
-    sb.from('Expenses').select('*').order('created_at',{ascending:false}),
-    sb.from('Logs').select('*').order('created_at',{ascending:false}),
-    sb.from('Photos').select('*')
+    sb.from('clients').select('*').order('created_at',{ascending:false}),
+    sb.from('invoices').select('*').order('created_at',{ascending:false}),
+    sb.from('estimates').select('*').order('created_at',{ascending:false}),
+    sb.from('expenses').select('*').order('created_at',{ascending:false}),
+    sb.from('logs').select('*').order('created_at',{ascending:false}),
+    sb.from('photos').select('*')
   ]);
   clients=c.data||[];invoices=i.data||[];estimates=e.data||[];
   expenses=ex.data||[];logs=l.data||[];
@@ -643,7 +643,7 @@ async function handleEditPhotos(e){
   const files=Array.from(e.target.files);
   await Promise.all(files.map(f=>new Promise(res=>{
     const r=new FileReader();
-    r.onload=async ev=>{await sb.from('Photos').insert({client_id:clientId,url:ev.target.result});res();};
+    r.onload=async ev=>{await sb.from('photos').insert({client_id:clientId,url:ev.target.result});res();};
     r.readAsDataURL(f);
   })));
   e.target.value='';
@@ -673,7 +673,7 @@ function editClient(id){
 
 async function deleteClient(id){
   if(!confirm('Delete this client? This cannot be undone.'))return;
-  await sb.from('Clients').delete().eq('id',id);
+  await sb.from('clients').delete().eq('id',id);
   closeModal('detailModal');
   await loadAll();
 }
@@ -816,7 +816,7 @@ async function saveDoc(type){
     total:d.total,balance:d.balance,
     notes:d.notes,include_hst:d.hstInclude
   };
-  const tbl=isEst?'Estimates':'Invoices';
+  const tbl=isEst?'estimates':'invoices';
   if(editingDocId&&editingDocType===type){
     await sb.from(tbl).update(payload).eq('id',editingDocId);
     editingDocId=null;editingDocType=null;
@@ -934,7 +934,7 @@ async function duplicateToInvoice(){
     total:est.total,balance:est.balance,
     notes:est.notes,include_hst:est.include_hst
   };
-  const res=await sb.from('Invoices').insert(payload).select();
+  const res=await sb.from('invoices').insert(payload).select();
   await loadAll();
   alert('Invoice '+newNum+' created! Original estimate kept.');
   closeModal('docViewModal');
@@ -969,7 +969,7 @@ function openExpModal(){
 }
 
 async function saveExpense(){
-  await sb.from('Expenses').insert({
+  await sb.from('expenses').insert({
     client_id:document.getElementById('expClient').value||null,
     description:document.getElementById('expDesc').value,
     category:document.getElementById('expCat').value,
@@ -1017,7 +1017,7 @@ function openLogFor(id){
 }
 
 async function saveLog(){
-  await sb.from('Logs').insert({
+  await sb.from('logs').insert({
     client_id:document.getElementById('logClient').value||null,
     type:document.getElementById('logType').value,
     notes:document.getElementById('logNotes').value,
