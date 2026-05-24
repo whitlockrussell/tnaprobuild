@@ -294,11 +294,6 @@ canvas#sigPad{width:100%;height:180px;border-radius:8px;display:block;touch-acti
         <option value="active">Active Job</option><option value="complete">Complete</option>
       </select>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label>Start Date</label><input type="date" id="cStart"/></div>
-      <div class="form-group"><label>End Date</label><input type="date" id="cEnd"/></div>
-    </div>
-    <div class="form-group"><label>Quote Amount ($)</label><input type="number" id="cQuote" placeholder="0"/></div>
     <div class="form-group"><label>Returning Client</label>
       <select id="cReturning"><option value="no">No</option><option value="yes">Yes ⭐</option></select>
     </div>
@@ -548,10 +543,9 @@ function jobCard(c){
 function openNewClient(){
   editingClientId=null;newClientPhotoData=[];
   document.getElementById('clientModalTitle').textContent='New Client';
-  ['cName','cPhone','cEmail','cAddress','cNotes','cQuote'].forEach(id=>document.getElementById(id).value='');
+  ['cName','cPhone','cEmail','cAddress','cNotes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('cStatus').value='lead';
   document.getElementById('cReturning').value='no';
-  document.getElementById('cStart').value='';document.getElementById('cEnd').value='';
   document.getElementById('clientModalPhotos').innerHTML='';
   openModal('clientModal');
 }
@@ -572,7 +566,7 @@ function renderNewClientPhotos(){
 }
 
 async function saveClient(){
-  const data={name:document.getElementById('cName').value||'Unnamed',phone:document.getElementById('cPhone').value||null,email:document.getElementById('cEmail').value||null,address:document.getElementById('cAddress').value||null,service:document.getElementById('cService').value||null,status:document.getElementById('cStatus').value||'lead',start_date:document.getElementById('cStart').value||null,end_date:document.getElementById('cEnd').value||null,quote_amount:document.getElementById('cQuote').value||null,is_returning:document.getElementById('cReturning').value||'no',notes:document.getElementById('cNotes').value||null};
+  const data={name:document.getElementById('cName').value||'Unnamed',phone:document.getElementById('cPhone').value||null,email:document.getElementById('cEmail').value||null,address:document.getElementById('cAddress').value||null,service:document.getElementById('cService').value||null,status:document.getElementById('cStatus').value||'lead',is_returning:document.getElementById('cReturning').value||'no',notes:document.getElementById('cNotes').value||null};
   try{
     let clientId=editingClientId;
     if(editingClientId){
@@ -686,9 +680,6 @@ function editClient(id){
     document.getElementById('cAddress').value=c.address||'';
     document.getElementById('cService').value=c.service||'Custom Bathroom';
     document.getElementById('cStatus').value=c.status||'lead';
-    document.getElementById('cStart').value=c.start_date||'';
-    document.getElementById('cEnd').value=c.end_date||'';
-    document.getElementById('cQuote').value=c.quote_amount||'';
     document.getElementById('cReturning').value=c.is_returning||'no';
     document.getElementById('cNotes').value=c.notes||'';
     document.getElementById('clientModalPhotos').innerHTML='';
@@ -852,6 +843,13 @@ async function saveDoc(type){
       if(res.error)throw res.error;
       if(res.data&&res.data[0])savedId=res.data[0].id;
     }
+    // Auto status: lead -> quoted when estimate created
+    if(type==='estimate'&&savedId&&d.clientId){
+      const cl=clients.find(c=>c.id==parseInt(d.clientId));
+      if(cl&&cl.status==='lead'){
+        await sb.from('clients').update({status:'quoted'}).eq('id',cl.id);
+      }
+    }
     await loadAll();
     showPage('Invoices');
     if(savedId)setTimeout(()=>openDocView(savedId,type),300);
@@ -938,6 +936,13 @@ async function saveContract(){
       const res=await sb.from('contracts').insert(payload).select();
       if(res.error)throw res.error;
       if(res.data&&res.data[0])savedId=res.data[0].id;
+    }
+    // Auto status: quoted -> active when contract saved
+    if(savedId&&payload.client_id){
+      const cl=clients.find(c=>c.id==payload.client_id);
+      if(cl&&(cl.status==='quoted'||cl.status==='lead')){
+        await sb.from('clients').update({status:'active'}).eq('id',cl.id);
+      }
     }
     await loadAll();
     showPage('Invoices');
@@ -1094,16 +1099,23 @@ function buildEmailLink(doc,type,client){
   return`mailto:${to}?subject=${subj}&body=${body}`;
 }
 
+function openEmailLink(href){
+  const a=document.createElement('a');
+  a.href=href;a.target='_blank';a.rel='noopener';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>document.body.removeChild(a),200);
+}
+
 function emailCurrentDoc(){
   if(!currentViewDoc)return;
   const client=clients.find(c=>c.id==currentViewDoc.client_id);
-  window.open(buildEmailLink(currentViewDoc,currentViewType,client),'_self');
+  openEmailLink(buildEmailLink(currentViewDoc,currentViewType,client));
 }
 
 function emailDocForm(type){
   const d=getDocData(type);
   const doc={number:d.number,date:d.date,description:d.desc,items:d.items,subtotal:d.sub,hst:d.hst,deposit_received:d.dep,total:d.total,balance:d.balance,notes:d.notes};
-  window.open(buildEmailLink(doc,type,d.client),'_self');
+  openEmailLink(buildEmailLink(doc,type,d.client));
 }
 
 function emailContractForm(){
@@ -1113,7 +1125,7 @@ function emailContractForm(){
   const prog=parseFloat(document.getElementById('conProg').value)||0;
   const fin=parseFloat(document.getElementById('conFinal').value)||0;
   const con={number:document.getElementById('conNum').value,start_date:document.getElementById('conStart').value,end_date:document.getElementById('conEnd').value,scope:document.getElementById('conScope').value,deposit_amount:dep,deposit_due:document.getElementById('conDepDue').value,progress_amount:prog,progress_due:document.getElementById('conProgDue').value,final_amount:fin,total:dep+prog+fin};
-  window.open(buildEmailLink(con,'contract',client),'_self');
+  openEmailLink(buildEmailLink(con,'contract',client));
 }
 
 function editCurrentDoc(){
@@ -1186,6 +1198,13 @@ async function savePayment(){
   try{
     const res=await sb.from('invoices').update(payload).eq('id',currentViewDoc.id);
     if(res.error)throw res.error;
+    // Auto status: active -> complete when invoice paid in full
+    if(type==='full'&&currentViewDoc.client_id){
+      const cl=clients.find(c=>c.id==currentViewDoc.client_id);
+      if(cl&&cl.status==='active'){
+        await sb.from('clients').update({status:'complete'}).eq('id',cl.id);
+      }
+    }
     await loadAll();
     closeModal('paymentModal');
     closeModal('docViewModal');
