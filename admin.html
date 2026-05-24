@@ -14,10 +14,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--dark:#181b1f;--mid:#232830;--card:#2a3038;--border:#333d47;--red:#cc2222;--red2:#a81b1b;--green:#22cc66;--yellow:#f0a500;--blue:#2266cc;--white:#fff;--silver:#b0b8c1;--muted:#8a9299}
+:root{--dark:#181b1f;--mid:#232830;--card:#2a3038;--border:#333d47;--red:#cc2222;--red2:#a81b1b;--green:#22cc66;--yellow:#f0a500;--blue:#2266cc;--purple:#8844cc;--white:#fff;--silver:#b0b8c1;--muted:#8a9299}
 html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI',Arial,sans-serif;overflow-x:hidden}
 
-/* LOGIN */
 #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
 .login-box{background:var(--mid);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:380px;text-align:center}
 .login-logo svg{width:48px;height:48px;margin-bottom:1rem}
@@ -28,7 +27,6 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 .login-btn{width:100%;background:var(--red);color:var(--white);border:none;padding:1rem;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer}
 .login-error{color:var(--red);font-size:.85rem;margin-top:.75rem;display:none}
 
-/* APP */
 #app{display:none;min-height:100vh;padding-bottom:80px}
 .topbar{background:var(--mid);border-bottom:1px solid var(--border);padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .topbar-left{display:flex;align-items:center;gap:.6rem}
@@ -41,22 +39,21 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 .page{display:none;padding:1rem}
 .page.active{display:block}
 
-/* DASHBOARD */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem}
 .stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.1rem;text-align:center}
-.stat-card .num{font-size:1.8rem;font-weight:800;color:var(--red)}
-.stat-card .lbl{font-size:.72rem;color:var(--muted);margin-top:.2rem;text-transform:uppercase;letter-spacing:.05em}
+.stat-card .num{font-size:1.5rem;font-weight:800;color:var(--red)}
+.stat-card .lbl{font-size:.68rem;color:var(--muted);margin-top:.2rem;text-transform:uppercase;letter-spacing:.05em}
 .stat-card.green .num{color:var(--green)}
 .stat-card.yellow .num{color:var(--yellow)}
 .stat-card.blue .num{color:var(--blue)}
+.stat-card.purple .num{color:var(--purple)}
 .section-title{font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;margin-top:1.25rem}
 
-/* JOB CARDS */
 .job-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem;cursor:pointer;transition:border-color .2s}
-.job-card:hover{border-color:var(--red)}
+.job-card:active{border-color:var(--red)}
 .job-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem}
 .job-card h3{font-size:.95rem;font-weight:700;color:var(--white)}
-.status-badge{font-size:.65rem;font-weight:700;padding:.2rem .6rem;border-radius:30px;text-transform:uppercase;white-space:nowrap}
+.status-badge{font-size:.65rem;font-weight:700;padding:.2rem .6rem;border-radius:30px;text-transform:uppercase;white-space:nowrap;flex-shrink:0;margin-left:.5rem}
 .status-lead{background:rgba(240,165,0,.15);color:var(--yellow)}
 .status-quoted{background:rgba(34,102,204,.15);color:var(--blue)}
 .status-active{background:rgba(204,34,34,.15);color:var(--red)}
@@ -66,27 +63,27 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 .job-card-bottom span{font-size:.78rem;color:var(--muted)}
 .job-card-bottom strong{color:var(--green);font-size:.82rem}
 
-/* FORMS */
 .form-group{margin-bottom:1rem}
 .form-group label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
 .form-group input,.form-group textarea,.form-group select{width:100%;background:var(--dark);border:1px solid var(--border);color:var(--white);padding:.8rem 1rem;border-radius:8px;font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s}
 .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--red)}
 .form-group select option{background:var(--dark)}
-.form-group textarea{resize:vertical;min-height:80px}
+.form-group textarea{resize:vertical;min-height:100px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+input[type="date"]{cursor:pointer;min-height:48px;color:var(--white)}
+input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1);cursor:pointer;width:24px;height:24px}
 
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.8rem 1.25rem;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;width:100%;margin-bottom:.5rem}
 .btn-primary{background:var(--red);color:var(--white)}
-.btn-primary:hover{background:var(--red2)}
+.btn-primary:active{background:var(--red2)}
 .btn-secondary{background:var(--border);color:var(--white)}
 .btn-success{background:var(--green);color:#111}
 .btn-blue{background:var(--blue);color:var(--white)}
 .btn-orange{background:#e07000;color:var(--white)}
+.btn-purple{background:var(--purple);color:var(--white)}
 .btn-sm{padding:.5rem .9rem;font-size:.8rem;width:auto;margin-bottom:0}
 .btn-outline{background:none;border:1px solid var(--border);color:var(--silver)}
 
-/* MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex}
 .modal{background:var(--mid);border-radius:20px 20px 0 0;width:100%;max-width:640px;max-height:93vh;overflow-y:auto;padding:1.5rem;border:1px solid var(--border)}
@@ -94,7 +91,6 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 .modal-header h3{font-size:1.1rem;font-weight:700;color:var(--white)}
 .modal-close{background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1}
 
-/* DETAIL */
 .detail-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem}
 .detail-section h4{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
 .detail-row{display:flex;justify-content:space-between;align-items:center;padding:.4rem 0;border-bottom:1px solid var(--border)}
@@ -102,24 +98,22 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 .detail-row span:first-child{font-size:.82rem;color:var(--muted);flex-shrink:0}
 .detail-row span:last-child{font-size:.85rem;color:var(--white);font-weight:600;text-align:right;max-width:65%}
 
-/* LIST ITEMS */
 .list-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.85rem;margin-bottom:.6rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
 .list-item:active{border-color:var(--red)}
 .list-item-left h4{font-size:.88rem;font-weight:600;color:var(--white)}
 .list-item-left p{font-size:.75rem;color:var(--muted);margin-top:.15rem}
 .list-item-right{text-align:right;flex-shrink:0;margin-left:.5rem}
-.list-item-right strong{color:var(--red);font-size:.9rem;display:block}
+.list-item-right strong{font-size:.9rem;display:block}
 .list-item-right span{font-size:.72rem;color:var(--muted)}
 .amount-green{color:var(--green)!important}
+.amount-red{color:var(--red)!important}
 
-/* PHOTOS */
 .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.75rem}
-.photo-thumb{aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--dark);border:1px solid var(--border);position:relative}
+.photo-thumb{aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--dark);border:1px solid var(--border)}
 .photo-thumb img{width:100%;height:100%;object-fit:cover}
 .photo-add-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.4rem;color:var(--muted);cursor:pointer;border:2px dashed var(--border);border-radius:8px;aspect-ratio:1;gap:.2rem;font-size:.7rem}
 .photo-add-btn:active{border-color:var(--red);color:var(--red)}
 
-/* MISC */
 .search-bar{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;width:100%;color:var(--white);font-size:.9rem;margin-bottom:1rem;outline:none}
 .search-bar::placeholder{color:var(--muted)}
 .search-bar:focus{border-color:var(--red)}
@@ -127,10 +121,11 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 .empty-state span{font-size:2.5rem;display:block;margin-bottom:.75rem}
 .empty-state p{font-size:.9rem}
 .fab{position:fixed;bottom:90px;right:1.25rem;width:56px;height:56px;background:var(--red);border-radius:50%;border:none;color:var(--white);font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(204,34,34,.5);z-index:90;display:flex;align-items:center;justify-content:center}
-.tabs{display:inline-flex;background:var(--card);border-radius:10px;padding:.3rem;margin-bottom:1rem;gap:.3rem;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex:0 0 auto;padding:.5rem 1.1rem;border-radius:7px;border:none;background:none;color:var(--muted);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+
+.tabs{display:inline-flex;background:var(--card);border-radius:10px;padding:.3rem;margin-bottom:1rem;gap:.3rem}
+.tab{flex:0 0 auto;padding:.5rem .9rem;border-radius:7px;border:none;background:none;color:var(--muted);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
 .tab.active{background:var(--red);color:var(--white)}
+
 .profit-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem}
 .profit-bar h4{font-size:.8rem;color:var(--muted);margin-bottom:.5rem}
 .profit-bar-track{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:.5rem}
@@ -138,24 +133,30 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 .profit-bar-nums{display:flex;justify-content:space-between;font-size:.72rem;flex-wrap:wrap;gap:.3rem}
 .profit-bar-nums span{color:var(--muted)}
 .profit-bar-nums strong{color:var(--green)}
-.tag{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.72rem;font-weight:700;margin-left:.3rem}
+
+.tag{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.7rem;font-weight:700;margin-left:.3rem}
 .tag-est{background:rgba(240,165,0,.15);color:var(--yellow)}
 .tag-inv{background:rgba(34,204,102,.15);color:var(--green)}
+.tag-con{background:rgba(136,68,204,.15);color:var(--purple)}
+.tag-paid{background:rgba(34,204,102,.2);color:var(--green)}
+.tag-unpaid{background:rgba(204,34,34,.15);color:var(--red)}
 
-/* PRINT */
+/* SIGNATURE PAD */
+.sig-pad-wrap{background:var(--white);border-radius:8px;margin-bottom:1rem;position:relative}
+canvas#sigPad{width:100%;height:180px;border-radius:8px;display:block;touch-action:none}
+.sig-clear{position:absolute;top:.5rem;right:.5rem;background:var(--red);color:var(--white);border:none;border-radius:4px;padding:.3rem .6rem;font-size:.75rem;cursor:pointer}
+
 @media print{
   body>*{display:none!important}
-  #printArea{display:block!important;position:fixed;inset:0;background:white;z-index:9999;padding:0;margin:0}
-  @page{margin:1cm;size:letter}
-  head title{display:none}
+  #printArea{display:block!important;position:fixed;inset:0;background:white;z-index:9999}
+  @page{margin:1.5cm;size:letter}
 }
 #printArea{display:none}
 
-/* DOC STYLES */
-.doc-paper{background:#fff;color:#1a1a1a;font-family:'Segoe UI',Arial,sans-serif;padding:2rem;min-height:100%}
+.doc-paper{background:#fff;color:#1a1a1a;font-family:'Segoe UI',Arial,sans-serif;padding:2rem}
 .doc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
-.doc-logo{width:120px;height:auto}
-.doc-type-label{font-size:2rem;font-weight:900;color:#1a1a1a;text-align:right;line-height:1}
+.doc-logo{width:130px;height:auto}
+.doc-type-label{font-size:1.8rem;font-weight:900;color:#1a1a1a;text-align:right;line-height:1}
 .doc-type-sub{font-size:.8rem;color:#666;text-align:right;margin-top:.2rem}
 .doc-divider{border:none;border-top:3px solid #cc2222;margin:1rem 0}
 .doc-meta{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;font-size:.83rem}
@@ -165,16 +166,23 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 .doc-table th{background:#f5f5f5;padding:.6rem .75rem;text-align:left;font-size:.7rem;text-transform:uppercase;color:#777;border-bottom:2px solid #e0e0e0}
 .doc-table td{padding:.6rem .75rem;border-bottom:1px solid #eee;color:#333}
 .doc-table td:last-child,.doc-table th:last-child{text-align:right}
-.doc-totals{margin-left:auto;width:260px;font-size:.85rem}
+.doc-totals{margin-left:auto;width:280px;font-size:.85rem}
 .doc-total-row{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid #eee;color:#444}
 .doc-total-row.grand{font-size:1rem;font-weight:800;color:#cc2222;border-top:2px solid #cc2222;border-bottom:none;margin-top:.5rem;padding-top:.5rem}
+.doc-total-row.paid-row{color:#22cc66;font-weight:700}
 .doc-footer{margin-top:1.5rem;padding-top:1rem;border-top:1px solid #eee;font-size:.75rem;color:#888;text-align:center;line-height:1.6}
-.doc-hst{font-size:.72rem;color:#999;margin-top:.3rem}
+.doc-section{margin-bottom:1.5rem}
+.doc-section h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:.5rem;font-weight:700}
+.doc-section p{font-size:.85rem;color:#333;line-height:1.7;white-space:pre-wrap}
+.doc-payment-row{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid #eee;font-size:.85rem;color:#333}
+.doc-sig-area{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem}
+.doc-sig-box{border-top:2px solid #333;padding-top:.5rem;font-size:.75rem;color:#666}
+.doc-sig-img{max-width:200px;max-height:60px}
+.doc-stamp{display:inline-block;border:3px solid #22cc66;color:#22cc66;font-weight:900;font-size:1.2rem;padding:.3rem 1rem;border-radius:6px;transform:rotate(-5deg);margin-bottom:1rem}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">
@@ -188,23 +196,26 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <div class="topbar">
     <div class="topbar-left">
       <svg width="24" height="24" viewBox="0 0 100 100" fill="none"><polygon points="50,6 93,40 93,91 7,91 7,40" stroke="#cc2222" stroke-width="7" stroke-linejoin="round"/><rect x="33" y="54" width="14" height="37" fill="#cc2222"/><rect x="53" y="54" width="14" height="37" fill="#cc2222"/></svg>
       <h2 id="pageTitle">Dashboard</h2>
     </div>
-    <button class="icon-btn" onclick="logout()" title="Logout">🚪</button>
+    <button class="icon-btn" onclick="logout()">🚪</button>
   </div>
 
   <!-- DASHBOARD -->
   <div class="page active" id="pageDashboard">
     <div class="stats-grid">
-      <div class="stat-card"><div class="num" id="statLeads">0</div><div class="lbl">Leads</div></div>
-      <div class="stat-card blue"><div class="num" id="statActive">0</div><div class="lbl">Active</div></div>
-      <div class="stat-card green"><div class="num" id="statRevenue">$0</div><div class="lbl">Revenue</div></div>
-      <div class="stat-card yellow"><div class="num" id="statProfit">$0</div><div class="lbl">Profit</div></div>
+      <div class="stat-card blue"><div class="num" id="statActive">0</div><div class="lbl">Active Jobs</div></div>
+      <div class="stat-card yellow"><div class="num" id="statQuoted">0</div><div class="lbl">Quoted Jobs</div></div>
+      <div class="stat-card green"><div class="num" id="statMonth">$0</div><div class="lbl">This Month</div></div>
+      <div class="stat-card purple"><div class="num" id="statYTD">$0</div><div class="lbl">Year to Date</div></div>
+    </div>
+    <div class="detail-section" style="margin-bottom:1rem">
+      <div class="detail-row"><span>Outstanding</span><span id="statOutstanding" class="amount-red">$0</span></div>
+      <div class="detail-row"><span>Total Profit (YTD)</span><span id="statProfit" class="amount-green">$0</span></div>
     </div>
     <div class="section-title">Active Jobs</div><div id="dashActive"></div>
     <div class="section-title">Quoted Jobs</div><div id="dashQuoted"></div>
@@ -228,11 +239,14 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
     <div class="tabs">
       <button class="tab active" onclick="switchDocTab('estimates',this)">📝 Estimates</button>
       <button class="tab" onclick="switchDocTab('invoices',this)">📋 Invoices</button>
+      <button class="tab" onclick="switchDocTab('contracts',this)">📄 Contracts</button>
     </div>
-    <div id="tabInvoices"><div id="invoicesList"></div></div>
-    <div id="tabEstimates" style="display:none"><div id="estimatesList"></div></div>
+    <div id="tabEstimates"><div id="estimatesList"></div></div>
+    <div id="tabInvoices" style="display:none"><div id="invoicesList"></div></div>
+    <div id="tabContracts" style="display:none"><div id="contractsList"></div></div>
     <div id="tabNewEst" style="display:none"><div id="estForm"></div></div>
     <div id="tabNewInv" style="display:none"><div id="invForm"></div></div>
+    <div id="tabNewCon" style="display:none"><div id="conForm"></div></div>
   </div>
 
   <!-- EXPENSES -->
@@ -266,7 +280,7 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
     <div class="form-group"><label>Full Name *</label><input type="text" id="cName" placeholder="John Smith"/></div>
     <div class="form-group"><label>Phone</label><input type="tel" id="cPhone" placeholder="613-000-0000"/></div>
     <div class="form-group"><label>Email</label><input type="email" id="cEmail" placeholder="client@email.com"/></div>
-    <div class="form-group"><label>Address / Area</label><input type="text" id="cAddress" placeholder="123 Main St, Barrhaven"/></div>
+    <div class="form-group"><label>Address</label><input type="text" id="cAddress" placeholder="123 Main St, Barrhaven"/></div>
     <div class="form-group"><label>Service Type</label>
       <select id="cService">
         <option>Custom Bathroom</option><option>Kitchen Renovation</option><option>Basement Finishing</option>
@@ -274,7 +288,7 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
         <option>Home Addition</option><option>Multiple Services</option><option>Other</option>
       </select>
     </div>
-    <div class="form-group"><label>Job Status</label>
+    <div class="form-group"><label>Status</label>
       <select id="cStatus">
         <option value="lead">Lead</option><option value="quoted">Quoted</option>
         <option value="active">Active Job</option><option value="complete">Complete</option>
@@ -293,8 +307,8 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
       <label>📷 Job Photos</label>
       <div class="photo-grid" id="clientModalPhotos"></div>
       <div style="display:flex;gap:.5rem;margin-top:.5rem">
-        <button class="btn btn-secondary btn-sm" onclick="triggerCamera('new')">📷 Take Photo</button>
-        <button class="btn btn-outline btn-sm" onclick="triggerGallery('new')">🖼️ From Gallery</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('cameraNew').click()">📷 Camera</button>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('galleryNew').click()">🖼️ Gallery</button>
       </div>
     </div>
     <input type="file" id="cameraNew" accept="image/*" capture="environment" style="display:none" multiple onchange="handleNewPhotos(event)"/>
@@ -318,7 +332,7 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 <div class="modal-overlay" id="expenseModal">
   <div class="modal">
     <div class="modal-header"><h3>Add Expense</h3><button class="modal-close" onclick="closeModal('expenseModal')">×</button></div>
-    <div class="form-group"><label>Job / Client</label><select id="expClient"></select></div>
+    <div class="form-group"><label>Client</label><select id="expClient"></select></div>
     <div class="form-group"><label>Description</label><input type="text" id="expDesc" placeholder="e.g. Tile from Home Depot"/></div>
     <div class="form-group"><label>Category</label>
       <select id="expCat">
@@ -348,7 +362,7 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
       </select>
     </div>
     <div class="form-group"><label>Notes</label><textarea id="logNotes" placeholder="What was discussed..."></textarea></div>
-    <div class="form-group"><label>Follow Up Date (optional)</label><input type="date" id="logFollowUp"/></div>
+    <div class="form-group"><label>Follow Up Date</label><input type="date" id="logFollowUp"/></div>
     <button class="btn btn-primary" onclick="saveLog()">💾 Save Log</button>
   </div>
 </div>
@@ -361,31 +375,48 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
       <button class="modal-close" onclick="closeModal('docViewModal')">×</button>
     </div>
     <div id="docViewContent"></div>
-    <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.5rem">
-      <button class="btn btn-secondary" onclick="printCurrentDoc()">🖨️ Print / Save PDF</button>
-      <button class="btn btn-blue" onclick="emailCurrentDoc()">📧 Send via Email</button>
-      <button class="btn btn-orange" id="editDocBtn" onclick="editCurrentDoc()">✏️ Edit</button>
-      <button class="btn btn-success" id="dupToInvBtn" style="display:none" onclick="duplicateToInvoice()">📄 Duplicate as Invoice</button>
-    </div>
+    <div id="docViewActions" style="margin-top:1rem;display:flex;flex-direction:column;gap:.5rem"></div>
   </div>
 </div>
 
-<!-- NEW DOC MODAL -->
-<div class="modal-overlay" id="newDocModal">
-  <div class="modal" style="text-align:center">
-    <div class="modal-header">
-      <h3>Create New Document</h3>
-      <button class="modal-close" onclick="closeModal('newDocModal')">×</button>
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="paymentModal">
+  <div class="modal">
+    <div class="modal-header"><h3>Record Payment</h3><button class="modal-close" onclick="closeModal('paymentModal')">×</button></div>
+    <div class="form-group"><label>Payment Type</label>
+      <select id="payType">
+        <option value="deposit">Deposit Received</option>
+        <option value="full">Paid in Full</option>
+      </select>
     </div>
-    <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.5rem">What would you like to create?</p>
-    <button class="btn btn-primary" onclick="closeModal('newDocModal');showDocForm('estimate')">📝 New Estimate</button>
-    <button class="btn btn-secondary" onclick="closeModal('newDocModal');showDocForm('invoice')">🧾 New Invoice</button>
+    <div class="form-group"><label>Amount ($)</label><input type="number" id="payAmount" placeholder="0.00"/></div>
+    <div class="form-group"><label>Date Received</label><input type="date" id="payDate"/></div>
+    <div class="form-group"><label>Payment Method</label>
+      <select id="payMethod">
+        <option>Cash</option><option>E-Transfer</option><option>Cheque</option><option>Credit Card</option><option>Other</option>
+      </select>
+    </div>
+    <button class="btn btn-success" onclick="savePayment()">✅ Record Payment</button>
   </div>
 </div>
+
+<!-- CONTRACT SIGN MODAL -->
+<div class="modal-overlay" id="signModal">
+  <div class="modal">
+    <div class="modal-header"><h3>Client Signature</h3><button class="modal-close" onclick="closeModal('signModal')">×</button></div>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">Have the client sign below using their finger</p>
+    <div class="sig-pad-wrap">
+      <canvas id="sigPad" width="600" height="180"></canvas>
+      <button class="sig-clear" onclick="clearSig()">Clear</button>
+    </div>
+    <div class="form-group"><label>Client Name</label><input type="text" id="sigName" placeholder="Full name"/></div>
+    <div class="form-group"><label>Date</label><input type="date" id="sigDate"/></div>
+    <button class="btn btn-success" onclick="saveSig()">✅ Save Signature</button>
+  </div>
+</div>
+
 <input type="file" id="cameraEdit" accept="image/*" capture="environment" style="display:none" multiple onchange="handleEditPhotos(event)"/>
 <input type="file" id="galleryEdit" accept="image/*" style="display:none" multiple onchange="handleEditPhotos(event)"/>
-
-<!-- PRINT AREA -->
 <div id="printArea"></div>
 
 <script>
@@ -393,22 +424,24 @@ const PW='Titannetwork1!';
 const SURL='https://mhbnsoyusypuiiqiikph.supabase.co';
 const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oYm5zb3l1c3lwdWlpcWlpa3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MjU1MjQsImV4cCI6MjA5NTIwMTUyNH0.QKVLFT661mY4UYuQMRs5cZZT3QGeAf1YjPt1x529Lig';
 const sb=supabase.createClient(SURL,SKEY);
-
 const CO={name:'TNA Pro Build',addr:'332 Sweetfern Cresc',city:'Orleans, ON',email:'tna.probuild@yahoo.com',phone:'613-252-5636',hst:'HST# 728609413RT0001',logo:'https://tnaprobuild.ca/logo.jpg'};
 
-let clients=[],invoices=[],estimates=[],expenses=[],logs=[],clientPhotos={};
+let clients=[],invoices=[],estimates=[],expenses=[],logs=[],contracts=[],clientPhotos={};
 let editingClientId=null,currentDetailId=null,currentViewDoc=null,currentViewType=null;
-let newClientPhotoData=[],editClientPhotoData=[];
-let docLineCount=0,editingDocId=null,editingDocType=null;
+let newClientPhotoData=[],docLineCount=0,editingDocId=null,sigCanvas=null,sigCtx=null,sigDrawing=false;
 
-// UTILS
-function fmtDate(d){
-  if(!d) return '—';
-  try{const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});}catch{return d;}
-}
+function fmtDate(d){if(!d)return'—';try{return new Date(d+'T00:00:00').toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});}catch{return d;}}
 function fmtMoney(n){return'$'+(parseFloat(n)||0).toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function today(){return new Date().toISOString().split('T')[0]}
-function genNum(arr,prefix){return prefix+String(arr.length+1).padStart(3,'0')}
+function genNum(arr,prefix){return prefix+String((arr.length||0)+1).padStart(3,'0')}
+function thisMonth(){const n=new Date();return`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`}
+function thisYear(){return new Date().getFullYear()}
+
+function fixDateInputs(){
+  document.querySelectorAll('input[type="date"]').forEach(inp=>{
+    inp.onclick=function(e){e.preventDefault();try{this.showPicker();}catch(ex){this.focus();}};
+  });
+}
 
 async function login(){
   if(document.getElementById('pwInput').value===PW){
@@ -419,7 +452,6 @@ async function login(){
     document.getElementById('loginError').style.display='block';
   }
 }
-
 function logout(){
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('app').style.display='none';
@@ -427,16 +459,17 @@ function logout(){
 }
 
 async function loadAll(){
-  const [c,i,e,ex,l,p]=await Promise.all([
+  const [c,i,e,ex,l,co,p]=await Promise.all([
     sb.from('clients').select('*').order('created_at',{ascending:false}),
     sb.from('invoices').select('*').order('created_at',{ascending:false}),
     sb.from('estimates').select('*').order('created_at',{ascending:false}),
     sb.from('expenses').select('*').order('created_at',{ascending:false}),
     sb.from('logs').select('*').order('created_at',{ascending:false}),
+    sb.from('contracts').select('*').order('created_at',{ascending:false}),
     sb.from('photos').select('*')
   ]);
   clients=c.data||[];invoices=i.data||[];estimates=e.data||[];
-  expenses=ex.data||[];logs=l.data||[];
+  expenses=ex.data||[];logs=l.data||[];contracts=co.data||[];
   clientPhotos={};
   (p.data||[]).forEach(ph=>{
     if(!clientPhotos[ph.client_id])clientPhotos[ph.client_id]=[];
@@ -454,48 +487,50 @@ function showPage(name){
     if(n===name)document.querySelectorAll('.nav-item')[i].classList.add('active');
   });
   renderAll();
+  setTimeout(fixDateInputs,200);
 }
 
-function openModal(id){document.getElementById(id).classList.add('open')}
+function openModal(id){document.getElementById(id).classList.add('open');setTimeout(fixDateInputs,200);}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
+
 function openFAB(){
   const p=document.getElementById('pageTitle').textContent;
-  if(p==='Expenses') openExpModal();
-  else if(p==='Documents'){
+  if(p==='Expenses'){openExpModal();return;}
+  if(p==='Documents'){
     const activeTab=document.querySelector('#pageInvoices .tab.active');
-    const type=activeTab&&activeTab.textContent.includes('Estimate')?'estimate':'invoice';
-    showDocForm(type);
+    const txt=activeTab?activeTab.textContent:'';
+    if(txt.includes('Invoice'))showDocForm('invoice');
+    else if(txt.includes('Contract'))showDocForm('contract');
+    else showDocForm('estimate');
+    return;
   }
-  else openNewClient();
-}
-
-function showDocForm(type){
-  editingDocId=null;editingDocType=null;
-  // Show the correct hidden tab content
-  ['tabInvoices','tabEstimates','tabNewEst','tabNewInv'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.style.display='none';
-  });
-  const tabId=type==='estimate'?'tabNewEst':'tabNewInv';
-  document.getElementById(tabId).style.display='block';
-  initDocForm(type);
+  openNewClient();
 }
 
 function renderAll(){
   renderDashboard();renderClients();renderSchedule();
-  renderInvoices();renderExpenses();populateAllSelects();
+  renderDocs();renderExpenses();populateAllSelects();
 }
 
 // DASHBOARD
 function renderDashboard(){
-  const leads=clients.filter(c=>c.status==='lead');
   const active=clients.filter(c=>c.status==='active');
   const quoted=clients.filter(c=>c.status==='quoted');
-  const rev=invoices.reduce((s,i)=>s+(parseFloat(i.total)||0),0);
-  const exp=expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
-  document.getElementById('statLeads').textContent=leads.length;
+  const leads=clients.filter(c=>c.status==='lead');
+  const mo=thisMonth();const yr=thisYear();
+  const paidInvs=invoices.filter(i=>i.paid_date);
+  const monthRev=paidInvs.filter(i=>i.paid_date&&i.paid_date.startsWith(mo)).reduce((s,i)=>s+(parseFloat(i.total)||0),0);
+  const ytdRev=paidInvs.filter(i=>i.paid_date&&new Date(i.paid_date).getFullYear()===yr).reduce((s,i)=>s+(parseFloat(i.total)||0),0);
+  const outstanding=invoices.filter(i=>!i.paid_date).reduce((s,i)=>s+(parseFloat(i.balance)||0),0);
+  const ytdExp=expenses.filter(e=>e.date&&new Date(e.date).getFullYear()===yr).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+
   document.getElementById('statActive').textContent=active.length;
-  document.getElementById('statRevenue').textContent='$'+Math.round(rev).toLocaleString();
-  document.getElementById('statProfit').textContent='$'+Math.round(rev-exp).toLocaleString();
+  document.getElementById('statQuoted').textContent=quoted.length;
+  document.getElementById('statMonth').textContent='$'+Math.round(monthRev).toLocaleString();
+  document.getElementById('statYTD').textContent='$'+Math.round(ytdRev).toLocaleString();
+  document.getElementById('statOutstanding').textContent=fmtMoney(outstanding);
+  document.getElementById('statProfit').textContent=fmtMoney(ytdRev-ytdExp);
+
   document.getElementById('dashActive').innerHTML=active.length?active.map(jobCard).join(''):'<div class="empty-state"><span>🔨</span><p>No active jobs</p></div>';
   document.getElementById('dashQuoted').innerHTML=quoted.length?quoted.map(jobCard).join(''):'<div class="empty-state"><span>📋</span><p>No quoted jobs</p></div>';
   document.getElementById('dashLeads').innerHTML=leads.length?leads.map(jobCard).join(''):'<div class="empty-state"><span>📞</span><p>No leads yet</p></div>';
@@ -517,13 +552,9 @@ function openNewClient(){
   document.getElementById('cStatus').value='lead';
   document.getElementById('cReturning').value='no';
   document.getElementById('cStart').value='';document.getElementById('cEnd').value='';
-  renderNewClientPhotos();
+  document.getElementById('clientModalPhotos').innerHTML='';
   openModal('clientModal');
 }
-
-function triggerCamera(mode){document.getElementById('camera'+capitalize(mode)).click()}
-function triggerGallery(mode){document.getElementById('gallery'+capitalize(mode)).click()}
-function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 
 function handleNewPhotos(e){
   Array.from(e.target.files).forEach(f=>{
@@ -535,47 +566,30 @@ function handleNewPhotos(e){
 }
 
 function renderNewClientPhotos(){
-  const grid=document.getElementById('clientModalPhotos');
-  grid.innerHTML=newClientPhotoData.map((url,i)=>`<div class="photo-thumb"><img src="${url}"/><div style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem" onclick="removeNewPhoto(${i})">×</div></div>`).join('');
+  document.getElementById('clientModalPhotos').innerHTML=newClientPhotoData.map((url,i)=>
+    `<div class="photo-thumb" style="position:relative"><img src="${url}"/><div onclick="newClientPhotoData.splice(${i},1);renderNewClientPhotos()" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem;color:white">×</div></div>`
+  ).join('');
 }
 
-function removeNewPhoto(i){newClientPhotoData.splice(i,1);renderNewClientPhotos()}
-
 async function saveClient(){
-  const data={
-    name:document.getElementById('cName').value||'Unnamed',
-    phone:document.getElementById('cPhone').value||null,
-    email:document.getElementById('cEmail').value||null,
-    address:document.getElementById('cAddress').value||null,
-    service:document.getElementById('cService').value||null,
-    status:document.getElementById('cStatus').value||'lead',
-    start_date:document.getElementById('cStart').value||null,
-    end_date:document.getElementById('cEnd').value||null,
-    quote_amount:document.getElementById('cQuote').value||null,
-    is_returning:document.getElementById('cReturning').value||'no',
-    notes:document.getElementById('cNotes').value||null
-  };
+  const data={name:document.getElementById('cName').value||'Unnamed',phone:document.getElementById('cPhone').value||null,email:document.getElementById('cEmail').value||null,address:document.getElementById('cAddress').value||null,service:document.getElementById('cService').value||null,status:document.getElementById('cStatus').value||'lead',start_date:document.getElementById('cStart').value||null,end_date:document.getElementById('cEnd').value||null,quote_amount:document.getElementById('cQuote').value||null,is_returning:document.getElementById('cReturning').value||'no',notes:document.getElementById('cNotes').value||null};
   try{
     let clientId=editingClientId;
     if(editingClientId){
-      await sb.from('clients').update(data).eq('id',editingClientId);
+      const res=await sb.from('clients').update(data).eq('id',editingClientId);
+      if(res.error)throw res.error;
     } else {
       const res=await sb.from('clients').insert(data).select();
-      if(res.error) throw res.error;
-      if(res.data&&res.data[0]) clientId=res.data[0].id;
+      if(res.error)throw res.error;
+      if(res.data&&res.data[0])clientId=res.data[0].id;
     }
     if(clientId&&newClientPhotoData.length){
-      for(const url of newClientPhotoData){
-        await sb.from('photos').insert({client_id:clientId,url});
-      }
+      for(const url of newClientPhotoData)await sb.from('photos').insert({client_id:clientId,url});
     }
     newClientPhotoData=[];
     closeModal('clientModal');
     await loadAll();
-  } catch(err){
-    alert('Error saving client: '+err.message);
-    console.error(err);
-  }
+  }catch(err){alert('Error: '+err.message);}
 }
 
 function renderClients(filter=''){
@@ -587,13 +601,15 @@ function searchClients(v){renderClients(v)}
 async function openDetail(id){
   currentDetailId=id;
   const c=clients.find(cl=>cl.id==id);if(!c)return;
-  const cExp=expenses.filter(e=>e.client_id===id);
-  const cInv=invoices.filter(i=>i.client_id===id);
-  const cEst=estimates.filter(e=>e.client_id===id);
-  const cLogs=logs.filter(l=>l.client_id===id);
+  const cExp=expenses.filter(e=>e.client_id==id);
+  const cInv=invoices.filter(i=>i.client_id==id);
+  const cEst=estimates.filter(e=>e.client_id==id);
+  const cCon=contracts.filter(co=>co.client_id==id);
+  const cLogs=logs.filter(l=>l.client_id==id);
   const cPhotos=clientPhotos[id]||[];
   const totalExp=cExp.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
-  const totalInv=cInv.reduce((s,i)=>s+(parseFloat(i.total)||0),0);
+  const totalInv=cInv.filter(i=>i.paid_date).reduce((s,i)=>s+(parseFloat(i.total)||0),0);
+  const outstanding=cInv.filter(i=>!i.paid_date).reduce((s,i)=>s+(parseFloat(i.balance)||0),0);
 
   document.getElementById('detailName').textContent=c.name+(c.is_returning==='yes'?' ⭐':'');
   document.getElementById('detailContent').innerHTML=`
@@ -611,52 +627,48 @@ async function openDetail(id){
     ${c.notes?`<div class="detail-section"><h4>Notes</h4><p style="font-size:.88rem;color:var(--silver);line-height:1.7">${c.notes}</p></div>`:''}
     <div class="detail-section">
       <h4>Financials</h4>
-      <div class="detail-row"><span>Invoiced</span><span class="amount-green">${fmtMoney(totalInv)}</span></div>
-      <div class="detail-row"><span>Expenses</span><span style="color:var(--red)">${fmtMoney(totalExp)}</span></div>
-      <div class="detail-row"><span>Profit</span><span class="${totalInv-totalExp>=0?'amount-green':''}">${fmtMoney(totalInv-totalExp)}</span></div>
+      <div class="detail-row"><span>Collected</span><span class="amount-green">${fmtMoney(totalInv)}</span></div>
+      <div class="detail-row"><span>Outstanding</span><span class="amount-red">${fmtMoney(outstanding)}</span></div>
+      <div class="detail-row"><span>Expenses</span><span style="color:var(--yellow)">${fmtMoney(totalExp)}</span></div>
+      <div class="detail-row"><span>Profit</span><span class="${totalInv-totalExp>=0?'amount-green':'amount-red'}">${fmtMoney(totalInv-totalExp)}</span></div>
     </div>
     <div class="detail-section">
       <h4>Estimates (${cEst.length})</h4>
       ${cEst.map(e=>`<div class="list-item" onclick="openDocView(${e.id},'estimate')"><div class="list-item-left"><h4>${e.number}<span class="tag tag-est">EST</span></h4><p>${e.description||''} • ${fmtDate(e.date)}</p></div><div class="list-item-right"><strong>${fmtMoney(e.total)}</strong></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No estimates</p>'}
     </div>
     <div class="detail-section">
+      <h4>Contracts (${cCon.length})</h4>
+      ${cCon.map(co=>`<div class="list-item" onclick="openDocView(${co.id},'contract')"><div class="list-item-left"><h4>${co.number}<span class="tag tag-con">CONTRACT</span></h4><p>${co.scope?co.scope.substring(0,40)+'...':''} • ${fmtDate(co.date)}</p></div><div class="list-item-right"><strong>${fmtMoney(co.total)}</strong><span class="tag ${co.status==='signed'?'tag-paid':'tag-unpaid'}">${co.status||'unsigned'}</span></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No contracts</p>'}
+    </div>
+    <div class="detail-section">
       <h4>Invoices (${cInv.length})</h4>
-      ${cInv.map(i=>`<div class="list-item" onclick="openDocView(${i.id},'invoice')"><div class="list-item-left"><h4>${i.number}<span class="tag tag-inv">INV</span></h4><p>${i.description||''} • ${fmtDate(i.date)}</p></div><div class="list-item-right"><strong class="amount-green">${fmtMoney(i.total)}</strong></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No invoices</p>'}
+      ${cInv.map(i=>`<div class="list-item" onclick="openDocView(${i.id},'invoice')"><div class="list-item-left"><h4>${i.number}<span class="tag tag-inv">INV</span>${i.paid_date?'<span class="tag tag-paid">PAID</span>':'<span class="tag tag-unpaid">UNPAID</span>'}</h4><p>${i.description||''} • ${fmtDate(i.date)}</p></div><div class="list-item-right"><strong class="amount-green">${fmtMoney(i.total)}</strong><span>Bal: ${fmtMoney(i.balance)}</span></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No invoices</p>'}
     </div>
     <div class="detail-section">
       <h4>📷 Photos (${cPhotos.length})</h4>
       <div class="photo-grid">
         ${cPhotos.map(p=>`<div class="photo-thumb"><img src="${p.url}" loading="lazy"/></div>`).join('')}
-        <div class="photo-add-btn" onclick="triggerEditCamera('${id}')"><span>📷</span><span>Camera</span></div>
-        <div class="photo-add-btn" onclick="triggerEditGallery('${id}')"><span>🖼️</span><span>Gallery</span></div>
+        <div class="photo-add-btn" onclick="document.getElementById('cameraEdit').setAttribute('data-client','${id}');document.getElementById('cameraEdit').click()"><span>📷</span><span>Camera</span></div>
+        <div class="photo-add-btn" onclick="document.getElementById('galleryEdit').setAttribute('data-client','${id}');document.getElementById('galleryEdit').click()"><span>🖼️</span><span>Gallery</span></div>
       </div>
     </div>
     <div class="detail-section">
-      <h4>Communication Log (${cLogs.length})</h4>
-      ${cLogs.map(l=>`<div class="list-item"><div class="list-item-left"><h4>${l.type}</h4><p>${l.notes||''}</p>${l.follow_up?`<p style="color:var(--yellow);font-size:.75rem;margin-top:.2rem">📅 Follow up: ${fmtDate(l.follow_up)}</p>`:''}</div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No logs yet</p>'}
+      <h4>Log (${cLogs.length})</h4>
+      ${cLogs.map(l=>`<div class="list-item"><div class="list-item-left"><h4>${l.type}</h4><p>${l.notes||''}</p>${l.follow_up?`<p style="color:var(--yellow);font-size:.75rem;margin-top:.2rem">📅 Follow up: ${fmtDate(l.follow_up)}</p>`:''}</div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No logs</p>'}
       <button class="btn btn-secondary btn-sm" style="margin-top:.75rem" onclick="openLogFor('${id}')">+ Add Log</button>
     </div>
     <div style="display:flex;gap:.75rem;margin-top:1rem">
-      <button class="btn btn-secondary" style="margin:0" onclick="editClient('${id}')">✏️ Edit</button>
-      <button class="btn btn-outline" style="margin:0" onclick="deleteClient('${id}')">🗑️ Delete</button>
+      <button class="btn btn-secondary" style="margin:0" onclick="editClient(${id})">✏️ Edit</button>
+      <button class="btn btn-outline" style="margin:0" onclick="deleteClient(${id})">🗑️ Delete</button>
     </div>`;
   openModal('detailModal');
 }
 
-function triggerEditCamera(clientId){
-  document.getElementById('cameraEdit').setAttribute('data-client',clientId);
-  document.getElementById('cameraEdit').click();
-}
-function triggerEditGallery(clientId){
-  document.getElementById('galleryEdit').setAttribute('data-client',clientId);
-  document.getElementById('galleryEdit').click();
-}
 async function handleEditPhotos(e){
   const clientId=e.target.getAttribute('data-client');
-  const files=Array.from(e.target.files);
-  await Promise.all(files.map(f=>new Promise(res=>{
+  await Promise.all(Array.from(e.target.files).map(f=>new Promise(res=>{
     const r=new FileReader();
-    r.onload=async ev=>{await sb.from('photos').insert({client_id:clientId,url:ev.target.result});res();};
+    r.onload=async ev=>{await sb.from('photos').insert({client_id:parseInt(clientId),url:ev.target.result});res();};
     r.readAsDataURL(f);
   })));
   e.target.value='';
@@ -665,37 +677,38 @@ async function handleEditPhotos(e){
 }
 
 function editClient(id){
-  const c=clients.find(cl=>cl.id===id);if(!c)return;
+  const c=clients.find(cl=>cl.id==id);if(!c)return;
   editingClientId=id;newClientPhotoData=[];
   document.getElementById('clientModalTitle').textContent='Edit Client';
-  document.getElementById('cName').value=c.name||'';
-  document.getElementById('cPhone').value=c.phone||'';
-  document.getElementById('cEmail').value=c.email||'';
-  document.getElementById('cAddress').value=c.address||'';
-  document.getElementById('cService').value=c.service||'Custom Bathroom';
-  document.getElementById('cStatus').value=c.status||'lead';
-  document.getElementById('cStart').value=c.start_date||'';
-  document.getElementById('cEnd').value=c.end_date||'';
-  document.getElementById('cQuote').value=c.quote_amount||'';
-  document.getElementById('cReturning').value=c.is_returning||'no';
-  document.getElementById('cNotes').value=c.notes||'';
-  renderNewClientPhotos();
   closeModal('detailModal');
-  openModal('clientModal');
+  setTimeout(()=>{
+    document.getElementById('cName').value=c.name||'';
+    document.getElementById('cPhone').value=c.phone||'';
+    document.getElementById('cEmail').value=c.email||'';
+    document.getElementById('cAddress').value=c.address||'';
+    document.getElementById('cService').value=c.service||'Custom Bathroom';
+    document.getElementById('cStatus').value=c.status||'lead';
+    document.getElementById('cStart').value=c.start_date||'';
+    document.getElementById('cEnd').value=c.end_date||'';
+    document.getElementById('cQuote').value=c.quote_amount||'';
+    document.getElementById('cReturning').value=c.is_returning||'no';
+    document.getElementById('cNotes').value=c.notes||'';
+    document.getElementById('clientModalPhotos').innerHTML='';
+    openModal('clientModal');
+  },300);
 }
 
 async function deleteClient(id){
-  if(!confirm('Delete this client? This cannot be undone.'))return;
+  if(!confirm('Delete this client?'))return;
   await sb.from('clients').delete().eq('id',id);
-  closeModal('detailModal');
-  await loadAll();
+  closeModal('detailModal');await loadAll();
 }
 
 // SCHEDULE
 function renderSchedule(){
   const jobs=clients.filter(c=>c.start_date&&(c.status==='active'||c.status==='quoted')).sort((a,b)=>new Date(a.start_date)-new Date(b.start_date));
   document.getElementById('scheduleList').innerHTML=jobs.length?jobs.map(c=>`
-    <div class="job-card" onclick="openDetail('${c.id}')">
+    <div class="job-card" onclick="openDetail(${c.id})">
       <div class="job-card-top"><h3>${c.name}</h3><span class="status-badge status-${c.status}">${c.status}</span></div>
       <p>${c.service||''}</p>
       <div class="job-card-bottom"><span>📅 ${fmtDate(c.start_date)}</span><span>🏁 ${fmtDate(c.end_date)}</span></div>
@@ -704,13 +717,29 @@ function renderSchedule(){
 
 // DOCUMENTS
 function switchDocTab(tab,btn){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#pageInvoices .tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  ['tabInvoices','tabEstimates','tabNewEst','tabNewInv'].forEach(id=>{
+  ['tabEstimates','tabInvoices','tabContracts','tabNewEst','tabNewInv','tabNewCon'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.style.display='none';
   });
-  const map={invoices:'tabInvoices',estimates:'tabEstimates',newEst:'tabNewEst',newInv:'tabNewInv'};
-  document.getElementById(map[tab]).style.display='block';
+  const map={estimates:'tabEstimates',invoices:'tabInvoices',contracts:'tabContracts',newEst:'tabNewEst',newInv:'tabNewInv',newCon:'tabNewCon'};
+  if(map[tab])document.getElementById(map[tab]).style.display='block';
+}
+
+function showDocForm(type){
+  editingDocId=null;
+  const tabMap={estimate:'newEst',invoice:'newInv',contract:'newCon'};
+  const btnMap={estimate:0,invoice:1,contract:2};
+  const tabs=document.querySelectorAll('#pageInvoices .tab');
+  tabs.forEach(t=>t.classList.remove('active'));
+  if(tabs[btnMap[type]])tabs[btnMap[type]].classList.add('active');
+  ['tabEstimates','tabInvoices','tabContracts','tabNewEst','tabNewInv','tabNewCon'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='none';
+  });
+  document.getElementById('tab'+tabMap[type].charAt(0).toUpperCase()+tabMap[type].slice(1)).style.display='block';
+  if(type==='contract')initContractForm();
+  else initDocForm(type);
+  setTimeout(fixDateInputs,200);
 }
 
 function initDocForm(type,prefill=null){
@@ -718,7 +747,6 @@ function initDocForm(type,prefill=null){
   const isEst=type==='estimate';
   const containerId=isEst?'estForm':'invForm';
   const num=prefill?prefill.number:(isEst?genNum(estimates,'EST-'):genNum(invoices,'INV-'));
-
   document.getElementById(containerId).innerHTML=`
     <div class="form-group"><label>Client</label><select id="${type}Client" onchange="fillDocClient('${type}')"><option value="">Select client...</option></select></div>
     <div class="form-group"><label>${isEst?'Estimate':'Invoice'} #</label><input type="text" id="${type}Num" value="${num}"/></div>
@@ -728,8 +756,13 @@ function initDocForm(type,prefill=null){
     <div class="section-title">Line Items</div>
     <div id="${type}Lines"></div>
     <button class="btn btn-outline btn-sm" style="margin-bottom:1rem" onclick="addDocLine('${type}')">+ Add Item</button>
+    ${!isEst?`
+    <div class="section-title">Payment</div>
     <div class="form-row">
-      <div class="form-group"><label>Deposit ($)</label><input type="number" id="${type}Dep" value="${prefill?prefill.deposit||0:0}" oninput="calcDocTotals('${type}')"/></div>
+      <div class="form-group"><label>Deposit Received ($)</label><input type="number" id="${type}DepAmt" value="${prefill?prefill.deposit_received||0:0}" oninput="calcDocTotals('${type}')"/></div>
+      <div class="form-group"><label>Deposit Date</label><input type="date" id="${type}DepDate" value="${prefill?prefill.deposit_date||'':''}"/></div>
+    </div>`:''}
+    <div class="form-row">
       <div class="form-group"><label>HST (13%)</label>
         <select id="${type}HST" onchange="calcDocTotals('${type}')">
           <option value="yes" ${prefill&&prefill.include_hst==='yes'?'selected':''}>Include HST</option>
@@ -737,76 +770,62 @@ function initDocForm(type,prefill=null){
         </select>
       </div>
     </div>
-    <div class="form-group"><label>Notes</label><textarea id="${type}Notes" placeholder="Payment terms, scope details...">${prefill?prefill.notes||'':''}</textarea></div>
+    <div class="form-group"><label>Notes</label><textarea id="${type}Notes" placeholder="Payment terms, notes...">${prefill?prefill.notes||'':''}</textarea></div>
     <div class="detail-section" style="margin-bottom:1rem">
       <div class="detail-row"><span>Subtotal</span><span id="${type}SubAmt">$0.00</span></div>
       <div class="detail-row"><span>HST (13%)</span><span id="${type}HSTAmt">$0.00</span></div>
-      <div class="detail-row"><span>Deposit</span><span id="${type}DepAmt">$0.00</span></div>
+      ${!isEst?`<div class="detail-row"><span>Deposit Received</span><span id="${type}DepShow">$0.00</span></div>`:''}
       <div class="detail-row"><span style="font-weight:700;color:var(--white)">${isEst?'Estimated Total':'Balance Owing'}</span><span id="${type}BalAmt" style="color:var(--red);font-weight:800">$0.00</span></div>
     </div>
     <button class="btn btn-primary" onclick="saveDoc('${type}')">💾 Save ${isEst?'Estimate':'Invoice'}</button>
     <button class="btn btn-secondary" onclick="printDocForm('${type}')">🖨️ Print / PDF</button>
-    <button class="btn btn-blue" onclick="emailDocForm('${type}')">📧 Send via Email</button>
-  `;
-
+    <button class="btn btn-blue" onclick="emailDocForm('${type}')">📧 Send via Email</button>`;
   populateClientSelect(type+'Client');
-
   const items=prefill&&prefill.items?JSON.parse(prefill.items||'[]'):[];
-  if(items.length){
-    items.forEach(it=>{
-      docLineCount++;
-      const d=document.createElement('div');
-      d.className='form-row';
-      d.innerHTML=`<div class="form-group" style="flex:2"><label>Description</label><input type="text" id="${type}ld${docLineCount}" value="${it.desc||''}" oninput="calcDocTotals('${type}')"/></div><div class="form-group"><label>Amount ($)</label><input type="number" id="${type}la${docLineCount}" value="${it.amt||''}" oninput="calcDocTotals('${type}')"/></div>`;
-      document.getElementById(type+'Lines').appendChild(d);
-    });
-  } else {
-    addDocLine(type);
-  }
-
-  if(prefill&&prefill.client_id){
-    const sel=document.getElementById(type+'Client');
-    if(sel)sel.value=prefill.client_id;
-  }
+  if(items.length){items.forEach(it=>{docLineCount++;const d=document.createElement('div');d.className='form-row';d.innerHTML=`<div class="form-group" style="flex:2"><label>Description</label><input type="text" id="${type}ld${docLineCount}" value="${it.desc||''}" oninput="calcDocTotals('${type}')"/></div><div class="form-group"><label>Amount ($)</label><input type="number" id="${type}la${docLineCount}" value="${it.amt||''}" oninput="calcDocTotals('${type}')"/></div>`;document.getElementById(type+'Lines').appendChild(d);});}
+  else addDocLine(type);
+  if(prefill&&prefill.client_id){const sel=document.getElementById(type+'Client');if(sel)sel.value=prefill.client_id;}
   calcDocTotals(type);
+  setTimeout(fixDateInputs,200);
 }
 
 function addDocLine(type){
   docLineCount++;
-  const d=document.createElement('div');
-  d.className='form-row';
+  const d=document.createElement('div');d.className='form-row';
   d.innerHTML=`<div class="form-group" style="flex:2"><label>Description</label><input type="text" id="${type}ld${docLineCount}" placeholder="e.g. Labour" oninput="calcDocTotals('${type}')"/></div><div class="form-group"><label>Amount ($)</label><input type="number" id="${type}la${docLineCount}" placeholder="0.00" oninput="calcDocTotals('${type}')"/></div>`;
   document.getElementById(type+'Lines').appendChild(d);
+  setTimeout(fixDateInputs,100);
 }
 
 function fillDocClient(type){
   const id=document.getElementById(type+'Client').value;
   const c=clients.find(cl=>cl.id==id);
-  if(!c) return;
+  if(!c)return;
   const descEl=document.getElementById(type+'Desc');
-  if(descEl&&c.service) descEl.value=c.service;
+  if(descEl&&c.service)descEl.value=c.service;
 }
 
 function getDocData(type){
   let sub=0,items=[];
-  for(let i=1;i<=docLineCount+10;i++){
+  for(let i=1;i<=docLineCount+20;i++){
     const d=document.getElementById(type+'ld'+i);
     const a=document.getElementById(type+'la'+i);
     if(d&&a){const amt=parseFloat(a.value)||0;items.push({desc:d.value,amt});sub+=amt;}
   }
   const hstEl=document.getElementById(type+'HST');
   const hst=hstEl&&hstEl.value==='yes'?sub*0.13:0;
-  const dep=parseFloat((document.getElementById(type+'Dep')||{}).value)||0;
+  const depEl=document.getElementById(type+'DepAmt');
+  const dep=depEl?parseFloat(depEl.value)||0:0;
+  const depDateEl=document.getElementById(type+'DepDate');
   const clientId=(document.getElementById(type+'Client')||{}).value||null;
   const client=clients.find(c=>c.id==clientId);
-  return{sub,items,hst,dep,total:sub+hst,balance:sub+hst-dep,
+  return{sub,items,hst,dep,depDate:depDateEl?depDateEl.value||null:null,total:sub+hst,balance:sub+hst-dep,
     number:(document.getElementById(type+'Num')||{}).value||'',
     date:(document.getElementById(type+'Date')||{}).value||'',
     due:(document.getElementById(type+'Due')||{}).value||'',
     desc:(document.getElementById(type+'Desc')||{}).value||'',
     notes:(document.getElementById(type+'Notes')||{}).value||'',
-    hstInclude:hstEl?hstEl.value:'yes',
-    clientId,client};
+    hstInclude:hstEl?hstEl.value:'yes',clientId,client};
 }
 
 function calcDocTotals(type){
@@ -814,176 +833,426 @@ function calcDocTotals(type){
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   set(type+'SubAmt',fmtMoney(d.sub));
   set(type+'HSTAmt',fmtMoney(d.hst));
-  set(type+'DepAmt',fmtMoney(d.dep));
+  set(type+'DepShow',fmtMoney(d.dep));
   set(type+'BalAmt',fmtMoney(d.balance));
 }
 
 async function saveDoc(type){
   const d=getDocData(type);
   const isEst=type==='estimate';
-  const payload={
-    client_id:d.clientId||null,
-    number:d.number,date:d.date||null,
-    valid_until:isEst?null:d.due||null,
-    description:d.desc,
-    items:JSON.stringify(d.items),
-    subtotal:d.sub,hst:d.hst,deposit:d.dep,
-    total:d.total,balance:d.balance,
-    notes:d.notes,include_hst:d.hstInclude
-  };
+  const payload={client_id:d.clientId?parseInt(d.clientId):null,number:d.number,date:d.date||null,valid_until:isEst?null:d.due||null,description:d.desc,items:JSON.stringify(d.items),subtotal:d.sub,hst:d.hst,deposit:d.dep,deposit_received:d.dep,deposit_date:d.depDate||null,total:d.total,balance:d.balance,notes:d.notes,include_hst:d.hstInclude};
   const tbl=isEst?'estimates':'invoices';
-  if(editingDocId&&editingDocType===type){
-    await sb.from(tbl).update(payload).eq('id',editingDocId);
-    editingDocId=null;editingDocType=null;
-    alert((isEst?'Estimate':'Invoice')+' updated!');
-  } else {
-    await sb.from(tbl).insert(payload);    alert((isEst?'Estimate':'Invoice')+' saved!');
-  }
-  await loadAll();
+  try{
+    if(editingDocId){
+      const res=await sb.from(tbl).update(payload).eq('id',editingDocId);
+      if(res.error)throw res.error;
+      editingDocId=null;alert((isEst?'Estimate':'Invoice')+' updated!');
+    } else {
+      const res=await sb.from(tbl).insert(payload);
+      if(res.error)throw res.error;
+      alert((isEst?'Estimate':'Invoice')+' saved!');
+    }
+    await loadAll();showPage('Invoices');
+  }catch(err){alert('Error: '+err.message);}
 }
 
+// CONTRACT FORM
+function initContractForm(prefill=null){
+  const num=prefill?prefill.number:genNum(contracts,'CON-');
+  document.getElementById('conForm').innerHTML=`
+    <div class="form-group"><label>Client</label><select id="conClient"><option value="">Select client...</option></select></div>
+    <div class="form-group"><label>Contract #</label><input type="text" id="conNum" value="${num}"/></div>
+    <div class="form-row">
+      <div class="form-group"><label>Date</label><input type="date" id="conDate" value="${prefill?prefill.date||today():today()}"/></div>
+      <div class="form-group"><label>Start Date</label><input type="date" id="conStart" value="${prefill?prefill.start_date||'':''}"/></div>
+    </div>
+    <div class="form-group"><label>Estimated End Date</label><input type="date" id="conEnd" value="${prefill?prefill.end_date||'':''}"/></div>
+    <div class="form-group"><label>Scope of Work</label><textarea id="conScope" placeholder="Detailed description of all work to be completed..." style="min-height:150px">${prefill?prefill.scope||'':''}</textarea></div>
+    <div class="section-title">Payment Schedule</div>
+    <div class="form-row">
+      <div class="form-group"><label>Deposit Amount ($)</label><input type="number" id="conDep" placeholder="0.00" value="${prefill?prefill.deposit_amount||'':''}" oninput="calcConTotal()"/></div>
+      <div class="form-group"><label>Due On</label><input type="date" id="conDepDue" value="${prefill?prefill.deposit_due||'':''}"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Progress Payment ($)</label><input type="number" id="conProg" placeholder="0.00" value="${prefill?prefill.progress_amount||'':''}" oninput="calcConTotal()"/></div>
+      <div class="form-group"><label>Due When</label><input type="text" id="conProgDue" placeholder="e.g. At rough-in" value="${prefill?prefill.progress_due||'':''}"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Final Payment ($)</label><input type="number" id="conFinal" placeholder="0.00" value="${prefill?prefill.final_amount||'':''}" oninput="calcConTotal()"/></div>
+      <div class="form-group"><label>Due When</label><input type="text" id="conFinalDue" placeholder="e.g. On completion" value="On completion"/></div>
+    </div>
+    <div class="detail-section" style="margin-bottom:1rem">
+      <div class="detail-row"><span style="font-weight:700;color:var(--white)">Total Contract Value</span><span id="conTotal" style="color:var(--red);font-weight:800">$0.00</span></div>
+    </div>
+    <div class="form-group"><label>Terms & Conditions</label><textarea id="conTerms" style="min-height:150px" placeholder="Payment terms, cancellation policy, warranty, change order policy...">${prefill?prefill.terms||defaultTerms():defaultTerms()}</textarea></div>
+    <div class="form-group"><label>Additional Notes</label><textarea id="conNotes" placeholder="Any other details...">${prefill?prefill.notes||'':''}</textarea></div>
+    <button class="btn btn-primary" onclick="saveContract()">💾 Save Contract</button>
+    <button class="btn btn-secondary" onclick="printContractForm()">🖨️ Print / PDF</button>
+    <button class="btn btn-blue" onclick="emailContractForm()">📧 Send via Email</button>`;
+  populateClientSelect('conClient');
+  if(prefill&&prefill.client_id){const sel=document.getElementById('conClient');if(sel)sel.value=prefill.client_id;}
+  setTimeout(fixDateInputs,200);
+}
+
+function defaultTerms(){
+  return`1. PAYMENT: Payments are due as outlined in the payment schedule. Work may be suspended if payments are not received on time.\n\n2. CHANGES: Any changes to the scope of work must be agreed upon in writing via a change order. Additional costs will apply.\n\n3. CANCELLATION: If the client cancels after work has begun, the client is responsible for all work completed to date plus 15% of the remaining contract value.\n\n4. WARRANTY: TNA Pro Build warrants all workmanship for one year from completion. Material warranties are per manufacturer.\n\n5. ACCESS: The client agrees to provide reasonable access to the property during agreed working hours.\n\n6. DELAYS: TNA Pro Build is not responsible for delays caused by material shortages, weather, or client-requested changes.`;
+}
+
+function calcConTotal(){
+  const dep=parseFloat(document.getElementById('conDep').value)||0;
+  const prog=parseFloat(document.getElementById('conProg').value)||0;
+  const fin=parseFloat(document.getElementById('conFinal').value)||0;
+  document.getElementById('conTotal').textContent=fmtMoney(dep+prog+fin);
+}
+
+async function saveContract(){
+  const clientId=document.getElementById('conClient').value||null;
+  const dep=parseFloat(document.getElementById('conDep').value)||0;
+  const prog=parseFloat(document.getElementById('conProg').value)||0;
+  const fin=parseFloat(document.getElementById('conFinal').value)||0;
+  const payload={
+    client_id:clientId?parseInt(clientId):null,
+    number:document.getElementById('conNum').value,
+    date:document.getElementById('conDate').value||null,
+    start_date:document.getElementById('conStart').value||null,
+    end_date:document.getElementById('conEnd').value||null,
+    scope:document.getElementById('conScope').value,
+    deposit_amount:dep,deposit_due:document.getElementById('conDepDue').value||null,
+    progress_amount:prog,progress_due:document.getElementById('conProgDue').value,
+    final_amount:fin,
+    total:dep+prog+fin,
+    terms:document.getElementById('conTerms').value,
+    notes:document.getElementById('conNotes').value,
+    status:'unsigned'
+  };
+  try{
+    if(editingDocId){
+      const res=await sb.from('contracts').update(payload).eq('id',editingDocId);
+      if(res.error)throw res.error;
+      editingDocId=null;alert('Contract updated!');
+    } else {
+      const res=await sb.from('contracts').insert(payload);
+      if(res.error)throw res.error;
+      alert('Contract saved!');
+    }
+    await loadAll();showPage('Invoices');
+  }catch(err){alert('Error: '+err.message);}
+}
+
+// DOC PAPER BUILDERS
 function buildDocPaper(doc,type,client){
   const isEst=type==='estimate';
   const items=typeof doc.items==='string'?JSON.parse(doc.items||'[]'):doc.items||[];
+  const isPaid=!!doc.paid_date;
   return`<div class="doc-paper">
     <div class="doc-top">
-      <img src="${CO.logo}" class="doc-logo" alt="TNA Pro Build"/>
-      <div><div class="doc-type-label">${isEst?'ESTIMATE':'INVOICE'}</div><div class="doc-type-sub">${doc.number||''}</div></div>
+      <img src="${CO.logo}" class="doc-logo" onerror="this.style.display='none'" alt="TNA Pro Build"/>
+      <div>${isPaid?'<div class="doc-stamp">PAID</div>':''}<div class="doc-type-label">${isEst?'ESTIMATE':'INVOICE'}</div><div class="doc-type-sub">${doc.number||''}</div></div>
     </div>
     <hr class="doc-divider"/>
     <div class="doc-meta">
       <div class="doc-meta-block"><strong>From</strong><p><strong>${CO.name}</strong><br>${CO.addr}<br>${CO.city}<br>${CO.phone}<br>${CO.email}${!isEst?`<br><small>${CO.hst}</small>`:''}</p></div>
       <div class="doc-meta-block"><strong>Bill To</strong><p>${client?`<strong>${client.name}</strong><br>${client.phone||''}<br>${client.email||''}<br>${client.address||''}`:'—'}</p>
-      <div style="margin-top:.75rem"><strong>${isEst?'Project Date':'Invoice Date'}</strong><p>${fmtDate(doc.date)}</p></div>
-      ${!isEst&&doc.valid_until?`<div style="margin-top:.5rem"><strong>Due Date</strong><p>${fmtDate(doc.valid_until)}</p></div>`:''}
+        <div style="margin-top:.75rem"><strong>${isEst?'Project Date':'Invoice Date'}</strong><p>${fmtDate(doc.date)}</p></div>
+        ${!isEst&&doc.valid_until?`<div style="margin-top:.5rem"><strong>Due Date</strong><p>${fmtDate(doc.valid_until)}</p></div>`:''}
       </div>
     </div>
-    <div class="form-group"><p style="font-size:.85rem;color:#444;font-weight:600">${doc.description||''}</p></div>
+    ${doc.description?`<div class="doc-section"><p style="font-weight:600;color:#333">${doc.description}</p></div>`:''}
     <table class="doc-table"><thead><tr><th>Description</th><th>Amount</th></tr></thead><tbody>
     ${items.map(it=>`<tr><td>${it.desc||''}</td><td>${fmtMoney(it.amt)}</td></tr>`).join('')}
     </tbody></table>
     <div class="doc-totals">
       <div class="doc-total-row"><span>Subtotal</span><span>${fmtMoney(doc.subtotal)}</span></div>
       ${parseFloat(doc.hst)>0?`<div class="doc-total-row"><span>HST (13%)</span><span>${fmtMoney(doc.hst)}</span></div>`:''}
-      ${parseFloat(doc.deposit)>0?`<div class="doc-total-row"><span>Deposit Paid</span><span>(${fmtMoney(doc.deposit)})</span></div>`:''}
-      <div class="doc-total-row grand"><span>${isEst?'Estimated Total':'Balance Owing'}</span><span>${fmtMoney(doc.balance)}</span></div>
+      ${parseFloat(doc.deposit_received)>0?`<div class="doc-total-row paid-row"><span>✅ Deposit Received ${doc.deposit_date?'('+fmtDate(doc.deposit_date)+')':''}</span><span>(${fmtMoney(doc.deposit_received)})</span></div>`:''}
+      ${isPaid?`<div class="doc-total-row paid-row"><span>✅ Paid in Full (${fmtDate(doc.paid_date)})</span><span>${doc.payment_method||''}</span></div>`:''}
+      <div class="doc-total-row grand"><span>${isEst?'Estimated Total':isPaid?'Total Paid':'Balance Owing'}</span><span>${isEst?fmtMoney(doc.total):isPaid?fmtMoney(doc.total):fmtMoney(doc.balance)}</span></div>
     </div>
     ${doc.notes?`<p style="margin-top:1rem;font-size:.82rem;color:#555">${doc.notes}</p>`:''}
-    <div class="doc-footer">Thank you for choosing TNA Pro Build — Quality. Care. Trust.<br>${CO.phone} • ${CO.email}${!isEst?`<div class="doc-hst">${CO.hst}</div>`:''}</div>
+    <div class="doc-footer">Thank you for choosing TNA Pro Build — Quality. Care. Trust.<br>${CO.phone} • ${CO.email}${!isEst?`<br><small>${CO.hst}</small>`:''}</div>
   </div>`;
 }
 
-function printDocForm(type){
-  const d=getDocData(type);
-  const doc={number:d.number,date:d.date,valid_until:d.due,description:d.desc,items:d.items,subtotal:d.sub,hst:d.hst,deposit:d.dep,total:d.total,balance:d.balance,notes:d.notes};
-  document.getElementById('printArea').innerHTML=buildDocPaper(doc,type,d.client);
-  window.print();
-}
-
-function emailDocForm(type){
-  const d=getDocData(type);
-  const isEst=type==='estimate';
-  const doc={number:d.number,date:d.date,valid_until:d.due,description:d.desc,items:d.items,subtotal:d.sub,hst:d.hst,deposit:d.dep,total:d.total,balance:d.balance,notes:d.notes};
-  const link=buildEmailLink(doc,type,d.client);
-  window.open(link,'_self');
+function buildContractPaper(con,client){
+  return`<div class="doc-paper">
+    <div class="doc-top">
+      <img src="${CO.logo}" class="doc-logo" onerror="this.style.display='none'" alt="TNA Pro Build"/>
+      <div>${con.status==='signed'?'<div class="doc-stamp">SIGNED</div>':''}<div class="doc-type-label">CONTRACT</div><div class="doc-type-sub">${con.number||''}</div></div>
+    </div>
+    <hr class="doc-divider"/>
+    <div class="doc-meta">
+      <div class="doc-meta-block"><strong>Contractor</strong><p><strong>${CO.name}</strong><br>${CO.addr}<br>${CO.city}<br>${CO.phone}<br>${CO.email}</p></div>
+      <div class="doc-meta-block"><strong>Client</strong><p>${client?`<strong>${client.name}</strong><br>${client.phone||''}<br>${client.email||''}<br>${client.address||''}`:'—'}</p>
+        <div style="margin-top:.75rem"><strong>Contract Date</strong><p>${fmtDate(con.date)}</p></div>
+      </div>
+    </div>
+    <div class="doc-meta">
+      <div class="doc-meta-block"><strong>Project Start</strong><p>${fmtDate(con.start_date)}</p></div>
+      <div class="doc-meta-block"><strong>Est. Completion</strong><p>${fmtDate(con.end_date)}</p></div>
+    </div>
+    <hr class="doc-divider"/>
+    <div class="doc-section"><h3>Scope of Work</h3><p>${con.scope||''}</p></div>
+    <div class="doc-section">
+      <h3>Payment Schedule</h3>
+      ${con.deposit_amount>0?`<div class="doc-payment-row"><span>Deposit (${fmtMoney(con.deposit_amount)})</span><span>Due: ${fmtDate(con.deposit_due)}</span></div>`:''}
+      ${con.progress_amount>0?`<div class="doc-payment-row"><span>Progress Payment (${fmtMoney(con.progress_amount)})</span><span>Due: ${con.progress_due||''}</span></div>`:''}
+      ${con.final_amount>0?`<div class="doc-payment-row"><span>Final Payment (${fmtMoney(con.final_amount)})</span><span>Due: On Completion</span></div>`:''}
+      <div class="doc-payment-row" style="font-weight:700;border-top:2px solid #cc2222;margin-top:.5rem;color:#cc2222"><span>Total Contract Value</span><span>${fmtMoney(con.total)}</span></div>
+    </div>
+    <div class="doc-section"><h3>Terms & Conditions</h3><p>${con.terms||''}</p></div>
+    ${con.notes?`<div class="doc-section"><h3>Additional Notes</h3><p>${con.notes}</p></div>`:''}
+    <div class="doc-sig-area">
+      <div class="doc-sig-box">
+        <p style="margin-bottom:.5rem;font-size:.85rem;color:#333"><strong>TNA Pro Build</strong></p>
+        <p style="font-size:.8rem;color:#666">Authorized Signature & Date</p>
+      </div>
+      <div class="doc-sig-box">
+        ${con.signature?`<img src="${con.signature}" class="doc-sig-img"/><br>`:''}
+        <p style="font-size:.85rem;color:#333"><strong>${con.signed_by||'Client Signature'}</strong></p>
+        <p style="font-size:.8rem;color:#666">${con.signed_date?fmtDate(con.signed_date):'Date'}</p>
+      </div>
+    </div>
+    <div class="doc-footer">TNA Pro Build • ${CO.addr}, ${CO.city} • ${CO.phone} • ${CO.email}</div>
+  </div>`;
 }
 
 function openDocView(id,type){
-  const arr=type==='estimate'?estimates:invoices;
+  const arr=type==='estimate'?estimates:type==='invoice'?invoices:contracts;
   const doc=arr.find(d=>d.id==id);if(!doc)return;
   currentViewDoc=doc;currentViewType=type;
   const client=clients.find(c=>c.id==doc.client_id);
-  document.getElementById('docViewTitle').textContent=type==='estimate'?`Estimate ${doc.number}`:`Invoice ${doc.number}`;
-  document.getElementById('docViewContent').innerHTML=buildDocPaper(doc,type,client);
-  document.getElementById('dupToInvBtn').style.display=type==='estimate'?'flex':'none';
+  document.getElementById('docViewTitle').textContent=`${type==='estimate'?'Estimate':type==='invoice'?'Invoice':'Contract'} ${doc.number||''}`;
+  document.getElementById('docViewContent').innerHTML=type==='contract'?buildContractPaper(doc,client):buildDocPaper(doc,type,client);
+
+  const actions=document.getElementById('docViewActions');
+  actions.innerHTML='';
+  const addBtn=(label,cls,fn)=>{const b=document.createElement('button');b.className=`btn ${cls}`;b.textContent=label;b.onclick=fn;actions.appendChild(b);};
+
+  addBtn('🖨️ Print / Save PDF','btn-secondary',printCurrentDoc);
+  addBtn('📧 Send via Email','btn-blue',emailCurrentDoc);
+  addBtn('✏️ Edit','btn-orange',editCurrentDoc);
+
+  if(type==='estimate'){
+    addBtn('📄 Duplicate as Invoice','btn-success',duplicateToInvoice);
+    addBtn('📋 Create Contract from Estimate','btn-purple',()=>createContractFromEstimate(doc,client));
+  }
+  if(type==='invoice'&&!doc.paid_date){
+    addBtn('💰 Record Payment','btn-success',()=>{
+      document.getElementById('payDate').value=today();
+      document.getElementById('payAmount').value=doc.balance||'';
+      openModal('paymentModal');
+    });
+  }
+  if(type==='contract'&&doc.status!=='signed'){
+    addBtn('✍️ Get Client Signature','btn-purple',openSignModal);
+  }
   openModal('docViewModal');
 }
 
 function printCurrentDoc(){
   if(!currentViewDoc)return;
-  const client=clients.find(c=>c.id===currentViewDoc.client_id);
-  document.getElementById('printArea').innerHTML=buildDocPaper(currentViewDoc,currentViewType,client);
+  const client=clients.find(c=>c.id==currentViewDoc.client_id);
+  document.getElementById('printArea').innerHTML=currentViewType==='contract'?buildContractPaper(currentViewDoc,client):buildDocPaper(currentViewDoc,currentViewType,client);
   window.print();
 }
 
-function buildEmailLink(doc, type, client){
-  const isEst=type==='estimate';
-  const items=typeof doc.items==='string'?JSON.parse(doc.items||'[]'):doc.items||[];
+function printDocForm(type){
+  const d=getDocData(type);
+  const doc={number:d.number,date:d.date,valid_until:d.due,description:d.desc,items:d.items,subtotal:d.sub,hst:d.hst,deposit_received:d.dep,deposit_date:d.depDate,total:d.total,balance:d.balance,notes:d.notes};
+  document.getElementById('printArea').innerHTML=buildDocPaper(doc,type,d.client);
+  window.print();
+}
+
+function printContractForm(){
+  const clientId=document.getElementById('conClient').value;
+  const client=clients.find(c=>c.id==clientId);
+  const dep=parseFloat(document.getElementById('conDep').value)||0;
+  const prog=parseFloat(document.getElementById('conProg').value)||0;
+  const fin=parseFloat(document.getElementById('conFinal').value)||0;
+  const con={number:document.getElementById('conNum').value,date:document.getElementById('conDate').value,start_date:document.getElementById('conStart').value,end_date:document.getElementById('conEnd').value,scope:document.getElementById('conScope').value,deposit_amount:dep,deposit_due:document.getElementById('conDepDue').value,progress_amount:prog,progress_due:document.getElementById('conProgDue').value,final_amount:fin,total:dep+prog+fin,terms:document.getElementById('conTerms').value,notes:document.getElementById('conNotes').value,status:'unsigned'};
+  document.getElementById('printArea').innerHTML=buildContractPaper(con,client);
+  window.print();
+}
+
+function buildEmailLink(doc,type,client){
+  const isEst=type==='estimate';const isCon=type==='contract';
+  const items=!isCon?(typeof doc.items==='string'?JSON.parse(doc.items||'[]'):doc.items||[]):[];
   const to=client?client.email||'':'';
-  const subj=encodeURIComponent(`TNA Pro Build — ${isEst?'Estimate':'Invoice'} ${doc.number||''}`);
-  const body=encodeURIComponent(
-    `Hi ${client?client.name:''},\n\n`+
-    `Please find your ${isEst?'estimate':'invoice'} details below.\n\n`+
-    `Job: ${doc.description||''}\n`+
-    items.map(i=>`${i.desc}: ${fmtMoney(i.amt)}`).join('\n')+'\n\n'+
-    `Subtotal: ${fmtMoney(doc.subtotal)}`+
-    (parseFloat(doc.hst)>0?`\nHST (13%): ${fmtMoney(doc.hst)}`:'')+
-    (parseFloat(doc.deposit)>0?`\nDeposit: ${fmtMoney(doc.deposit)}`:'')+
-    `\n${isEst?'Estimated Total':'Balance Owing'}: ${fmtMoney(doc.balance)}\n\n`+
-    (doc.notes?doc.notes+'\n\n':'')+
-    `Thank you for choosing TNA Pro Build.\nQuality. Care. Trust.\n${CO.phone}`
-  );
-  return `mailto:${to}?subject=${subj}&body=${body}`;
+  const subj=encodeURIComponent(`TNA Pro Build — ${isCon?'Contract':isEst?'Estimate':'Invoice'} ${doc.number||''}`);
+  let body='';
+  if(isCon){
+    body=encodeURIComponent(`Hi ${client?client.name:''},\n\nPlease find your contract details below.\n\nContract #: ${doc.number||''}\nProject Start: ${fmtDate(doc.start_date)}\nEst. Completion: ${fmtDate(doc.end_date)}\n\nScope of Work:\n${doc.scope||''}\n\nPayment Schedule:\n${doc.deposit_amount>0?'Deposit: '+fmtMoney(doc.deposit_amount)+' due '+fmtDate(doc.deposit_due)+'\n':''}${doc.progress_amount>0?'Progress Payment: '+fmtMoney(doc.progress_amount)+' due '+doc.progress_due+'\n':''}${doc.final_amount>0?'Final Payment: '+fmtMoney(doc.final_amount)+' on completion\n':''}\nTotal Contract Value: ${fmtMoney(doc.total)}\n\nPlease review and contact us with any questions.\n\nThank you for choosing TNA Pro Build.\nQuality. Care. Trust.\n${CO.phone}`);
+  } else {
+    body=encodeURIComponent(`Hi ${client?client.name:''},\n\nPlease find your ${isEst?'estimate':'invoice'} below.\n\nJob: ${doc.description||''}\n${items.map(i=>i.desc+': '+fmtMoney(i.amt)).join('\n')}\n\nSubtotal: ${fmtMoney(doc.subtotal)}${parseFloat(doc.hst)>0?'\nHST (13%): '+fmtMoney(doc.hst):''}${parseFloat(doc.deposit_received)>0?'\nDeposit Received: '+fmtMoney(doc.deposit_received):''}\n${isEst?'Estimated Total':'Balance Owing'}: ${fmtMoney(isEst?doc.total:doc.balance)}\n\n${doc.notes||''}\n\nThank you for choosing TNA Pro Build.\nQuality. Care. Trust.\n${CO.phone}`);
+  }
+  return`mailto:${to}?subject=${subj}&body=${body}`;
 }
 
 function emailCurrentDoc(){
   if(!currentViewDoc)return;
   const client=clients.find(c=>c.id==currentViewDoc.client_id);
-  const link=buildEmailLink(currentViewDoc,currentViewType,client);
-  window.open(link,'_self');
+  window.location.href=buildEmailLink(currentViewDoc,currentViewType,client);
+}
+
+function emailDocForm(type){
+  const d=getDocData(type);
+  const doc={number:d.number,date:d.date,description:d.desc,items:d.items,subtotal:d.sub,hst:d.hst,deposit_received:d.dep,total:d.total,balance:d.balance,notes:d.notes};
+  window.location.href=buildEmailLink(doc,type,d.client);
+}
+
+function emailContractForm(){
+  const clientId=document.getElementById('conClient').value;
+  const client=clients.find(c=>c.id==clientId);
+  const dep=parseFloat(document.getElementById('conDep').value)||0;
+  const prog=parseFloat(document.getElementById('conProg').value)||0;
+  const fin=parseFloat(document.getElementById('conFinal').value)||0;
+  const con={number:document.getElementById('conNum').value,start_date:document.getElementById('conStart').value,end_date:document.getElementById('conEnd').value,scope:document.getElementById('conScope').value,deposit_amount:dep,deposit_due:document.getElementById('conDepDue').value,progress_amount:prog,progress_due:document.getElementById('conProgDue').value,final_amount:fin,total:dep+prog+fin};
+  window.location.href=buildEmailLink(con,'contract',client);
 }
 
 function editCurrentDoc(){
   if(!currentViewDoc)return;
   const type=currentViewType;
   editingDocId=currentViewDoc.id;
-  editingDocType=type;
   closeModal('docViewModal');
-  showPage('Invoices');
   setTimeout(()=>{
-    showDocForm(type);
-    setTimeout(()=>initDocForm(type,currentViewDoc),100);
-  },100);
+    showPage('Invoices');
+    setTimeout(()=>{
+      showDocForm(type);
+      setTimeout(()=>{
+        if(type==='contract')initContractForm(currentViewDoc);
+        else initDocForm(type,currentViewDoc);
+      },150);
+    },150);
+  },300);
 }
 
 async function duplicateToInvoice(){
   if(!currentViewDoc||currentViewType!=='estimate')return;
   if(!confirm('Duplicate this estimate as a new invoice? The original estimate will be kept.'))return;
   const est=currentViewDoc;
-  const newNum=genNum(invoices,'INV-');
-  const payload={
-    client_id:est.client_id,number:newNum,
-    date:today(),valid_until:null,
-    description:est.description,items:est.items,
-    subtotal:est.subtotal,hst:est.hst,deposit:est.deposit,
-    total:est.total,balance:est.balance,
-    notes:est.notes,include_hst:est.include_hst
-  };
+  const payload={client_id:est.client_id,number:genNum(invoices,'INV-'),date:today(),valid_until:null,description:est.description,items:est.items,subtotal:est.subtotal,hst:est.hst,deposit:0,deposit_received:0,total:est.total,balance:est.total,notes:est.notes,include_hst:est.include_hst};
   const res=await sb.from('invoices').insert(payload).select();
   await loadAll();
-  alert('Invoice '+newNum+' created! Original estimate kept.');
+  alert('Invoice created! Original estimate kept.');
   closeModal('docViewModal');
   if(res.data&&res.data[0])openDocView(res.data[0].id,'invoice');
 }
 
-function renderInvoices(){
-  populateClientSelect('estimateClient');
-  populateClientSelect('invoiceClient');
+function createContractFromEstimate(est,client){
+  closeModal('docViewModal');
+  setTimeout(()=>{
+    showPage('Invoices');
+    setTimeout(()=>{
+      showDocForm('contract');
+      setTimeout(()=>{
+        initContractForm({
+          number:genNum(contracts,'CON-'),
+          date:today(),
+          client_id:est.client_id,
+          scope:est.description||'',
+          deposit_amount:Math.round(est.total*0.25*100)/100,
+          final_amount:Math.round(est.total*0.75*100)/100,
+          total:est.total,
+          terms:defaultTerms()
+        });
+        const sel=document.getElementById('conClient');
+        if(sel&&est.client_id)sel.value=est.client_id;
+        calcConTotal();
+      },150);
+    },150);
+  },300);
+}
+
+// PAYMENT
+async function savePayment(){
+  if(!currentViewDoc)return;
+  const type=document.getElementById('payType').value;
+  const amount=parseFloat(document.getElementById('payAmount').value)||0;
+  const date=document.getElementById('payDate').value;
+  const method=document.getElementById('payMethod').value;
+  let payload={};
+  if(type==='deposit'){
+    payload={deposit_received:amount,deposit_date:date,balance:(parseFloat(currentViewDoc.total)||0)-amount};
+  } else {
+    payload={paid_date:date,payment_method:method,balance:0};
+  }
+  try{
+    const res=await sb.from('invoices').update(payload).eq('id',currentViewDoc.id);
+    if(res.error)throw res.error;
+    await loadAll();
+    closeModal('paymentModal');
+    closeModal('docViewModal');
+    alert(type==='deposit'?'Deposit recorded!':'Invoice marked as paid!');
+  }catch(err){alert('Error: '+err.message);}
+}
+
+// SIGNATURE
+function openSignModal(){
+  document.getElementById('sigDate').value=today();
+  document.getElementById('sigName').value='';
+  openModal('signModal');
+  setTimeout(initSigPad,200);
+}
+
+function initSigPad(){
+  const canvas=document.getElementById('sigPad');
+  if(!canvas)return;
+  sigCanvas=canvas;
+  sigCtx=canvas.getContext('2d');
+  sigCtx.strokeStyle='#000';sigCtx.lineWidth=2;sigCtx.lineCap='round';
+  canvas.addEventListener('touchstart',sigStart,{passive:false});
+  canvas.addEventListener('touchmove',sigMove,{passive:false});
+  canvas.addEventListener('touchend',()=>sigDrawing=false);
+  canvas.addEventListener('mousedown',e=>{sigDrawing=true;const r=canvas.getBoundingClientRect();sigCtx.beginPath();sigCtx.moveTo((e.clientX-r.left)*canvas.width/r.width,(e.clientY-r.top)*canvas.height/r.height);});
+  canvas.addEventListener('mousemove',e=>{if(!sigDrawing)return;const r=canvas.getBoundingClientRect();sigCtx.lineTo((e.clientX-r.left)*canvas.width/r.width,(e.clientY-r.top)*canvas.height/r.height);sigCtx.stroke();});
+  canvas.addEventListener('mouseup',()=>sigDrawing=false);
+}
+
+function sigStart(e){e.preventDefault();sigDrawing=true;const t=e.touches[0];const r=sigCanvas.getBoundingClientRect();sigCtx.beginPath();sigCtx.moveTo((t.clientX-r.left)*sigCanvas.width/r.width,(t.clientY-r.top)*sigCanvas.height/r.height);}
+function sigMove(e){e.preventDefault();if(!sigDrawing)return;const t=e.touches[0];const r=sigCanvas.getBoundingClientRect();sigCtx.lineTo((t.clientX-r.left)*sigCanvas.width/r.width,(t.clientY-r.top)*sigCanvas.height/r.height);sigCtx.stroke();}
+function clearSig(){if(sigCtx)sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height);}
+
+async function saveSig(){
+  if(!currentViewDoc||currentViewType!=='contract')return;
+  const sigData=sigCanvas.toDataURL();
+  const name=document.getElementById('sigName').value;
+  const date=document.getElementById('sigDate').value;
+  try{
+    const res=await sb.from('contracts').update({signature:sigData,signed_by:name,signed_date:date,status:'signed'}).eq('id',currentViewDoc.id);
+    if(res.error)throw res.error;
+    await loadAll();
+    closeModal('signModal');
+    closeModal('docViewModal');
+    alert('Contract signed and saved!');
+  }catch(err){alert('Error: '+err.message);}
+}
+
+function renderDocs(){
+  populateClientSelect('conClient');
   document.getElementById('invoicesList').innerHTML=invoices.length?invoices.map(inv=>{
-    const c=clients.find(cl=>cl.id===inv.client_id);
+    const c=clients.find(cl=>cl.id==inv.client_id);
     return`<div class="list-item" onclick="openDocView(${inv.id},'invoice')">
-      <div class="list-item-left"><h4>${inv.number}<span class="tag tag-inv">INV</span></h4><p>${inv.description||''} • ${fmtDate(inv.date)}</p></div>
+      <div class="list-item-left"><h4>${inv.number}<span class="tag tag-inv">INV</span>${inv.paid_date?'<span class="tag tag-paid">PAID</span>':'<span class="tag tag-unpaid">UNPAID</span>'}</h4><p>${inv.description||''} • ${fmtDate(inv.date)}</p></div>
       <div class="list-item-right"><strong class="amount-green">${fmtMoney(inv.total)}</strong><span>${c?c.name:'—'}</span></div>
     </div>`;
   }).join(''):'<div class="empty-state"><span>🧾</span><p>No invoices yet</p></div>';
 
   document.getElementById('estimatesList').innerHTML=estimates.length?estimates.map(est=>{
-    const c=clients.find(cl=>cl.id===est.client_id);
+    const c=clients.find(cl=>cl.id==est.client_id);
     return`<div class="list-item" onclick="openDocView(${est.id},'estimate')">
       <div class="list-item-left"><h4>${est.number}<span class="tag tag-est">EST</span></h4><p>${est.description||''} • ${fmtDate(est.date)}</p></div>
       <div class="list-item-right"><strong>${fmtMoney(est.total)}</strong><span>${c?c.name:'—'}</span></div>
     </div>`;
   }).join(''):'<div class="empty-state"><span>📝</span><p>No estimates yet</p></div>';
+
+  document.getElementById('contractsList').innerHTML=contracts.length?contracts.map(con=>{
+    const c=clients.find(cl=>cl.id==con.client_id);
+    return`<div class="list-item" onclick="openDocView(${con.id},'contract')">
+      <div class="list-item-left"><h4>${con.number}<span class="tag tag-con">CONTRACT</span>${con.status==='signed'?'<span class="tag tag-paid">SIGNED</span>':'<span class="tag tag-unpaid">UNSIGNED</span>'}</h4><p>${c?c.name:'—'} • ${fmtDate(con.date)}</p></div>
+      <div class="list-item-right"><strong>${fmtMoney(con.total)}</strong></div>
+    </div>`;
+  }).join(''):'<div class="empty-state"><span>📋</span><p>No contracts yet</p></div>';
 }
 
 // EXPENSES
@@ -992,78 +1261,54 @@ function openExpModal(){
   populateClientSelect('expClient');
   openModal('expenseModal');
 }
-
 async function saveExpense(){
-  await sb.from('expenses').insert({
-    client_id:document.getElementById('expClient').value||null,
-    description:document.getElementById('expDesc').value,
-    category:document.getElementById('expCat').value,
-    amount:document.getElementById('expAmount').value||0,
-    date:document.getElementById('expDate').value||null,
-    note:document.getElementById('expNote').value
-  });
-  closeModal('expenseModal');
-  await loadAll();
+  const clientId=document.getElementById('expClient').value;
+  try{
+    const res=await sb.from('expenses').insert({client_id:clientId?parseInt(clientId):null,description:document.getElementById('expDesc').value,category:document.getElementById('expCat').value,amount:document.getElementById('expAmount').value||0,date:document.getElementById('expDate').value||null,note:document.getElementById('expNote').value});
+    if(res.error)throw res.error;
+    closeModal('expenseModal');await loadAll();
+  }catch(err){alert('Error: '+err.message);}
 }
 
 function renderExpenses(){
-  populateClientSelect('expFilter',true);
-  populateClientSelect('expClient');
+  populateClientSelect('expFilter',true);populateClientSelect('expClient');
   const filter=document.getElementById('expFilter').value;
-  const list=expenses.filter(e=>!filter||e.client_id===filter);
+  const list=expenses.filter(e=>!filter||String(e.client_id)===String(filter));
   document.getElementById('expensesList').innerHTML=list.length?list.map(e=>{
-    const c=clients.find(cl=>cl.id===e.client_id);
-    return`<div class="list-item">
-      <div class="list-item-left"><h4>${e.description||'Expense'}</h4><p>${e.category||''}${c?' — '+c.name:''} • ${e.note||''}</p></div>
-      <div class="list-item-right"><strong>${fmtMoney(e.amount)}</strong><span>${fmtDate(e.date)}</span></div>
-    </div>`;
+    const c=clients.find(cl=>cl.id==e.client_id);
+    return`<div class="list-item"><div class="list-item-left"><h4>${e.description||'Expense'}</h4><p>${e.category||''}${c?' — '+c.name:''} • ${e.note||''}</p></div><div class="list-item-right"><strong class="amount-red">${fmtMoney(e.amount)}</strong><span>${fmtDate(e.date)}</span></div></div>`;
   }).join(''):'<div class="empty-state"><span>💸</span><p>No expenses yet</p></div>';
 
   const acJobs=clients.filter(c=>c.status==='active'||c.status==='complete');
   document.getElementById('profitList').innerHTML=acJobs.length?acJobs.map(c=>{
-    const rev=invoices.filter(i=>i.client_id===c.id).reduce((s,i)=>s+(parseFloat(i.total)||0),0);
-    const exp=expenses.filter(e=>e.client_id===c.id).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
-    const profit=rev-exp;
-    const pct=rev>0?Math.min(100,Math.max(0,profit/rev*100)):0;
-    return`<div class="profit-bar">
-      <h4>${c.name} — ${c.service||''}</h4>
-      <div class="profit-bar-track"><div class="profit-bar-fill" style="width:${pct}%"></div></div>
-      <div class="profit-bar-nums"><span>Revenue: ${fmtMoney(rev)}</span><span>Expenses: ${fmtMoney(exp)}</span><strong>Profit: ${fmtMoney(profit)}</strong></div>
-    </div>`;
+    const rev=invoices.filter(i=>i.client_id==c.id&&i.paid_date).reduce((s,i)=>s+(parseFloat(i.total)||0),0);
+    const exp=expenses.filter(e=>e.client_id==c.id).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+    const profit=rev-exp;const pct=rev>0?Math.min(100,Math.max(0,profit/rev*100)):0;
+    return`<div class="profit-bar"><h4>${c.name} — ${c.service||''}</h4><div class="profit-bar-track"><div class="profit-bar-fill" style="width:${pct}%"></div></div><div class="profit-bar-nums"><span>Collected: ${fmtMoney(rev)}</span><span>Expenses: ${fmtMoney(exp)}</span><strong>Profit: ${fmtMoney(profit)}</strong></div></div>`;
   }).join(''):'<div class="empty-state"><span>📊</span><p>Profitability shows for active & complete jobs</p></div>';
 }
 
 // LOGS
-function openLogFor(id){
-  closeModal('detailModal');
-  populateClientSelect('logClient');
-  document.getElementById('logClient').value=id;
-  openModal('logModal');
-}
-
+function openLogFor(id){closeModal('detailModal');populateClientSelect('logClient');document.getElementById('logClient').value=id;openModal('logModal');}
 async function saveLog(){
-  await sb.from('logs').insert({
-    client_id:document.getElementById('logClient').value||null,
-    type:document.getElementById('logType').value,
-    notes:document.getElementById('logNotes').value,
-    follow_up:document.getElementById('logFollowUp').value||null
-  });
-  closeModal('logModal');
-  await loadAll();
-  if(currentDetailId)openDetail(currentDetailId);
+  try{
+    const res=await sb.from('logs').insert({client_id:document.getElementById('logClient').value||null,type:document.getElementById('logType').value,notes:document.getElementById('logNotes').value,follow_up:document.getElementById('logFollowUp').value||null});
+    if(res.error)throw res.error;
+    closeModal('logModal');await loadAll();
+    if(currentDetailId)openDetail(currentDetailId);
+  }catch(err){alert('Error: '+err.message);}
 }
 
 // HELPERS
 function populateClientSelect(id,includeAll=false){
   const sel=document.getElementById(id);if(!sel)return;
   const cur=sel.value;
-  sel.innerHTML=(includeAll?'<option value="">All Jobs</option>':'<option value="">Select client...</option>')+
-    clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  sel.innerHTML=(includeAll?'<option value="">All Jobs</option>':'<option value="">Select client...</option>')+clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
   if(cur)sel.value=cur;
 }
-
 function populateAllSelects(){
-  ['estimateClient','invoiceClient','expClient','expFilter','logClient'].forEach((id,i)=>populateClientSelect(id,i===3));
+  ['conClient','expClient','logClient'].forEach(id=>populateClientSelect(id));
+  populateClientSelect('expFilter',true);
 }
 </script>
 </body>
