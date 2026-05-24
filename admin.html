@@ -326,8 +326,8 @@ canvas#sigPad{width:100%;height:180px;border-radius:8px;display:block;touch-acti
 <!-- EXPENSE MODAL -->
 <div class="modal-overlay" id="expenseModal">
   <div class="modal">
-    <div class="modal-header"><h3>Add Expense</h3><button class="modal-close" onclick="closeModal('expenseModal')">×</button></div>
-    <div class="form-group"><label>Client</label><select id="expClient"></select></div>
+    <div class="modal-header"><h3 id="expModalTitle">Add Expense</h3><button class="modal-close" onclick="closeModal('expenseModal')">×</button></div>
+    <div class="form-group"><label>Client / Job</label><select id="expClient"></select></div>
     <div class="form-group"><label>Description</label><input type="text" id="expDesc" placeholder="e.g. Tile from Home Depot"/></div>
     <div class="form-group"><label>Category</label>
       <select id="expCat">
@@ -342,6 +342,7 @@ canvas#sigPad{width:100%;height:180px;border-radius:8px;display:block;touch-acti
     </div>
     <div class="form-group"><label>Receipt Note</label><input type="text" id="expNote" placeholder="Store, supplier, ref..."/></div>
     <button class="btn btn-primary" onclick="saveExpense()">💾 Save Expense</button>
+    <button class="btn btn-outline" id="expDeleteBtn" style="display:none" onclick="deleteExpense()">🗑️ Delete Expense</button>
   </div>
 </div>
 
@@ -1295,16 +1296,61 @@ function renderDocs(){
 }
 
 // EXPENSES
+let editingExpId=null;
+
 function openExpModal(){
+  editingExpId=null;
+  document.getElementById('expModalTitle').textContent='Add Expense';
+  document.getElementById('expDeleteBtn').style.display='none';
   document.getElementById('expDate').value=today();
+  document.getElementById('expDesc').value='';
+  document.getElementById('expAmount').value='';
+  document.getElementById('expNote').value='';
+  document.getElementById('expCat').value='Materials';
   populateClientSelect('expClient');
   openModal('expenseModal');
 }
+
+function openExpEdit(id){
+  const e=expenses.find(ex=>ex.id==id);if(!e)return;
+  editingExpId=id;
+  document.getElementById('expModalTitle').textContent='Edit Expense';
+  document.getElementById('expDeleteBtn').style.display='block';
+  populateClientSelect('expClient');
+  setTimeout(()=>{
+    document.getElementById('expClient').value=e.client_id||'';
+    document.getElementById('expDesc').value=e.description||'';
+    document.getElementById('expCat').value=e.category||'Materials';
+    document.getElementById('expAmount').value=e.amount||'';
+    document.getElementById('expDate').value=e.date||'';
+    document.getElementById('expNote').value=e.note||'';
+  },50);
+  openModal('expenseModal');
+}
+
 async function saveExpense(){
   const clientId=document.getElementById('expClient').value;
+  const payload={client_id:clientId?parseInt(clientId):null,description:document.getElementById('expDesc').value,category:document.getElementById('expCat').value,amount:document.getElementById('expAmount').value||0,date:document.getElementById('expDate').value||null,note:document.getElementById('expNote').value};
   try{
-    const res=await sb.from('expenses').insert({client_id:clientId?parseInt(clientId):null,description:document.getElementById('expDesc').value,category:document.getElementById('expCat').value,amount:document.getElementById('expAmount').value||0,date:document.getElementById('expDate').value||null,note:document.getElementById('expNote').value});
+    if(editingExpId){
+      const res=await sb.from('expenses').update(payload).eq('id',editingExpId);
+      if(res.error)throw res.error;
+      editingExpId=null;
+    } else {
+      const res=await sb.from('expenses').insert(payload);
+      if(res.error)throw res.error;
+    }
+    closeModal('expenseModal');await loadAll();
+  }catch(err){alert('Error: '+err.message);}
+}
+
+async function deleteExpense(){
+  if(!editingExpId)return;
+  if(!confirm('Delete this expense? This cannot be undone.'))return;
+  try{
+    const res=await sb.from('expenses').delete().eq('id',editingExpId);
     if(res.error)throw res.error;
+    editingExpId=null;
     closeModal('expenseModal');await loadAll();
   }catch(err){alert('Error: '+err.message);}
 }
@@ -1313,10 +1359,29 @@ function renderExpenses(){
   populateClientSelect('expFilter',true);populateClientSelect('expClient');
   const filter=document.getElementById('expFilter').value;
   const list=expenses.filter(e=>!filter||String(e.client_id)===String(filter));
-  document.getElementById('expensesList').innerHTML=list.length?list.map(e=>{
-    const c=clients.find(cl=>cl.id==e.client_id);
-    return`<div class="list-item"><div class="list-item-left"><h4>${e.description||'Expense'}</h4><p>${e.category||''}${c?' — '+c.name:''} • ${e.note||''}</p></div><div class="list-item-right"><strong class="amount-red">${fmtMoney(e.amount)}</strong><span>${fmtDate(e.date)}</span></div></div>`;
-  }).join(''):'<div class="empty-state"><span>💸</span><p>No expenses yet</p></div>';
+
+  // Group by client
+  const grouped={};
+  list.forEach(e=>{
+    const key=e.client_id||'none';
+    if(!grouped[key])grouped[key]=[];
+    grouped[key].push(e);
+  });
+
+  let html='';
+  Object.keys(grouped).forEach(key=>{
+    const c=clients.find(cl=>cl.id==key);
+    const groupTotal=grouped[key].reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+    html+=`<div class="section-title" style="display:flex;justify-content:space-between;align-items:center"><span>${c?c.name:'No Job Assigned'}</span><span style="color:var(--red);font-weight:700">${fmtMoney(groupTotal)}</span></div>`;
+    grouped[key].forEach(e=>{
+      html+=`<div class="list-item" onclick="openExpEdit(${e.id})">
+        <div class="list-item-left"><h4>${e.description||'Expense'}</h4><p>${e.category||''}${e.note?' • '+e.note:''}</p></div>
+        <div class="list-item-right"><strong class="amount-red">${fmtMoney(e.amount)}</strong><span>${fmtDate(e.date)}</span></div>
+      </div>`;
+    });
+  });
+
+  document.getElementById('expensesList').innerHTML=html||'<div class="empty-state"><span>💸</span><p>No expenses yet</p></div>';
 
   const acJobs=clients.filter(c=>c.status==='active'||c.status==='complete');
   document.getElementById('profitList').innerHTML=acJobs.length?acJobs.map(c=>{
