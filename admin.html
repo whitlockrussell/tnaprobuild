@@ -620,9 +620,7 @@ async function openDetail(id){
       <div class="detail-row"><span>Address</span><span>${c.address||'—'}</span></div>
       <div class="detail-row"><span>Service</span><span>${c.service||'—'}</span></div>
       <div class="detail-row"><span>Status</span><span class="status-badge status-${c.status}">${c.status}</span></div>
-      <div class="detail-row"><span>Start</span><span>${fmtDate(c.start_date)}</span></div>
-      <div class="detail-row"><span>End</span><span>${fmtDate(c.end_date)}</span></div>
-      <div class="detail-row"><span>Quote</span><span>${c.quote_amount?fmtMoney(c.quote_amount):'—'}</span></div>
+
     </div>
     ${c.notes?`<div class="detail-section"><h4>Notes</h4><p style="font-size:.88rem;color:var(--silver);line-height:1.7">${c.notes}</p></div>`:''}
     <div class="detail-section">
@@ -843,16 +841,20 @@ async function saveDoc(type){
   const payload={client_id:d.clientId?parseInt(d.clientId):null,number:d.number,date:d.date||null,valid_until:isEst?null:d.due||null,description:d.desc,items:JSON.stringify(d.items),subtotal:d.sub,hst:d.hst,deposit:d.dep,deposit_received:d.dep,deposit_date:d.depDate||null,total:d.total,balance:d.balance,notes:d.notes,include_hst:d.hstInclude};
   const tbl=isEst?'estimates':'invoices';
   try{
+    let savedId=null;
     if(editingDocId){
       const res=await sb.from(tbl).update(payload).eq('id',editingDocId);
       if(res.error)throw res.error;
-      editingDocId=null;alert((isEst?'Estimate':'Invoice')+' updated!');
+      savedId=editingDocId;
+      editingDocId=null;
     } else {
-      const res=await sb.from(tbl).insert(payload);
+      const res=await sb.from(tbl).insert(payload).select();
       if(res.error)throw res.error;
-      alert((isEst?'Estimate':'Invoice')+' saved!');
+      if(res.data&&res.data[0])savedId=res.data[0].id;
     }
-    await loadAll();showPage('Invoices');
+    await loadAll();
+    showPage('Invoices');
+    if(savedId)setTimeout(()=>openDocView(savedId,type),300);
   }catch(err){alert('Error: '+err.message);}
 }
 
@@ -926,16 +928,20 @@ async function saveContract(){
     status:'unsigned'
   };
   try{
+    let savedId=null;
     if(editingDocId){
       const res=await sb.from('contracts').update(payload).eq('id',editingDocId);
       if(res.error)throw res.error;
-      editingDocId=null;alert('Contract updated!');
+      savedId=editingDocId;
+      editingDocId=null;
     } else {
-      const res=await sb.from('contracts').insert(payload);
+      const res=await sb.from('contracts').insert(payload).select();
       if(res.error)throw res.error;
-      alert('Contract saved!');
+      if(res.data&&res.data[0])savedId=res.data[0].id;
     }
-    await loadAll();showPage('Invoices');
+    await loadAll();
+    showPage('Invoices');
+    if(savedId)setTimeout(()=>openDocView(savedId,'contract'),300);
   }catch(err){alert('Error: '+err.message);}
 }
 
@@ -1091,13 +1097,13 @@ function buildEmailLink(doc,type,client){
 function emailCurrentDoc(){
   if(!currentViewDoc)return;
   const client=clients.find(c=>c.id==currentViewDoc.client_id);
-  window.location.href=buildEmailLink(currentViewDoc,currentViewType,client);
+  window.open(buildEmailLink(currentViewDoc,currentViewType,client),'_self');
 }
 
 function emailDocForm(type){
   const d=getDocData(type);
   const doc={number:d.number,date:d.date,description:d.desc,items:d.items,subtotal:d.sub,hst:d.hst,deposit_received:d.dep,total:d.total,balance:d.balance,notes:d.notes};
-  window.location.href=buildEmailLink(doc,type,d.client);
+  window.open(buildEmailLink(doc,type,d.client),'_self');
 }
 
 function emailContractForm(){
@@ -1107,7 +1113,7 @@ function emailContractForm(){
   const prog=parseFloat(document.getElementById('conProg').value)||0;
   const fin=parseFloat(document.getElementById('conFinal').value)||0;
   const con={number:document.getElementById('conNum').value,start_date:document.getElementById('conStart').value,end_date:document.getElementById('conEnd').value,scope:document.getElementById('conScope').value,deposit_amount:dep,deposit_due:document.getElementById('conDepDue').value,progress_amount:prog,progress_due:document.getElementById('conProgDue').value,final_amount:fin,total:dep+prog+fin};
-  window.location.href=buildEmailLink(con,'contract',client);
+  window.open(buildEmailLink(con,'contract',client),'_self');
 }
 
 function editCurrentDoc(){
