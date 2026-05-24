@@ -11,17 +11,17 @@
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="https://res.cloudinary.com/djg4tmkyb/image/upload/v1779635647/logo_aaf0ki.jpg"/>
 <title>TNA Pro Build — Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--dark:#181b1f;--mid:#232830;--card:#2a3038;--border:#333d47;--red:#cc2222;--red2:#a81b1b;--green:#22cc66;--yellow:#f0a500;--blue:#2266cc;--white:#fff;--silver:#b0b8c1;--light:#f5f5f5;--text:#e8eaed;--muted:#8a9299}
-html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;overflow-x:hidden}
+:root{--dark:#181b1f;--mid:#232830;--card:#2a3038;--border:#333d47;--red:#cc2222;--red2:#a81b1b;--green:#22cc66;--yellow:#f0a500;--blue:#2266cc;--white:#fff;--silver:#b0b8c1;--muted:#8a9299}
+html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI',Arial,sans-serif;overflow-x:hidden}
 
 /* LOGIN */
 #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
 .login-box{background:var(--mid);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:380px;text-align:center}
-.login-logo{margin-bottom:1.5rem}
-.login-logo svg{width:48px;height:48px}
-.login-box h1{font-size:1.3rem;font-weight:800;margin-bottom:.3rem;color:var(--white)}
+.login-logo svg{width:48px;height:48px;margin-bottom:1rem}
+.login-box h1{font-size:1.3rem;font-weight:800;color:var(--white);margin-bottom:.3rem}
 .login-box p{color:var(--muted);font-size:.85rem;margin-bottom:2rem}
 .login-box input{width:100%;background:var(--dark);border:1px solid var(--border);color:var(--white);padding:.9rem 1rem;border-radius:8px;font-size:1rem;margin-bottom:1rem;outline:none}
 .login-box input:focus{border-color:var(--red)}
@@ -30,22 +30,14 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Sego
 
 /* APP */
 #app{display:none;min-height:100vh;padding-bottom:80px}
-
-/* TOP BAR */
 .topbar{background:var(--mid);border-bottom:1px solid var(--border);padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .topbar-left{display:flex;align-items:center;gap:.6rem}
 .topbar h2{font-size:1rem;font-weight:700;color:var(--white)}
-.topbar-actions{display:flex;gap:.5rem}
 .icon-btn{background:none;border:none;color:var(--silver);font-size:1.2rem;cursor:pointer;padding:.3rem;border-radius:6px}
-.icon-btn:hover{background:var(--border);color:var(--white)}
-
-/* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--mid);border-top:1px solid var(--border);display:flex;z-index:100}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.6rem .3rem;cursor:pointer;transition:all .2s;border:none;background:none;color:var(--muted);font-size:.65rem;gap:.2rem}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.6rem .3rem;cursor:pointer;border:none;background:none;color:var(--muted);font-size:.62rem;gap:.2rem}
 .nav-item.active{color:var(--red)}
-.nav-item span:first-child{font-size:1.3rem}
-
-/* PAGES */
+.nav-item span:first-child{font-size:1.2rem}
 .page{display:none;padding:1rem}
 .page.active{display:block}
 
@@ -57,14 +49,14 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Sego
 .stat-card.green .num{color:var(--green)}
 .stat-card.yellow .num{color:var(--yellow)}
 .stat-card.blue .num{color:var(--blue)}
-
 .section-title{font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;margin-top:1.25rem}
 
+/* JOB CARDS */
 .job-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem;cursor:pointer;transition:border-color .2s}
 .job-card:hover{border-color:var(--red)}
 .job-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem}
 .job-card h3{font-size:.95rem;font-weight:700;color:var(--white)}
-.status-badge{font-size:.65rem;font-weight:700;padding:.2rem .6rem;border-radius:30px;text-transform:uppercase;letter-spacing:.05em}
+.status-badge{font-size:.65rem;font-weight:700;padding:.2rem .6rem;border-radius:30px;text-transform:uppercase;white-space:nowrap}
 .status-lead{background:rgba(240,165,0,.15);color:var(--yellow)}
 .status-quoted{background:rgba(34,102,204,.15);color:var(--blue)}
 .status-active{background:rgba(204,34,34,.15);color:var(--red)}
@@ -88,94 +80,93 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Sego
 .btn-primary{background:var(--red);color:var(--white)}
 .btn-primary:hover{background:var(--red2)}
 .btn-secondary{background:var(--border);color:var(--white)}
-.btn-secondary:hover{background:#444d57}
-.btn-success{background:var(--green);color:var(--dark)}
+.btn-success{background:var(--green);color:#111}
+.btn-blue{background:var(--blue);color:var(--white)}
+.btn-orange{background:#e07000;color:var(--white)}
 .btn-sm{padding:.5rem .9rem;font-size:.8rem;width:auto;margin-bottom:0}
 .btn-outline{background:none;border:1px solid var(--border);color:var(--silver)}
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:flex-end;justify-content:center}
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex}
-.modal{background:var(--mid);border-radius:20px 20px 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:1.5rem;border:1px solid var(--border)}
+.modal{background:var(--mid);border-radius:20px 20px 0 0;width:100%;max-width:640px;max-height:93vh;overflow-y:auto;padding:1.5rem;border:1px solid var(--border)}
 .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
 .modal-header h3{font-size:1.1rem;font-weight:700;color:var(--white)}
 .modal-close{background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1}
 
-/* CLIENT DETAIL */
+/* DETAIL */
 .detail-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem}
 .detail-section h4{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
 .detail-row{display:flex;justify-content:space-between;align-items:center;padding:.4rem 0;border-bottom:1px solid var(--border)}
 .detail-row:last-child{border-bottom:none}
-.detail-row span:first-child{font-size:.82rem;color:var(--muted)}
-.detail-row span:last-child{font-size:.85rem;color:var(--white);font-weight:600;text-align:right;max-width:60%}
+.detail-row span:first-child{font-size:.82rem;color:var(--muted);flex-shrink:0}
+.detail-row span:last-child{font-size:.85rem;color:var(--white);font-weight:600;text-align:right;max-width:65%}
 
-/* EXPENSE & LOG ITEMS */
-.list-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.85rem;margin-bottom:.6rem;display:flex;justify-content:space-between;align-items:center}
+/* LIST ITEMS */
+.list-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.85rem;margin-bottom:.6rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.list-item:active{border-color:var(--red)}
 .list-item-left h4{font-size:.88rem;font-weight:600;color:var(--white)}
 .list-item-left p{font-size:.75rem;color:var(--muted);margin-top:.15rem}
-.list-item-right{text-align:right}
-.list-item-right strong{color:var(--red);font-size:.9rem}
-.list-item-right span{font-size:.72rem;color:var(--muted);display:block}
-.amount-positive{color:var(--green)!important}
+.list-item-right{text-align:right;flex-shrink:0;margin-left:.5rem}
+.list-item-right strong{color:var(--red);font-size:.9rem;display:block}
+.list-item-right span{font-size:.72rem;color:var(--muted)}
+.amount-green{color:var(--green)!important}
 
-/* INVOICE */
-.invoice-preview{background:var(--white);color:#222;border-radius:12px;padding:1.5rem;margin-top:1rem}
-.inv-header{display:flex;justify-content:space-between;margin-bottom:1.5rem}
-.inv-company{font-size:.9rem}
-.inv-company strong{font-size:1.1rem;color:var(--red);display:block;margin-bottom:.2rem}
-.inv-title{text-align:right}
-.inv-title h2{font-size:1.5rem;font-weight:900;color:#222}
-.inv-title p{font-size:.8rem;color:#666}
-.inv-divider{border:none;border-top:2px solid var(--red);margin:1rem 0}
-.inv-parties{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;font-size:.82rem}
-.inv-parties strong{display:block;margin-bottom:.3rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:#888}
-.inv-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:1rem}
-.inv-table th{background:#f0f0f0;padding:.5rem .75rem;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:#666}
-.inv-table td{padding:.5rem .75rem;border-bottom:1px solid #eee}
-.inv-table td:last-child,.inv-table th:last-child{text-align:right}
-.inv-totals{text-align:right;font-size:.85rem}
-.inv-totals .total-row{display:flex;justify-content:flex-end;gap:2rem;padding:.3rem 0}
-.inv-totals .total-row.grand{font-size:1rem;font-weight:800;color:var(--red);border-top:2px solid var(--red);margin-top:.5rem;padding-top:.5rem}
-.inv-footer{margin-top:1rem;font-size:.75rem;color:#888;text-align:center;border-top:1px solid #eee;padding-top:.75rem}
-
-/* PHOTO GRID */
+/* PHOTOS */
 .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.75rem}
-.photo-thumb{aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--dark);border:1px solid var(--border)}
+.photo-thumb{aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--dark);border:1px solid var(--border);position:relative}
 .photo-thumb img{width:100%;height:100%;object-fit:cover}
-.photo-add{display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--muted);cursor:pointer;border:2px dashed var(--border);border-radius:8px;aspect-ratio:1}
-.photo-add:hover{border-color:var(--red);color:var(--red)}
+.photo-add-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.4rem;color:var(--muted);cursor:pointer;border:2px dashed var(--border);border-radius:8px;aspect-ratio:1;gap:.2rem;font-size:.7rem}
+.photo-add-btn:active{border-color:var(--red);color:var(--red)}
 
-/* SEARCH */
+/* MISC */
 .search-bar{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;width:100%;color:var(--white);font-size:.9rem;margin-bottom:1rem;outline:none}
+.search-bar::placeholder{color:var(--muted)}
 .search-bar:focus{border-color:var(--red)}
-
-/* EMPTY STATE */
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--muted)}
 .empty-state span{font-size:2.5rem;display:block;margin-bottom:.75rem}
 .empty-state p{font-size:.9rem}
-
-/* FAB */
 .fab{position:fixed;bottom:90px;right:1.25rem;width:56px;height:56px;background:var(--red);border-radius:50%;border:none;color:var(--white);font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(204,34,34,.5);z-index:90;display:flex;align-items:center;justify-content:center}
-
-/* TABS */
-.tabs{display:flex;background:var(--card);border-radius:10px;padding:.3rem;margin-bottom:1rem;gap:.3rem}
-.tab{flex:1;padding:.55rem;border-radius:7px;border:none;background:none;color:var(--muted);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s}
+.tabs{display:flex;background:var(--card);border-radius:10px;padding:.3rem;margin-bottom:1rem;gap:.3rem;overflow-x:auto}
+.tab{flex:1;padding:.5rem .3rem;border-radius:7px;border:none;background:none;color:var(--muted);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;min-width:0}
 .tab.active{background:var(--red);color:var(--white)}
-
-/* PROFIT BAR */
 .profit-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem}
 .profit-bar h4{font-size:.8rem;color:var(--muted);margin-bottom:.5rem}
 .profit-bar-track{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:.5rem}
-.profit-bar-fill{height:100%;background:var(--green);border-radius:4px;transition:width .5s}
-.profit-bar-nums{display:flex;justify-content:space-between;font-size:.75rem}
+.profit-bar-fill{height:100%;background:var(--green);border-radius:4px}
+.profit-bar-nums{display:flex;justify-content:space-between;font-size:.72rem;flex-wrap:wrap;gap:.3rem}
 .profit-bar-nums span{color:var(--muted)}
 .profit-bar-nums strong{color:var(--green)}
+.tag{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.72rem;font-weight:700;margin-left:.3rem}
+.tag-est{background:rgba(240,165,0,.15);color:var(--yellow)}
+.tag-inv{background:rgba(34,204,102,.15);color:var(--green)}
 
+/* PRINT */
 @media print{
-  #app>*:not(#invoicePrintArea){display:none!important}
-  #invoicePrintArea{display:block!important}
-  .invoice-preview{box-shadow:none}
+  body>*{display:none!important}
+  #printArea{display:block!important;position:fixed;inset:0;background:white;z-index:9999;padding:0;margin:0}
 }
+#printArea{display:none}
+
+/* DOC STYLES */
+.doc-paper{background:#fff;color:#1a1a1a;font-family:'Segoe UI',Arial,sans-serif;padding:2rem;min-height:100%}
+.doc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
+.doc-logo{width:120px;height:auto}
+.doc-type-label{font-size:2rem;font-weight:900;color:#1a1a1a;text-align:right;line-height:1}
+.doc-type-sub{font-size:.8rem;color:#666;text-align:right;margin-top:.2rem}
+.doc-divider{border:none;border-top:3px solid #cc2222;margin:1rem 0}
+.doc-meta{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;font-size:.83rem}
+.doc-meta-block strong{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:.3rem}
+.doc-meta-block p{line-height:1.6;color:#333}
+.doc-table{width:100%;border-collapse:collapse;font-size:.85rem;margin-bottom:1.5rem}
+.doc-table th{background:#f5f5f5;padding:.6rem .75rem;text-align:left;font-size:.7rem;text-transform:uppercase;color:#777;border-bottom:2px solid #e0e0e0}
+.doc-table td{padding:.6rem .75rem;border-bottom:1px solid #eee;color:#333}
+.doc-table td:last-child,.doc-table th:last-child{text-align:right}
+.doc-totals{margin-left:auto;width:260px;font-size:.85rem}
+.doc-total-row{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid #eee;color:#444}
+.doc-total-row.grand{font-size:1rem;font-weight:800;color:#cc2222;border-top:2px solid #cc2222;border-bottom:none;margin-top:.5rem;padding-top:.5rem}
+.doc-footer{margin-top:1.5rem;padding-top:1rem;border-top:1px solid #eee;font-size:.75rem;color:#888;text-align:center;line-height:1.6}
+.doc-hst{font-size:.72rem;color:#999;margin-top:.3rem}
 </style>
 </head>
 <body>
@@ -184,12 +175,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Sego
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">
-      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="50,6 93,40 93,91 7,91 7,40" stroke="#cc2222" stroke-width="7" stroke-linejoin="round"/>
-        <line x1="7" y1="91" x2="93" y2="91" stroke="#cc2222" stroke-width="7"/>
-        <rect x="33" y="54" width="14" height="37" fill="#cc2222"/>
-        <rect x="53" y="54" width="14" height="37" fill="#cc2222"/>
-      </svg>
+      <svg viewBox="0 0 100 100" fill="none"><polygon points="50,6 93,40 93,91 7,91 7,40" stroke="#cc2222" stroke-width="7" stroke-linejoin="round"/><line x1="7" y1="91" x2="93" y2="91" stroke="#cc2222" stroke-width="7"/><rect x="33" y="54" width="14" height="37" fill="#cc2222"/><rect x="53" y="54" width="14" height="37" fill="#cc2222"/></svg>
     </div>
     <h1>TNA Pro Build</h1>
     <p>Business Portal — Staff Only</p>
@@ -201,144 +187,70 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Sego
 
 <!-- APP -->
 <div id="app">
-
-  <!-- TOP BAR -->
   <div class="topbar">
     <div class="topbar-left">
       <svg width="24" height="24" viewBox="0 0 100 100" fill="none"><polygon points="50,6 93,40 93,91 7,91 7,40" stroke="#cc2222" stroke-width="7" stroke-linejoin="round"/><rect x="33" y="54" width="14" height="37" fill="#cc2222"/><rect x="53" y="54" width="14" height="37" fill="#cc2222"/></svg>
       <h2 id="pageTitle">Dashboard</h2>
     </div>
-    <div class="topbar-actions">
-      <button class="icon-btn" onclick="logout()" title="Logout">🚪</button>
-    </div>
+    <button class="icon-btn" onclick="logout()" title="Logout">🚪</button>
   </div>
 
-  <!-- DASHBOARD PAGE -->
+  <!-- DASHBOARD -->
   <div class="page active" id="pageDashboard">
-    <div style="padding:1rem">
-      <div class="stats-grid">
-        <div class="stat-card"><div class="num" id="statLeads">0</div><div class="lbl">Leads</div></div>
-        <div class="stat-card blue"><div class="num" id="statActive">0</div><div class="lbl">Active Jobs</div></div>
-        <div class="stat-card green"><div class="num" id="statRevenue">$0</div><div class="lbl">Revenue</div></div>
-        <div class="stat-card yellow"><div class="num" id="statProfit">$0</div><div class="lbl">Profit</div></div>
-      </div>
-
-      <div class="section-title">Active Jobs</div>
-      <div id="dashActiveJobs"></div>
-
-      <div class="section-title">Recent Leads</div>
-      <div id="dashLeads"></div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="num" id="statLeads">0</div><div class="lbl">Leads</div></div>
+      <div class="stat-card blue"><div class="num" id="statActive">0</div><div class="lbl">Active</div></div>
+      <div class="stat-card green"><div class="num" id="statRevenue">$0</div><div class="lbl">Revenue</div></div>
+      <div class="stat-card yellow"><div class="num" id="statProfit">$0</div><div class="lbl">Profit</div></div>
     </div>
+    <div class="section-title">Active Jobs</div><div id="dashActive"></div>
+    <div class="section-title">Quoted Jobs</div><div id="dashQuoted"></div>
+    <div class="section-title">Recent Leads</div><div id="dashLeads"></div>
   </div>
 
-  <!-- CLIENTS PAGE -->
+  <!-- CLIENTS -->
   <div class="page" id="pageClients">
-    <div style="padding:1rem">
-      <input class="search-bar" placeholder="🔍 Search clients..." oninput="searchClients(this.value)"/>
-      <div id="clientsList"></div>
-    </div>
+    <input class="search-bar" placeholder="🔍 Search clients..." oninput="searchClients(this.value)"/>
+    <div id="clientsList"></div>
   </div>
 
-  <!-- SCHEDULE PAGE -->
+  <!-- SCHEDULE -->
   <div class="page" id="pageSchedule">
-    <div style="padding:1rem">
-      <div class="section-title">Upcoming Jobs</div>
-      <div id="scheduleList"></div>
-    </div>
+    <div class="section-title">Upcoming Jobs</div>
+    <div id="scheduleList"></div>
   </div>
 
-  <!-- INVOICES PAGE -->
+  <!-- DOCUMENTS -->
   <div class="page" id="pageInvoices">
-    <div style="padding:1rem">
-      <div class="tabs">
-        <button class="tab active" onclick="switchInvTab('list',this)">All Invoices</button>
-        <button class="tab" onclick="switchInvTab('new',this)">New Invoice</button>
-      </div>
-      <div id="invTabList">
-        <div id="invoicesList"></div>
-      </div>
-      <div id="invTabNew" style="display:none">
-        <div class="form-group">
-          <label>Client</label>
-          <select id="invClient" onchange="fillInvClient()">
-            <option value="">Select client...</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Invoice #</label>
-          <input type="text" id="invNumber" placeholder="INV-001"/>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Date</label>
-            <input type="date" id="invDate"/>
-          </div>
-          <div class="form-group">
-            <label>Due Date</label>
-            <input type="date" id="invDue"/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Job Description</label>
-          <input type="text" id="invDesc" placeholder="e.g. Bathroom Renovation"/>
-        </div>
-        <div class="section-title">Line Items</div>
-        <div id="lineItems"></div>
-        <button class="btn btn-outline btn-sm" style="margin-bottom:1rem" onclick="addLineItem()">+ Add Item</button>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Deposit Paid ($)</label>
-            <input type="number" id="invDeposit" value="0" oninput="calcInvTotals()"/>
-          </div>
-          <div class="form-group">
-            <label>HST (13%)</label>
-            <select id="invHST" onchange="calcInvTotals()">
-              <option value="yes">Include HST</option>
-              <option value="no">No HST</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Notes</label>
-          <textarea id="invNotes" placeholder="Payment terms, thank you message..."></textarea>
-        </div>
-        <div class="detail-section" style="margin-bottom:1rem">
-          <div class="detail-row"><span>Subtotal</span><span id="invSubtotal">$0.00</span></div>
-          <div class="detail-row"><span>HST (13%)</span><span id="invHSTamt">$0.00</span></div>
-          <div class="detail-row"><span>Deposit Paid</span><span id="invDepositShow">$0.00</span></div>
-          <div class="detail-row"><span style="font-weight:700;color:var(--white)">Balance Owing</span><span id="invBalance" style="color:var(--red);font-weight:800">$0.00</span></div>
-        </div>
-        <button class="btn btn-primary" onclick="saveInvoice()">💾 Save Invoice</button>
-        <button class="btn btn-secondary" onclick="printInvoice()">🖨️ Print / Save PDF</button>
-      </div>
-      <div id="invoicePrintArea" style="display:none"></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchDocTab('invoices',this)">Invoices</button>
+      <button class="tab" onclick="switchDocTab('estimates',this)">Estimates</button>
+      <button class="tab" onclick="switchDocTab('newEst',this)">+ Estimate</button>
+      <button class="tab" onclick="switchDocTab('newInv',this)">+ Invoice</button>
     </div>
+    <div id="tabInvoices"><div id="invoicesList"></div></div>
+    <div id="tabEstimates" style="display:none"><div id="estimatesList"></div></div>
+    <div id="tabNewEst" style="display:none"><div id="estForm"></div></div>
+    <div id="tabNewInv" style="display:none"><div id="invForm"></div></div>
   </div>
 
-  <!-- EXPENSES PAGE -->
+  <!-- EXPENSES -->
   <div class="page" id="pageExpenses">
-    <div style="padding:1rem">
-      <div class="form-group">
-        <label>Filter by Job</label>
-        <select id="expFilter" onchange="renderExpenses()">
-          <option value="">All Jobs</option>
-        </select>
-      </div>
-      <div id="expensesList"></div>
-      <div class="section-title">Job Profitability</div>
-      <div id="profitList"></div>
+    <div class="form-group"><label>Filter by Job</label>
+      <select id="expFilter" onchange="renderExpenses()"><option value="">All Jobs</option></select>
     </div>
+    <div id="expensesList"></div>
+    <div class="section-title">Job Profitability</div>
+    <div id="profitList"></div>
   </div>
 
-  <!-- FAB -->
-  <button class="fab" id="fab" onclick="openFAB()">+</button>
+  <button class="fab" onclick="openFAB()">+</button>
 
-  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="showPage('Dashboard')"><span>🏠</span><span>Home</span></button>
     <button class="nav-item" onclick="showPage('Clients')"><span>👥</span><span>Clients</span></button>
     <button class="nav-item" onclick="showPage('Schedule')"><span>📅</span><span>Schedule</span></button>
-    <button class="nav-item" onclick="showPage('Invoices')"><span>🧾</span><span>Invoices</span></button>
+    <button class="nav-item" onclick="showPage('Invoices')"><span>🧾</span><span>Docs</span></button>
     <button class="nav-item" onclick="showPage('Expenses')"><span>💸</span><span>Expenses</span></button>
   </nav>
 </div>
@@ -350,28 +262,21 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Sego
       <h3 id="clientModalTitle">New Client</h3>
       <button class="modal-close" onclick="closeModal('clientModal')">×</button>
     </div>
-    <div class="form-group"><label>Full Name</label><input type="text" id="cName" placeholder="John Smith"/></div>
+    <div class="form-group"><label>Full Name *</label><input type="text" id="cName" placeholder="John Smith"/></div>
     <div class="form-group"><label>Phone</label><input type="tel" id="cPhone" placeholder="613-000-0000"/></div>
     <div class="form-group"><label>Email</label><input type="email" id="cEmail" placeholder="client@email.com"/></div>
     <div class="form-group"><label>Address / Area</label><input type="text" id="cAddress" placeholder="123 Main St, Barrhaven"/></div>
     <div class="form-group"><label>Service Type</label>
       <select id="cService">
-        <option>Custom Bathroom</option>
-        <option>Kitchen Renovation</option>
-        <option>Basement Finishing</option>
-        <option>Flooring</option>
-        <option>Painting</option>
-        <option>Deck / Fence / Porch</option>
-        <option>Home Addition</option>
-        <option>Multiple Services</option>
+        <option>Custom Bathroom</option><option>Kitchen Renovation</option><option>Basement Finishing</option>
+        <option>Flooring</option><option>Painting</option><option>Deck / Fence / Porch</option>
+        <option>Home Addition</option><option>Multiple Services</option><option>Other</option>
       </select>
     </div>
     <div class="form-group"><label>Job Status</label>
       <select id="cStatus">
-        <option value="lead">Lead</option>
-        <option value="quoted">Quoted</option>
-        <option value="active">Active Job</option>
-        <option value="complete">Complete</option>
+        <option value="lead">Lead</option><option value="quoted">Quoted</option>
+        <option value="active">Active Job</option><option value="complete">Complete</option>
       </select>
     </div>
     <div class="form-row">
@@ -380,14 +285,24 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Sego
     </div>
     <div class="form-group"><label>Quote Amount ($)</label><input type="number" id="cQuote" placeholder="0"/></div>
     <div class="form-group"><label>Returning Client</label>
-      <select id="cReturning"><option value="no">No</option><option value="yes">Yes — Returning Client ⭐</option></select>
+      <select id="cReturning"><option value="no">No</option><option value="yes">Yes ⭐</option></select>
     </div>
     <div class="form-group"><label>Notes</label><textarea id="cNotes" placeholder="Job details, scope, special requests..."></textarea></div>
+    <div class="form-group">
+      <label>📷 Job Photos</label>
+      <div class="photo-grid" id="clientModalPhotos"></div>
+      <div style="display:flex;gap:.5rem;margin-top:.5rem">
+        <button class="btn btn-secondary btn-sm" onclick="triggerCamera('new')">📷 Take Photo</button>
+        <button class="btn btn-outline btn-sm" onclick="triggerGallery('new')">🖼️ From Gallery</button>
+      </div>
+    </div>
+    <input type="file" id="cameraNew" accept="image/*" capture="environment" style="display:none" multiple onchange="handleNewPhotos(event)"/>
+    <input type="file" id="galleryNew" accept="image/*" style="display:none" multiple onchange="handleNewPhotos(event)"/>
     <button class="btn btn-primary" onclick="saveClient()">💾 Save Client</button>
   </div>
 </div>
 
-<!-- CLIENT DETAIL MODAL -->
+<!-- CLIENT DETAIL -->
 <div class="modal-overlay" id="detailModal">
   <div class="modal">
     <div class="modal-header">
@@ -401,31 +316,21 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Sego
 <!-- EXPENSE MODAL -->
 <div class="modal-overlay" id="expenseModal">
   <div class="modal">
-    <div class="modal-header">
-      <h3>Add Expense</h3>
-      <button class="modal-close" onclick="closeModal('expenseModal')">×</button>
-    </div>
-    <div class="form-group"><label>Job / Client</label>
-      <select id="expClient"></select>
-    </div>
+    <div class="modal-header"><h3>Add Expense</h3><button class="modal-close" onclick="closeModal('expenseModal')">×</button></div>
+    <div class="form-group"><label>Job / Client</label><select id="expClient"></select></div>
     <div class="form-group"><label>Description</label><input type="text" id="expDesc" placeholder="e.g. Tile from Home Depot"/></div>
     <div class="form-group"><label>Category</label>
       <select id="expCat">
-        <option>Materials</option>
-        <option>Labour</option>
-        <option>Equipment Rental</option>
-        <option>Subcontractor</option>
-        <option>Fuel / Travel</option>
-        <option>Tools</option>
-        <option>Permits / Fees</option>
-        <option>Other</option>
+        <option>Materials</option><option>Labour</option><option>Equipment Rental</option>
+        <option>Subcontractor</option><option>Fuel / Travel</option><option>Tools</option>
+        <option>Permits / Fees</option><option>Other</option>
       </select>
     </div>
     <div class="form-row">
       <div class="form-group"><label>Amount ($)</label><input type="number" id="expAmount" placeholder="0.00"/></div>
       <div class="form-group"><label>Date</label><input type="date" id="expDate"/></div>
     </div>
-    <div class="form-group"><label>Receipt Note</label><input type="text" id="expNote" placeholder="Store, supplier, reference..."/></div>
+    <div class="form-group"><label>Receipt Note</label><input type="text" id="expNote" placeholder="Store, supplier, ref..."/></div>
     <button class="btn btn-primary" onclick="saveExpense()">💾 Save Expense</button>
   </div>
 </div>
@@ -433,19 +338,12 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Sego
 <!-- LOG MODAL -->
 <div class="modal-overlay" id="logModal">
   <div class="modal">
-    <div class="modal-header">
-      <h3>Add Communication Log</h3>
-      <button class="modal-close" onclick="closeModal('logModal')">×</button>
-    </div>
+    <div class="modal-header"><h3>Add Communication Log</h3><button class="modal-close" onclick="closeModal('logModal')">×</button></div>
     <div class="form-group"><label>Client</label><select id="logClient"></select></div>
     <div class="form-group"><label>Type</label>
       <select id="logType">
-        <option>Phone Call</option>
-        <option>Text Message</option>
-        <option>Email</option>
-        <option>Site Visit</option>
-        <option>Meeting</option>
-        <option>Other</option>
+        <option>Phone Call</option><option>Text Message</option><option>Email</option>
+        <option>Site Visit</option><option>Meeting</option><option>Other</option>
       </select>
     </div>
     <div class="form-group"><label>Notes</label><textarea id="logNotes" placeholder="What was discussed..."></textarea></div>
@@ -454,21 +352,57 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Sego
   </div>
 </div>
 
+<!-- DOC VIEW MODAL -->
+<div class="modal-overlay" id="docViewModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="docViewTitle">Document</h3>
+      <button class="modal-close" onclick="closeModal('docViewModal')">×</button>
+    </div>
+    <div id="docViewContent"></div>
+    <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.5rem">
+      <button class="btn btn-secondary" onclick="printCurrentDoc()">🖨️ Print / Save PDF</button>
+      <button class="btn btn-blue" onclick="emailCurrentDoc()">📧 Send via Email</button>
+      <button class="btn btn-orange" id="editDocBtn" onclick="editCurrentDoc()">✏️ Edit</button>
+      <button class="btn btn-success" id="dupToInvBtn" style="display:none" onclick="duplicateToInvoice()">📄 Duplicate as Invoice</button>
+    </div>
+  </div>
+</div>
+
+<!-- CAMERA INPUTS -->
+<input type="file" id="cameraEdit" accept="image/*" capture="environment" style="display:none" multiple onchange="handleEditPhotos(event)"/>
+<input type="file" id="galleryEdit" accept="image/*" style="display:none" multiple onchange="handleEditPhotos(event)"/>
+
+<!-- PRINT AREA -->
+<div id="printArea"></div>
+
 <script>
-const PW = 'Titannetwork1!';
-let db = JSON.parse(localStorage.getItem('tna_db') || '{"clients":[],"expenses":[],"invoices":[],"logs":[],"photos":{}}');
-let editingClientId = null;
-let lineItemCount = 0;
-let currentDetailId = null;
+const PW='Titannetwork1!';
+const SURL='https://mhbnsoyusypuiiqiikph.supabase.co';
+const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oYm5zb3l1c3lwdWlpcWlpa3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MjU1MjQsImV4cCI6MjA5NTIwMTUyNH0.QKVLFT661mY4UYuQMRs5cZZT3QGeAf1YjPt1x529Lig';
+const sb=supabase.createClient(SURL,SKEY);
 
-function save(){localStorage.setItem('tna_db',JSON.stringify(db))}
+const CO={name:'TNA Pro Build',addr:'332 Sweetfern Cresc',city:'Orleans, ON',email:'tna.probuild@yahoo.com',phone:'613-252-5636',hst:'HST# 728609413RT0001',logo:'https://res.cloudinary.com/djg4tmkyb/image/upload/v1779635647/logo_aaf0ki.jpg'};
 
-function login(){
-  const pw = document.getElementById('pwInput').value;
-  if(pw === PW){
+let clients=[],invoices=[],estimates=[],expenses=[],logs=[],clientPhotos={};
+let editingClientId=null,currentDetailId=null,currentViewDoc=null,currentViewType=null;
+let newClientPhotoData=[],editClientPhotoData=[];
+let docLineCount=0,editingDocId=null,editingDocType=null;
+
+// UTILS
+function fmtDate(d){
+  if(!d) return '—';
+  try{const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});}catch{return d;}
+}
+function fmtMoney(n){return'$'+(parseFloat(n)||0).toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function today(){return new Date().toISOString().split('T')[0]}
+function genNum(arr,prefix){return prefix+String(arr.length+1).padStart(3,'0')}
+
+async function login(){
+  if(document.getElementById('pwInput').value===PW){
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('app').style.display='block';
-    renderAll();
+    await loadAll();
   } else {
     document.getElementById('loginError').style.display='block';
   }
@@ -478,441 +412,612 @@ function logout(){
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('app').style.display='none';
   document.getElementById('pwInput').value='';
-  document.getElementById('loginError').style.display='none';
+}
+
+async function loadAll(){
+  const [c,i,e,ex,l,p]=await Promise.all([
+    sb.from('clients').select('*').order('created_at',{ascending:false}),
+    sb.from('invoices').select('*').order('created_at',{ascending:false}),
+    sb.from('estimates').select('*').order('created_at',{ascending:false}),
+    sb.from('expenses').select('*').order('created_at',{ascending:false}),
+    sb.from('logs').select('*').order('created_at',{ascending:false}),
+    sb.from('photos').select('*')
+  ]);
+  clients=c.data||[];invoices=i.data||[];estimates=e.data||[];
+  expenses=ex.data||[];logs=l.data||[];
+  clientPhotos={};
+  (p.data||[]).forEach(ph=>{
+    if(!clientPhotos[ph.client_id])clientPhotos[ph.client_id]=[];
+    clientPhotos[ph.client_id].push({url:ph.url,id:ph.id});
+  });
+  renderAll();
 }
 
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page'+name).classList.add('active');
-  document.getElementById('pageTitle').textContent = name;
-  const navItems = document.querySelectorAll('.nav-item');
-  const names = ['Dashboard','Clients','Schedule','Invoices','Expenses'];
-  const idx = names.indexOf(name);
-  if(idx>=0) navItems[idx].classList.add('active');
+  document.getElementById('pageTitle').textContent=name==='Invoices'?'Documents':name;
+  ['Dashboard','Clients','Schedule','Invoices','Expenses'].forEach((n,i)=>{
+    if(n===name)document.querySelectorAll('.nav-item')[i].classList.add('active');
+  });
   renderAll();
 }
 
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
-
 function openFAB(){
-  const page = document.getElementById('pageTitle').textContent;
-  if(page==='Clients'||page==='Dashboard') openNewClient();
-  else if(page==='Expenses') openExpenseModal();
-  else if(page==='Invoices') switchInvTab('new', document.querySelectorAll('.tab')[1]);
+  const p=document.getElementById('pageTitle').textContent;
+  if(p==='Expenses')openExpModal();
+  else if(p==='Documents'){switchDocTab('newEst',document.querySelectorAll('.tab')[2]);initDocForm('estimate');}
   else openNewClient();
 }
 
 function renderAll(){
-  renderDashboard();
-  renderClients();
-  renderSchedule();
-  renderInvoices();
-  renderExpenses();
-  populateSelects();
+  renderDashboard();renderClients();renderSchedule();
+  renderInvoices();renderExpenses();populateAllSelects();
 }
 
 // DASHBOARD
 function renderDashboard(){
-  const leads = db.clients.filter(c=>c.status==='lead').length;
-  const active = db.clients.filter(c=>c.status==='active').length;
-  const revenue = db.invoices.reduce((s,i)=>s+(parseFloat(i.total)||0),0);
-  const expenses = db.expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
-  const profit = revenue - expenses;
-  document.getElementById('statLeads').textContent = leads;
-  document.getElementById('statActive').textContent = active;
-  document.getElementById('statRevenue').textContent = '$'+revenue.toLocaleString();
-  document.getElementById('statProfit').textContent = '$'+profit.toLocaleString();
-
-  const activeJobs = db.clients.filter(c=>c.status==='active');
-  const leadsArr = db.clients.filter(c=>c.status==='lead');
-
-  document.getElementById('dashActiveJobs').innerHTML = activeJobs.length
-    ? activeJobs.map(c=>jobCard(c)).join('')
-    : '<div class="empty-state"><span>🔨</span><p>No active jobs</p></div>';
-
-  document.getElementById('dashLeads').innerHTML = leadsArr.length
-    ? leadsArr.map(c=>jobCard(c)).join('')
-    : '<div class="empty-state"><span>📋</span><p>No leads yet</p></div>';
+  const leads=clients.filter(c=>c.status==='lead');
+  const active=clients.filter(c=>c.status==='active');
+  const quoted=clients.filter(c=>c.status==='quoted');
+  const rev=invoices.reduce((s,i)=>s+(parseFloat(i.total)||0),0);
+  const exp=expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  document.getElementById('statLeads').textContent=leads.length;
+  document.getElementById('statActive').textContent=active.length;
+  document.getElementById('statRevenue').textContent='$'+Math.round(rev).toLocaleString();
+  document.getElementById('statProfit').textContent='$'+Math.round(rev-exp).toLocaleString();
+  document.getElementById('dashActive').innerHTML=active.length?active.map(jobCard).join(''):'<div class="empty-state"><span>🔨</span><p>No active jobs</p></div>';
+  document.getElementById('dashQuoted').innerHTML=quoted.length?quoted.map(jobCard).join(''):'<div class="empty-state"><span>📋</span><p>No quoted jobs</p></div>';
+  document.getElementById('dashLeads').innerHTML=leads.length?leads.map(jobCard).join(''):'<div class="empty-state"><span>📞</span><p>No leads yet</p></div>';
 }
 
 function jobCard(c){
-  return `<div class="job-card" onclick="openDetail('${c.id}')">
-    <div class="job-card-top">
-      <h3>${c.name}${c.returning==='yes'?' ⭐':''}</h3>
-      <span class="status-badge status-${c.status}">${c.status}</span>
-    </div>
-    <p>${c.service} • ${c.address||'No address'}</p>
-    <div class="job-card-bottom">
-      <span>${c.start||'No start date'}</span>
-      ${c.quote?`<strong>$${parseFloat(c.quote).toLocaleString()}</strong>`:'<span>No quote</span>'}
-    </div>
+  return`<div class="job-card" onclick="openDetail('${c.id}')">
+    <div class="job-card-top"><h3>${c.name||''}${c.returning==='yes'?' ⭐':''}</h3><span class="status-badge status-${c.status}">${c.status}</span></div>
+    <p>${c.service||''} • ${c.address||'No address'}</p>
+    <div class="job-card-bottom"><span>${c.start_date?fmtDate(c.start_date):'No date'}</span>${c.quote_amount?`<strong>${fmtMoney(c.quote_amount)}</strong>`:'<span>No quote</span>'}</div>
   </div>`;
 }
 
 // CLIENTS
 function openNewClient(){
-  editingClientId = null;
-  document.getElementById('clientModalTitle').textContent = 'New Client';
+  editingClientId=null;newClientPhotoData=[];
+  document.getElementById('clientModalTitle').textContent='New Client';
   ['cName','cPhone','cEmail','cAddress','cNotes','cQuote'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('cStatus').value='lead';
   document.getElementById('cReturning').value='no';
-  document.getElementById('cStart').value='';
-  document.getElementById('cEnd').value='';
+  document.getElementById('cStart').value='';document.getElementById('cEnd').value='';
+  renderNewClientPhotos();
   openModal('clientModal');
 }
 
-function saveClient(){
-  const client = {
-    id: editingClientId || Date.now().toString(),
-    name: document.getElementById('cName').value||'Unnamed',
-    phone: document.getElementById('cPhone').value,
-    email: document.getElementById('cEmail').value,
-    address: document.getElementById('cAddress').value,
-    service: document.getElementById('cService').value,
-    status: document.getElementById('cStatus').value,
-    start: document.getElementById('cStart').value,
-    end: document.getElementById('cEnd').value,
-    quote: document.getElementById('cQuote').value,
-    returning: document.getElementById('cReturning').value,
-    notes: document.getElementById('cNotes').value,
-    created: editingClientId ? undefined : new Date().toLocaleDateString()
+function triggerCamera(mode){document.getElementById('camera'+capitalize(mode)).click()}
+function triggerGallery(mode){document.getElementById('gallery'+capitalize(mode)).click()}
+function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+
+function handleNewPhotos(e){
+  Array.from(e.target.files).forEach(f=>{
+    const r=new FileReader();
+    r.onload=ev=>{newClientPhotoData.push(ev.target.result);renderNewClientPhotos();};
+    r.readAsDataURL(f);
+  });
+  e.target.value='';
+}
+
+function renderNewClientPhotos(){
+  const grid=document.getElementById('clientModalPhotos');
+  grid.innerHTML=newClientPhotoData.map((url,i)=>`<div class="photo-thumb"><img src="${url}"/><div style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem" onclick="removeNewPhoto(${i})">×</div></div>`).join('');
+}
+
+function removeNewPhoto(i){newClientPhotoData.splice(i,1);renderNewClientPhotos()}
+
+async function saveClient(){
+  const data={
+    name:document.getElementById('cName').value||'Unnamed',
+    phone:document.getElementById('cPhone').value,
+    email:document.getElementById('cEmail').value,
+    address:document.getElementById('cAddress').value,
+    service:document.getElementById('cService').value,
+    status:document.getElementById('cStatus').value,
+    start_date:document.getElementById('cStart').value||null,
+    end_date:document.getElementById('cEnd').value||null,
+    quote_amount:document.getElementById('cQuote').value||null,
+    returning:document.getElementById('cReturning').value,
+    notes:document.getElementById('cNotes').value
   };
+  let clientId=editingClientId;
   if(editingClientId){
-    const idx = db.clients.findIndex(c=>c.id===editingClientId);
-    if(idx>=0) db.clients[idx] = {...db.clients[idx],...client};
+    await sb.from('clients').update(data).eq('id',editingClientId);
   } else {
-    db.clients.unshift(client);
+    const res=await sb.from('clients').insert(data).select();
+    if(res.data&&res.data[0])clientId=res.data[0].id;
   }
-  save(); closeModal('clientModal'); renderAll();
+  if(clientId&&newClientPhotoData.length){
+    await Promise.all(newClientPhotoData.map(url=>sb.from('photos').insert({client_id:clientId,url})));
+  }
+  newClientPhotoData=[];
+  closeModal('clientModal');
+  await loadAll();
 }
 
 function renderClients(filter=''){
-  const list = db.clients.filter(c=>!filter||c.name.toLowerCase().includes(filter.toLowerCase())||c.phone.includes(filter));
-  document.getElementById('clientsList').innerHTML = list.length
-    ? list.map(c=>jobCard(c)).join('')
-    : '<div class="empty-state"><span>👥</span><p>No clients yet. Tap + to add one.</p></div>';
+  const list=clients.filter(c=>!filter||c.name.toLowerCase().includes(filter.toLowerCase())||(c.phone||'').includes(filter));
+  document.getElementById('clientsList').innerHTML=list.length?list.map(jobCard).join(''):'<div class="empty-state"><span>👥</span><p>No clients yet. Tap + to add.</p></div>';
 }
-
 function searchClients(v){renderClients(v)}
 
-function openDetail(id){
-  currentDetailId = id;
-  const c = db.clients.find(cl=>cl.id===id);
-  if(!c) return;
-  document.getElementById('detailName').textContent = c.name + (c.returning==='yes'?' ⭐':'');
-  const expenses = db.expenses.filter(e=>e.clientId===id);
-  const totalExp = expenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
-  const clientInvoices = db.invoices.filter(i=>i.clientId===id);
-  const totalInv = clientInvoices.reduce((s,i)=>s+(parseFloat(i.total)||0),0);
-  const logs = db.logs.filter(l=>l.clientId===id);
-  const photos = db.photos[id]||[];
+async function openDetail(id){
+  currentDetailId=id;
+  const c=clients.find(cl=>cl.id===id);if(!c)return;
+  const cExp=expenses.filter(e=>e.client_id===id);
+  const cInv=invoices.filter(i=>i.client_id===id);
+  const cEst=estimates.filter(e=>e.client_id===id);
+  const cLogs=logs.filter(l=>l.client_id===id);
+  const cPhotos=clientPhotos[id]||[];
+  const totalExp=cExp.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  const totalInv=cInv.reduce((s,i)=>s+(parseFloat(i.total)||0),0);
 
-  document.getElementById('detailContent').innerHTML = `
+  document.getElementById('detailName').textContent=c.name+(c.returning==='yes'?' ⭐':'');
+  document.getElementById('detailContent').innerHTML=`
     <div class="detail-section">
       <h4>Contact Info</h4>
       <div class="detail-row"><span>Phone</span><span><a href="tel:${c.phone}" style="color:var(--red)">${c.phone||'—'}</a></span></div>
-      <div class="detail-row"><span>Email</span><span>${c.email||'—'}</span></div>
+      <div class="detail-row"><span>Email</span><span>${c.email?`<a href="mailto:${c.email}" style="color:var(--blue)">${c.email}</a>`:'—'}</span></div>
       <div class="detail-row"><span>Address</span><span>${c.address||'—'}</span></div>
-      <div class="detail-row"><span>Service</span><span>${c.service}</span></div>
+      <div class="detail-row"><span>Service</span><span>${c.service||'—'}</span></div>
       <div class="detail-row"><span>Status</span><span class="status-badge status-${c.status}">${c.status}</span></div>
-      <div class="detail-row"><span>Start</span><span>${c.start||'—'}</span></div>
-      <div class="detail-row"><span>End</span><span>${c.end||'—'}</span></div>
-      <div class="detail-row"><span>Quote</span><span>${c.quote?'$'+parseFloat(c.quote).toLocaleString():'—'}</span></div>
+      <div class="detail-row"><span>Start</span><span>${fmtDate(c.start_date)}</span></div>
+      <div class="detail-row"><span>End</span><span>${fmtDate(c.end_date)}</span></div>
+      <div class="detail-row"><span>Quote</span><span>${c.quote_amount?fmtMoney(c.quote_amount):'—'}</span></div>
     </div>
     ${c.notes?`<div class="detail-section"><h4>Notes</h4><p style="font-size:.88rem;color:var(--silver);line-height:1.7">${c.notes}</p></div>`:''}
     <div class="detail-section">
       <h4>Financials</h4>
-      <div class="detail-row"><span>Total Invoiced</span><span class="amount-positive">$${totalInv.toLocaleString()}</span></div>
-      <div class="detail-row"><span>Total Expenses</span><span style="color:var(--red)">$${totalExp.toLocaleString()}</span></div>
-      <div class="detail-row"><span>Profit</span><span class="${totalInv-totalExp>=0?'amount-positive':''}">$${(totalInv-totalExp).toLocaleString()}</span></div>
+      <div class="detail-row"><span>Invoiced</span><span class="amount-green">${fmtMoney(totalInv)}</span></div>
+      <div class="detail-row"><span>Expenses</span><span style="color:var(--red)">${fmtMoney(totalExp)}</span></div>
+      <div class="detail-row"><span>Profit</span><span class="${totalInv-totalExp>=0?'amount-green':''}">${fmtMoney(totalInv-totalExp)}</span></div>
     </div>
     <div class="detail-section">
-      <h4>Photos (${photos.length})</h4>
+      <h4>Estimates (${cEst.length})</h4>
+      ${cEst.map(e=>`<div class="list-item" onclick="openDocView('${e.id}','estimate')"><div class="list-item-left"><h4>${e.number}<span class="tag tag-est">EST</span></h4><p>${e.description||''} • ${fmtDate(e.date)}</p></div><div class="list-item-right"><strong>${fmtMoney(e.total)}</strong></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No estimates</p>'}
+    </div>
+    <div class="detail-section">
+      <h4>Invoices (${cInv.length})</h4>
+      ${cInv.map(i=>`<div class="list-item" onclick="openDocView('${i.id}','invoice')"><div class="list-item-left"><h4>${i.number}<span class="tag tag-inv">INV</span></h4><p>${i.description||''} • ${fmtDate(i.date)}</p></div><div class="list-item-right"><strong class="amount-green">${fmtMoney(i.total)}</strong></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No invoices</p>'}
+    </div>
+    <div class="detail-section">
+      <h4>📷 Photos (${cPhotos.length})</h4>
       <div class="photo-grid">
-        ${photos.map(p=>`<div class="photo-thumb"><img src="${p}" alt="Job photo"/></div>`).join('')}
-        <div class="photo-add" onclick="addPhoto('${id}')">📷</div>
+        ${cPhotos.map(p=>`<div class="photo-thumb"><img src="${p.url}" loading="lazy"/></div>`).join('')}
+        <div class="photo-add-btn" onclick="triggerEditCamera('${id}')"><span>📷</span><span>Camera</span></div>
+        <div class="photo-add-btn" onclick="triggerEditGallery('${id}')"><span>🖼️</span><span>Gallery</span></div>
       </div>
     </div>
     <div class="detail-section">
-      <h4>Communication Log (${logs.length})</h4>
-      ${logs.map(l=>`<div class="list-item"><div class="list-item-left"><h4>${l.type}</h4><p>${l.notes}</p>${l.followUp?`<p style="color:var(--yellow)">Follow up: ${l.followUp}</p>`:''}</div><div class="list-item-right"><span>${l.date}</span></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem">No logs yet</p>'}
-      <button class="btn btn-secondary" style="margin-top:.75rem" onclick="openLogForClient('${id}')">+ Add Log</button>
+      <h4>Communication Log (${cLogs.length})</h4>
+      ${cLogs.map(l=>`<div class="list-item"><div class="list-item-left"><h4>${l.type}</h4><p>${l.notes||''}</p>${l.follow_up?`<p style="color:var(--yellow);font-size:.75rem;margin-top:.2rem">📅 Follow up: ${fmtDate(l.follow_up)}</p>`:''}</div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No logs yet</p>'}
+      <button class="btn btn-secondary btn-sm" style="margin-top:.75rem" onclick="openLogFor('${id}')">+ Add Log</button>
     </div>
     <div style="display:flex;gap:.75rem;margin-top:1rem">
-      <button class="btn btn-secondary" onclick="editClient('${id}')">✏️ Edit</button>
-      <button class="btn btn-outline" onclick="deleteClient('${id}')">🗑️ Delete</button>
-    </div>
-  `;
+      <button class="btn btn-secondary" style="margin:0" onclick="editClient('${id}')">✏️ Edit</button>
+      <button class="btn btn-outline" style="margin:0" onclick="deleteClient('${id}')">🗑️ Delete</button>
+    </div>`;
   openModal('detailModal');
 }
 
+function triggerEditCamera(clientId){
+  document.getElementById('cameraEdit').setAttribute('data-client',clientId);
+  document.getElementById('cameraEdit').click();
+}
+function triggerEditGallery(clientId){
+  document.getElementById('galleryEdit').setAttribute('data-client',clientId);
+  document.getElementById('galleryEdit').click();
+}
+async function handleEditPhotos(e){
+  const clientId=e.target.getAttribute('data-client');
+  const files=Array.from(e.target.files);
+  await Promise.all(files.map(f=>new Promise(res=>{
+    const r=new FileReader();
+    r.onload=async ev=>{await sb.from('photos').insert({client_id:clientId,url:ev.target.result});res();};
+    r.readAsDataURL(f);
+  })));
+  e.target.value='';
+  await loadAll();
+  openDetail(clientId);
+}
+
 function editClient(id){
-  const c = db.clients.find(cl=>cl.id===id);
-  if(!c) return;
-  editingClientId = id;
-  document.getElementById('clientModalTitle').textContent = 'Edit Client';
-  document.getElementById('cName').value=c.name;
-  document.getElementById('cPhone').value=c.phone;
-  document.getElementById('cEmail').value=c.email;
-  document.getElementById('cAddress').value=c.address;
-  document.getElementById('cService').value=c.service;
-  document.getElementById('cStatus').value=c.status;
-  document.getElementById('cStart').value=c.start;
-  document.getElementById('cEnd').value=c.end;
-  document.getElementById('cQuote').value=c.quote;
-  document.getElementById('cReturning').value=c.returning;
-  document.getElementById('cNotes').value=c.notes;
+  const c=clients.find(cl=>cl.id===id);if(!c)return;
+  editingClientId=id;newClientPhotoData=[];
+  document.getElementById('clientModalTitle').textContent='Edit Client';
+  document.getElementById('cName').value=c.name||'';
+  document.getElementById('cPhone').value=c.phone||'';
+  document.getElementById('cEmail').value=c.email||'';
+  document.getElementById('cAddress').value=c.address||'';
+  document.getElementById('cService').value=c.service||'Custom Bathroom';
+  document.getElementById('cStatus').value=c.status||'lead';
+  document.getElementById('cStart').value=c.start_date||'';
+  document.getElementById('cEnd').value=c.end_date||'';
+  document.getElementById('cQuote').value=c.quote_amount||'';
+  document.getElementById('cReturning').value=c.returning||'no';
+  document.getElementById('cNotes').value=c.notes||'';
+  renderNewClientPhotos();
   closeModal('detailModal');
   openModal('clientModal');
 }
 
-function deleteClient(id){
-  if(!confirm('Delete this client? This cannot be undone.')) return;
-  db.clients = db.clients.filter(c=>c.id!==id);
-  save(); closeModal('detailModal'); renderAll();
-}
-
-function addPhoto(clientId){
-  const url = prompt('Paste Cloudinary image URL:');
-  if(!url) return;
-  if(!db.photos[clientId]) db.photos[clientId]=[];
-  db.photos[clientId].push(url);
-  save(); openDetail(clientId);
+async function deleteClient(id){
+  if(!confirm('Delete this client? This cannot be undone.'))return;
+  await sb.from('clients').delete().eq('id',id);
+  closeModal('detailModal');
+  await loadAll();
 }
 
 // SCHEDULE
 function renderSchedule(){
-  const jobs = db.clients.filter(c=>c.start&&(c.status==='active'||c.status==='quoted')).sort((a,b)=>new Date(a.start)-new Date(b.start));
-  document.getElementById('scheduleList').innerHTML = jobs.length
-    ? jobs.map(c=>`<div class="job-card" onclick="openDetail('${c.id}')">
-        <div class="job-card-top"><h3>${c.name}</h3><span class="status-badge status-${c.status}">${c.status}</span></div>
-        <p>${c.service}</p>
-        <div class="job-card-bottom"><span>📅 Start: ${c.start}</span><span>🏁 End: ${c.end||'TBD'}</span></div>
-      </div>`).join('')
-    : '<div class="empty-state"><span>📅</span><p>No scheduled jobs</p></div>';
+  const jobs=clients.filter(c=>c.start_date&&(c.status==='active'||c.status==='quoted')).sort((a,b)=>new Date(a.start_date)-new Date(b.start_date));
+  document.getElementById('scheduleList').innerHTML=jobs.length?jobs.map(c=>`
+    <div class="job-card" onclick="openDetail('${c.id}')">
+      <div class="job-card-top"><h3>${c.name}</h3><span class="status-badge status-${c.status}">${c.status}</span></div>
+      <p>${c.service||''}</p>
+      <div class="job-card-bottom"><span>📅 ${fmtDate(c.start_date)}</span><span>🏁 ${fmtDate(c.end_date)}</span></div>
+    </div>`).join(''):'<div class="empty-state"><span>📅</span><p>No scheduled jobs</p></div>';
 }
 
-// INVOICES
-function switchInvTab(tab, btn){
+// DOCUMENTS
+function switchDocTab(tab,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('invTabList').style.display = tab==='list'?'block':'none';
-  document.getElementById('invTabNew').style.display = tab==='new'?'block':'none';
-  if(tab==='new'){
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('invDate').value = today;
-    document.getElementById('invNumber').value = 'INV-' + String(db.invoices.length+1).padStart(3,'0');
-    lineItemCount=0;
-    document.getElementById('lineItems').innerHTML='';
-    addLineItem();
-    calcInvTotals();
-  }
+  ['tabInvoices','tabEstimates','tabNewEst','tabNewInv'].forEach(id=>document.getElementById(id).style.display='none');
+  const map={invoices:'tabInvoices',estimates:'tabEstimates',newEst:'tabNewEst',newInv:'tabNewInv'};
+  document.getElementById(map[tab]).style.display='block';
+  if(tab==='newEst'){editingDocId=null;editingDocType=null;initDocForm('estimate');}
+  if(tab==='newInv'){editingDocId=null;editingDocType=null;initDocForm('invoice');}
 }
 
-function addLineItem(){
-  lineItemCount++;
-  const div = document.createElement('div');
-  div.className='form-row';
-  div.id='li'+lineItemCount;
-  div.innerHTML=`
-    <div class="form-group" style="flex:2"><label>Description</label><input type="text" id="liDesc${lineItemCount}" placeholder="e.g. Labour" oninput="calcInvTotals()"/></div>
-    <div class="form-group"><label>Amount</label><input type="number" id="liAmt${lineItemCount}" placeholder="0.00" oninput="calcInvTotals()"/></div>
+function initDocForm(type,prefill=null){
+  docLineCount=0;
+  const isEst=type==='estimate';
+  const containerId=isEst?'estForm':'invForm';
+  const num=prefill?prefill.number:(isEst?genNum(estimates,'EST-'):genNum(invoices,'INV-'));
+
+  document.getElementById(containerId).innerHTML=`
+    <div class="form-group"><label>Client</label><select id="${type}Client" onchange="fillDocClient('${type}')"><option value="">Select client...</option></select></div>
+    <div class="form-group"><label>${isEst?'Estimate':'Invoice'} #</label><input type="text" id="${type}Num" value="${num}"/></div>
+    <div class="form-group"><label>${isEst?'Project Date':'Invoice Date'}</label><input type="date" id="${type}Date" value="${prefill?prefill.date||today():today()}"/></div>
+    ${!isEst?`<div class="form-group"><label>Due Date</label><input type="date" id="${type}Due" value="${prefill?prefill.valid_until||'':''}"/></div>`:''}
+    <div class="form-group"><label>Job Description</label><input type="text" id="${type}Desc" value="${prefill?prefill.description||'':''}" placeholder="e.g. Bathroom Renovation"/></div>
+    <div class="section-title">Line Items</div>
+    <div id="${type}Lines"></div>
+    <button class="btn btn-outline btn-sm" style="margin-bottom:1rem" onclick="addDocLine('${type}')">+ Add Item</button>
+    <div class="form-row">
+      <div class="form-group"><label>Deposit ($)</label><input type="number" id="${type}Dep" value="${prefill?prefill.deposit||0:0}" oninput="calcDocTotals('${type}')"/></div>
+      <div class="form-group"><label>HST (13%)</label>
+        <select id="${type}HST" onchange="calcDocTotals('${type}')">
+          <option value="yes" ${prefill&&prefill.include_hst==='yes'?'selected':''}>Include HST</option>
+          <option value="no" ${prefill&&prefill.include_hst==='no'?'selected':''}>No HST</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Notes</label><textarea id="${type}Notes" placeholder="Payment terms, scope details...">${prefill?prefill.notes||'':''}</textarea></div>
+    <div class="detail-section" style="margin-bottom:1rem">
+      <div class="detail-row"><span>Subtotal</span><span id="${type}SubAmt">$0.00</span></div>
+      <div class="detail-row"><span>HST (13%)</span><span id="${type}HSTAmt">$0.00</span></div>
+      <div class="detail-row"><span>Deposit</span><span id="${type}DepAmt">$0.00</span></div>
+      <div class="detail-row"><span style="font-weight:700;color:var(--white)">${isEst?'Estimated Total':'Balance Owing'}</span><span id="${type}BalAmt" style="color:var(--red);font-weight:800">$0.00</span></div>
+    </div>
+    <button class="btn btn-primary" onclick="saveDoc('${type}')">💾 Save ${isEst?'Estimate':'Invoice'}</button>
+    <button class="btn btn-secondary" onclick="printDocForm('${type}')">🖨️ Print / PDF</button>
+    <button class="btn btn-blue" onclick="emailDocForm('${type}')">📧 Send via Email</button>
   `;
-  document.getElementById('lineItems').appendChild(div);
-}
 
-function calcInvTotals(){
-  let sub=0;
-  for(let i=1;i<=lineItemCount;i++){
-    const el=document.getElementById('liAmt'+i);
-    if(el) sub+=parseFloat(el.value)||0;
+  populateClientSelect(type+'Client');
+
+  const items=prefill&&prefill.items?JSON.parse(prefill.items||'[]'):[];
+  if(items.length){
+    items.forEach(it=>{
+      docLineCount++;
+      const d=document.createElement('div');
+      d.className='form-row';
+      d.innerHTML=`<div class="form-group" style="flex:2"><label>Description</label><input type="text" id="${type}ld${docLineCount}" value="${it.desc||''}" oninput="calcDocTotals('${type}')"/></div><div class="form-group"><label>Amount ($)</label><input type="number" id="${type}la${docLineCount}" value="${it.amt||''}" oninput="calcDocTotals('${type}')"/></div>`;
+      document.getElementById(type+'Lines').appendChild(d);
+    });
+  } else {
+    addDocLine(type);
   }
-  const hst = document.getElementById('invHST').value==='yes' ? sub*0.13 : 0;
-  const dep = parseFloat(document.getElementById('invDeposit').value)||0;
-  const bal = sub+hst-dep;
-  document.getElementById('invSubtotal').textContent='$'+sub.toFixed(2);
-  document.getElementById('invHSTamt').textContent='$'+hst.toFixed(2);
-  document.getElementById('invDepositShow').textContent='$'+dep.toFixed(2);
-  document.getElementById('invBalance').textContent='$'+bal.toFixed(2);
-}
 
-function fillInvClient(){
-  const id=document.getElementById('invClient').value;
-  const c=db.clients.find(cl=>cl.id===id);
-  if(c&&c.service) document.getElementById('invDesc').value=c.service;
-}
-
-function saveInvoice(){
-  let sub=0, items=[];
-  for(let i=1;i<=lineItemCount;i++){
-    const d=document.getElementById('liDesc'+i);
-    const a=document.getElementById('liAmt'+i);
-    if(d&&a&&(d.value||a.value)){
-      items.push({desc:d.value,amt:parseFloat(a.value)||0});
-      sub+=parseFloat(a.value)||0;
-    }
+  if(prefill&&prefill.client_id){
+    const sel=document.getElementById(type+'Client');
+    if(sel)sel.value=prefill.client_id;
   }
-  const hst = document.getElementById('invHST').value==='yes' ? sub*0.13 : 0;
-  const dep = parseFloat(document.getElementById('invDeposit').value)||0;
-  const inv = {
-    id: Date.now().toString(),
-    number: document.getElementById('invNumber').value,
-    clientId: document.getElementById('invClient').value,
-    date: document.getElementById('invDate').value,
-    due: document.getElementById('invDue').value,
-    desc: document.getElementById('invDesc').value,
-    items, sub, hst, deposit:dep,
-    total: sub+hst,
-    balance: sub+hst-dep,
-    notes: document.getElementById('invNotes').value,
-    includeHST: document.getElementById('invHST').value
+  calcDocTotals(type);
+}
+
+function addDocLine(type){
+  docLineCount++;
+  const d=document.createElement('div');
+  d.className='form-row';
+  d.innerHTML=`<div class="form-group" style="flex:2"><label>Description</label><input type="text" id="${type}ld${docLineCount}" placeholder="e.g. Labour" oninput="calcDocTotals('${type}')"/></div><div class="form-group"><label>Amount ($)</label><input type="number" id="${type}la${docLineCount}" placeholder="0.00" oninput="calcDocTotals('${type}')"/></div>`;
+  document.getElementById(type+'Lines').appendChild(d);
+}
+
+function fillDocClient(type){
+  const id=document.getElementById(type+'Client').value;
+  const c=clients.find(cl=>cl.id===id);
+  if(c&&c.service&&document.getElementById(type+'Desc'))document.getElementById(type+'Desc').value=c.service;
+}
+
+function getDocData(type){
+  let sub=0,items=[];
+  for(let i=1;i<=docLineCount+10;i++){
+    const d=document.getElementById(type+'ld'+i);
+    const a=document.getElementById(type+'la'+i);
+    if(d&&a){const amt=parseFloat(a.value)||0;items.push({desc:d.value,amt});sub+=amt;}
+  }
+  const hstEl=document.getElementById(type+'HST');
+  const hst=hstEl&&hstEl.value==='yes'?sub*0.13:0;
+  const dep=parseFloat((document.getElementById(type+'Dep')||{}).value)||0;
+  const client=clients.find(c=>c.id===(document.getElementById(type+'Client')||{}).value);
+  return{sub,items,hst,dep,total:sub+hst,balance:sub+hst-dep,
+    number:(document.getElementById(type+'Num')||{}).value||'',
+    date:(document.getElementById(type+'Date')||{}).value||'',
+    due:(document.getElementById(type+'Due')||{}).value||'',
+    desc:(document.getElementById(type+'Desc')||{}).value||'',
+    notes:(document.getElementById(type+'Notes')||{}).value||'',
+    hstInclude:hstEl?hstEl.value:'yes',
+    clientId:(document.getElementById(type+'Client')||{}).value||null,
+    client};
+}
+
+function calcDocTotals(type){
+  const d=getDocData(type);
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set(type+'SubAmt',fmtMoney(d.sub));
+  set(type+'HSTAmt',fmtMoney(d.hst));
+  set(type+'DepAmt',fmtMoney(d.dep));
+  set(type+'BalAmt',fmtMoney(d.balance));
+}
+
+async function saveDoc(type){
+  const d=getDocData(type);
+  const isEst=type==='estimate';
+  const payload={
+    client_id:d.clientId||null,
+    number:d.number,date:d.date||null,
+    valid_until:isEst?null:d.due||null,
+    description:d.desc,
+    items:JSON.stringify(d.items),
+    subtotal:d.sub,hst:d.hst,deposit:d.dep,
+    total:d.total,balance:d.balance,
+    notes:d.notes,include_hst:d.hstInclude
   };
-  db.invoices.unshift(inv);
-  save(); alert('Invoice saved!'); renderInvoices();
+  const tbl=isEst?'estimates':'invoices';
+  if(editingDocId&&editingDocType===type){
+    await sb.from(tbl).update(payload).eq('id',editingDocId);
+    editingDocId=null;editingDocType=null;
+    alert((isEst?'Estimate':'Invoice')+' updated!');
+  } else {
+    await sb.from(tbl).insert(payload);
+    alert((isEst?'Estimate':'Invoice')+' saved!');
+  }
+  await loadAll();
 }
 
-function printInvoice(){
-  let sub=0, items=[];
-  for(let i=1;i<=lineItemCount;i++){
-    const d=document.getElementById('liDesc'+i);
-    const a=document.getElementById('liAmt'+i);
-    if(d&&a&&(d.value||a.value)){
-      items.push({desc:d.value,amt:parseFloat(a.value)||0});
-      sub+=parseFloat(a.value)||0;
-    }
-  }
-  const clientId=document.getElementById('invClient').value;
-  const c=db.clients.find(cl=>cl.id===clientId)||{name:'',phone:'',email:'',address:''};
-  const hst=document.getElementById('invHST').value==='yes'?sub*0.13:0;
-  const dep=parseFloat(document.getElementById('invDeposit').value)||0;
-  const bal=sub+hst-dep;
-  const area=document.getElementById('invoicePrintArea');
-  area.style.display='block';
-  area.innerHTML=`<div class="invoice-preview">
-    <div class="inv-header">
-      <div class="inv-company"><strong>TNA Pro Build</strong>Quality. Care. Trust.<br>Ottawa, Ontario<br>613-252-5636<br>TNA.probuild@yahoo.com</div>
-      <div class="inv-title"><h2>INVOICE</h2><p>${document.getElementById('invNumber').value}</p><p>Date: ${document.getElementById('invDate').value}</p><p>Due: ${document.getElementById('invDue').value||'Upon Receipt'}</p></div>
+function buildDocPaper(doc,type,client){
+  const isEst=type==='estimate';
+  const items=typeof doc.items==='string'?JSON.parse(doc.items||'[]'):doc.items||[];
+  return`<div class="doc-paper">
+    <div class="doc-top">
+      <img src="${CO.logo}" class="doc-logo" alt="TNA Pro Build"/>
+      <div><div class="doc-type-label">${isEst?'ESTIMATE':'INVOICE'}</div><div class="doc-type-sub">${doc.number||''}</div></div>
     </div>
-    <hr class="inv-divider"/>
-    <div class="inv-parties"><div><strong>Bill To</strong>${c.name}<br>${c.phone}<br>${c.email}<br>${c.address}</div><div><strong>Job</strong>${document.getElementById('invDesc').value}</div></div>
-    <table class="inv-table"><thead><tr><th>Description</th><th>Amount</th></tr></thead><tbody>
-    ${items.map(it=>`<tr><td>${it.desc}</td><td>$${it.amt.toFixed(2)}</td></tr>`).join('')}
+    <hr class="doc-divider"/>
+    <div class="doc-meta">
+      <div class="doc-meta-block"><strong>From</strong><p><strong>${CO.name}</strong><br>${CO.addr}<br>${CO.city}<br>${CO.phone}<br>${CO.email}${!isEst?`<br><small>${CO.hst}</small>`:''}</p></div>
+      <div class="doc-meta-block"><strong>Bill To</strong><p>${client?`<strong>${client.name}</strong><br>${client.phone||''}<br>${client.email||''}<br>${client.address||''}`:'—'}</p>
+      <div style="margin-top:.75rem"><strong>${isEst?'Project Date':'Invoice Date'}</strong><p>${fmtDate(doc.date)}</p></div>
+      ${!isEst&&doc.valid_until?`<div style="margin-top:.5rem"><strong>Due Date</strong><p>${fmtDate(doc.valid_until)}</p></div>`:''}
+      </div>
+    </div>
+    <div class="form-group"><p style="font-size:.85rem;color:#444;font-weight:600">${doc.description||''}</p></div>
+    <table class="doc-table"><thead><tr><th>Description</th><th>Amount</th></tr></thead><tbody>
+    ${items.map(it=>`<tr><td>${it.desc||''}</td><td>${fmtMoney(it.amt)}</td></tr>`).join('')}
     </tbody></table>
-    <div class="inv-totals">
-      <div class="total-row"><span>Subtotal</span><span>$${sub.toFixed(2)}</span></div>
-      ${hst>0?`<div class="total-row"><span>HST (13%)</span><span>$${hst.toFixed(2)}</span></div>`:''}
-      ${dep>0?`<div class="total-row"><span>Deposit Paid</span><span>($${dep.toFixed(2)})</span></div>`:''}
-      <div class="total-row grand"><span>Balance Owing</span><span>$${bal.toFixed(2)}</span></div>
+    <div class="doc-totals">
+      <div class="doc-total-row"><span>Subtotal</span><span>${fmtMoney(doc.subtotal)}</span></div>
+      ${parseFloat(doc.hst)>0?`<div class="doc-total-row"><span>HST (13%)</span><span>${fmtMoney(doc.hst)}</span></div>`:''}
+      ${parseFloat(doc.deposit)>0?`<div class="doc-total-row"><span>Deposit Paid</span><span>(${fmtMoney(doc.deposit)})</span></div>`:''}
+      <div class="doc-total-row grand"><span>${isEst?'Estimated Total':'Balance Owing'}</span><span>${fmtMoney(doc.balance)}</span></div>
     </div>
-    <div class="inv-footer">Thank you for choosing TNA Pro Build — Quality. Care. Trust.<br>${document.getElementById('invNotes').value}</div>
+    ${doc.notes?`<p style="margin-top:1rem;font-size:.82rem;color:#555">${doc.notes}</p>`:''}
+    <div class="doc-footer">Thank you for choosing TNA Pro Build — Quality. Care. Trust.<br>${CO.phone} • ${CO.email}${!isEst?`<div class="doc-hst">${CO.hst}</div>`:''}</div>
   </div>`;
+}
+
+function printDocForm(type){
+  const d=getDocData(type);
+  const doc={number:d.number,date:d.date,valid_until:d.due,description:d.desc,items:d.items,subtotal:d.sub,hst:d.hst,deposit:d.dep,total:d.total,balance:d.balance,notes:d.notes};
+  document.getElementById('printArea').innerHTML=buildDocPaper(doc,type,d.client);
   window.print();
-  setTimeout(()=>{area.style.display='none'},1000);
+}
+
+function emailDocForm(type){
+  const d=getDocData(type);
+  const isEst=type==='estimate';
+  const to=d.client?d.client.email||'':'';
+  const subj=encodeURIComponent(`TNA Pro Build — ${isEst?'Estimate':'Invoice'} ${d.number}`);
+  const body=encodeURIComponent(`Hi ${d.client?d.client.name:''},\n\nPlease find your ${isEst?'estimate':'invoice'} details below.\n\nJob: ${d.desc}\n${d.items.map(i=>i.desc+': '+fmtMoney(i.amt)).join('\n')}\n\nSubtotal: ${fmtMoney(d.sub)}${d.hst>0?'\nHST (13%): '+fmtMoney(d.hst):''}${d.dep>0?'\nDeposit: '+fmtMoney(d.dep):''}\n${isEst?'Estimated Total':'Balance Owing'}: ${fmtMoney(d.balance)}\n\n${d.notes}\n\nThank you for choosing TNA Pro Build.\nQuality. Care. Trust.\n${CO.phone}`);
+  window.location.href=`mailto:${to}?subject=${subj}&body=${body}`;
+}
+
+function openDocView(id,type){
+  const arr=type==='estimate'?estimates:invoices;
+  const doc=arr.find(d=>d.id===id);if(!doc)return;
+  currentViewDoc=doc;currentViewType=type;
+  const client=clients.find(c=>c.id===doc.client_id);
+  document.getElementById('docViewTitle').textContent=type==='estimate'?`Estimate ${doc.number}`:`Invoice ${doc.number}`;
+  document.getElementById('docViewContent').innerHTML=buildDocPaper(doc,type,client);
+  document.getElementById('dupToInvBtn').style.display=type==='estimate'?'flex':'none';
+  openModal('docViewModal');
+}
+
+function printCurrentDoc(){
+  if(!currentViewDoc)return;
+  const client=clients.find(c=>c.id===currentViewDoc.client_id);
+  document.getElementById('printArea').innerHTML=buildDocPaper(currentViewDoc,currentViewType,client);
+  window.print();
+}
+
+function emailCurrentDoc(){
+  if(!currentViewDoc)return;
+  const doc=currentViewDoc;const type=currentViewType;
+  const isEst=type==='estimate';
+  const client=clients.find(c=>c.id===doc.client_id);
+  const items=typeof doc.items==='string'?JSON.parse(doc.items||'[]'):doc.items||[];
+  const to=client?client.email||'':'';
+  const subj=encodeURIComponent(`TNA Pro Build — ${isEst?'Estimate':'Invoice'} ${doc.number}`);
+  const body=encodeURIComponent(`Hi ${client?client.name:''},\n\nPlease find your ${isEst?'estimate':'invoice'} details below.\n\nJob: ${doc.description||''}\n${items.map(i=>i.desc+': '+fmtMoney(i.amt)).join('\n')}\n\nSubtotal: ${fmtMoney(doc.subtotal)}${parseFloat(doc.hst)>0?'\nHST (13%): '+fmtMoney(doc.hst):''}${parseFloat(doc.deposit)>0?'\nDeposit: '+fmtMoney(doc.deposit):''}\n${isEst?'Estimated Total':'Balance Owing'}: ${fmtMoney(doc.balance)}\n\n${doc.notes||''}\n\nThank you for choosing TNA Pro Build.\nQuality. Care. Trust.\n${CO.phone}`);
+  window.location.href=`mailto:${to}?subject=${subj}&body=${body}`;
+}
+
+function editCurrentDoc(){
+  if(!currentViewDoc)return;
+  closeModal('docViewModal');
+  const type=currentViewType;
+  editingDocId=currentViewDoc.id;
+  editingDocType=type;
+  if(type==='estimate'){
+    showPage('Invoices');
+    switchDocTab('newEst',document.querySelectorAll('.tab')[2]);
+    initDocForm('estimate',currentViewDoc);
+  } else {
+    showPage('Invoices');
+    switchDocTab('newInv',document.querySelectorAll('.tab')[3]);
+    initDocForm('invoice',currentViewDoc);
+  }
+}
+
+async function duplicateToInvoice(){
+  if(!currentViewDoc||currentViewType!=='estimate')return;
+  if(!confirm('Duplicate this estimate as a new invoice? The original estimate will be kept.'))return;
+  const est=currentViewDoc;
+  const newNum=genNum(invoices,'INV-');
+  const payload={
+    client_id:est.client_id,number:newNum,
+    date:today(),valid_until:null,
+    description:est.description,items:est.items,
+    subtotal:est.subtotal,hst:est.hst,deposit:est.deposit,
+    total:est.total,balance:est.balance,
+    notes:est.notes,include_hst:est.include_hst
+  };
+  const res=await sb.from('invoices').insert(payload).select();
+  await loadAll();
+  alert('Invoice '+newNum+' created! Original estimate kept.');
+  closeModal('docViewModal');
+  if(res.data&&res.data[0])openDocView(res.data[0].id,'invoice');
 }
 
 function renderInvoices(){
-  populateClientSelect('invClient');
-  document.getElementById('invoicesList').innerHTML = db.invoices.length
-    ? db.invoices.map(inv=>{
-        const c=db.clients.find(cl=>cl.id===inv.clientId);
-        return `<div class="list-item">
-          <div class="list-item-left"><h4>${inv.number} — ${c?c.name:'Unknown'}</h4><p>${inv.desc||''} • ${inv.date}</p></div>
-          <div class="list-item-right"><strong class="amount-positive">$${parseFloat(inv.total).toFixed(2)}</strong><span>Bal: $${parseFloat(inv.balance).toFixed(2)}</span></div>
-        </div>`;
-      }).join('')
-    : '<div class="empty-state"><span>🧾</span><p>No invoices yet</p></div>';
+  populateClientSelect('estimateClient');
+  populateClientSelect('invoiceClient');
+  document.getElementById('invoicesList').innerHTML=invoices.length?invoices.map(inv=>{
+    const c=clients.find(cl=>cl.id===inv.client_id);
+    return`<div class="list-item" onclick="openDocView('${inv.id}','invoice')">
+      <div class="list-item-left"><h4>${inv.number}<span class="tag tag-inv">INV</span></h4><p>${inv.description||''} • ${fmtDate(inv.date)}</p></div>
+      <div class="list-item-right"><strong class="amount-green">${fmtMoney(inv.total)}</strong><span>${c?c.name:'—'}</span></div>
+    </div>`;
+  }).join(''):'<div class="empty-state"><span>🧾</span><p>No invoices yet</p></div>';
+
+  document.getElementById('estimatesList').innerHTML=estimates.length?estimates.map(est=>{
+    const c=clients.find(cl=>cl.id===est.client_id);
+    return`<div class="list-item" onclick="openDocView('${est.id}','estimate')">
+      <div class="list-item-left"><h4>${est.number}<span class="tag tag-est">EST</span></h4><p>${est.description||''} • ${fmtDate(est.date)}</p></div>
+      <div class="list-item-right"><strong>${fmtMoney(est.total)}</strong><span>${c?c.name:'—'}</span></div>
+    </div>`;
+  }).join(''):'<div class="empty-state"><span>📝</span><p>No estimates yet</p></div>';
 }
 
 // EXPENSES
-function openExpenseModal(){
-  document.getElementById('expDate').value=new Date().toISOString().split('T')[0];
+function openExpModal(){
+  document.getElementById('expDate').value=today();
   populateClientSelect('expClient');
   openModal('expenseModal');
 }
 
-function saveExpense(){
-  const exp={
-    id:Date.now().toString(),
-    clientId:document.getElementById('expClient').value,
-    desc:document.getElementById('expDesc').value,
+async function saveExpense(){
+  await sb.from('expenses').insert({
+    client_id:document.getElementById('expClient').value||null,
+    description:document.getElementById('expDesc').value,
     category:document.getElementById('expCat').value,
-    amount:document.getElementById('expAmount').value,
-    date:document.getElementById('expDate').value,
+    amount:document.getElementById('expAmount').value||0,
+    date:document.getElementById('expDate').value||null,
     note:document.getElementById('expNote').value
-  };
-  db.expenses.unshift(exp);
-  save(); closeModal('expenseModal'); renderExpenses();
+  });
+  closeModal('expenseModal');
+  await loadAll();
 }
 
 function renderExpenses(){
   populateClientSelect('expFilter',true);
   populateClientSelect('expClient');
   const filter=document.getElementById('expFilter').value;
-  const exps=db.expenses.filter(e=>!filter||e.clientId===filter);
-  document.getElementById('expensesList').innerHTML=exps.length
-    ?exps.map(e=>{
-      const c=db.clients.find(cl=>cl.id===e.clientId);
-      return `<div class="list-item">
-        <div class="list-item-left"><h4>${e.desc}</h4><p>${e.category}${c?' — '+c.name:''} • ${e.note||''}</p></div>
-        <div class="list-item-right"><strong>$${parseFloat(e.amount).toFixed(2)}</strong><span>${e.date}</span></div>
-      </div>`;
-    }).join('')
-    :'<div class="empty-state"><span>💸</span><p>No expenses yet</p></div>';
-
-  // Profit per job
-  const profitHTML = db.clients.filter(c=>c.quote||db.expenses.some(e=>e.clientId===c.id)).map(c=>{
-    const rev=db.invoices.filter(i=>i.clientId===c.id).reduce((s,i)=>s+(parseFloat(i.total)||0),0);
-    const exp=db.expenses.filter(e=>e.clientId===c.id).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
-    const profit=rev-exp;
-    const pct=rev>0?Math.min(100,(profit/rev*100)):0;
-    return `<div class="profit-bar">
-      <h4>${c.name} — ${c.service}</h4>
-      <div class="profit-bar-track"><div class="profit-bar-fill" style="width:${Math.max(0,pct)}%"></div></div>
-      <div class="profit-bar-nums"><span>Revenue: $${rev.toLocaleString()}</span><span>Expenses: $${exp.toLocaleString()}</span><strong>Profit: $${profit.toLocaleString()}</strong></div>
+  const list=expenses.filter(e=>!filter||e.client_id===filter);
+  document.getElementById('expensesList').innerHTML=list.length?list.map(e=>{
+    const c=clients.find(cl=>cl.id===e.client_id);
+    return`<div class="list-item">
+      <div class="list-item-left"><h4>${e.description||'Expense'}</h4><p>${e.category||''}${c?' — '+c.name:''} • ${e.note||''}</p></div>
+      <div class="list-item-right"><strong>${fmtMoney(e.amount)}</strong><span>${fmtDate(e.date)}</span></div>
     </div>`;
-  }).join('');
-  document.getElementById('profitList').innerHTML=profitHTML||'<div class="empty-state"><span>📊</span><p>Add clients and expenses to see profitability</p></div>';
+  }).join(''):'<div class="empty-state"><span>💸</span><p>No expenses yet</p></div>';
+
+  const acJobs=clients.filter(c=>c.status==='active'||c.status==='complete');
+  document.getElementById('profitList').innerHTML=acJobs.length?acJobs.map(c=>{
+    const rev=invoices.filter(i=>i.client_id===c.id).reduce((s,i)=>s+(parseFloat(i.total)||0),0);
+    const exp=expenses.filter(e=>e.client_id===c.id).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+    const profit=rev-exp;
+    const pct=rev>0?Math.min(100,Math.max(0,profit/rev*100)):0;
+    return`<div class="profit-bar">
+      <h4>${c.name} — ${c.service||''}</h4>
+      <div class="profit-bar-track"><div class="profit-bar-fill" style="width:${pct}%"></div></div>
+      <div class="profit-bar-nums"><span>Revenue: ${fmtMoney(rev)}</span><span>Expenses: ${fmtMoney(exp)}</span><strong>Profit: ${fmtMoney(profit)}</strong></div>
+    </div>`;
+  }).join(''):'<div class="empty-state"><span>📊</span><p>Profitability shows for active & complete jobs</p></div>';
 }
 
 // LOGS
-function openLogForClient(id){
+function openLogFor(id){
   closeModal('detailModal');
   populateClientSelect('logClient');
   document.getElementById('logClient').value=id;
   openModal('logModal');
 }
 
-function saveLog(){
-  const log={
-    id:Date.now().toString(),
-    clientId:document.getElementById('logClient').value,
+async function saveLog(){
+  await sb.from('logs').insert({
+    client_id:document.getElementById('logClient').value||null,
     type:document.getElementById('logType').value,
     notes:document.getElementById('logNotes').value,
-    followUp:document.getElementById('logFollowUp').value,
-    date:new Date().toLocaleDateString()
-  };
-  db.logs.unshift(log);
-  save(); closeModal('logModal');
-  if(currentDetailId) openDetail(currentDetailId);
+    follow_up:document.getElementById('logFollowUp').value||null
+  });
+  closeModal('logModal');
+  await loadAll();
+  if(currentDetailId)openDetail(currentDetailId);
 }
 
 // HELPERS
-function populateClientSelect(id, includeAll=false){
-  const sel=document.getElementById(id);
-  if(!sel) return;
+function populateClientSelect(id,includeAll=false){
+  const sel=document.getElementById(id);if(!sel)return;
   const cur=sel.value;
   sel.innerHTML=(includeAll?'<option value="">All Jobs</option>':'<option value="">Select client...</option>')+
-    db.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-  if(cur) sel.value=cur;
+    clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  if(cur)sel.value=cur;
 }
 
-function populateSelects(){
-  populateClientSelect('invClient');
-  populateClientSelect('expClient');
-  populateClientSelect('expFilter',true);
-  populateClientSelect('logClient');
+function populateAllSelects(){
+  ['estimateClient','invoiceClient','expClient','expFilter','logClient'].forEach((id,i)=>populateClientSelect(id,i===3));
 }
 </script>
 </body>
