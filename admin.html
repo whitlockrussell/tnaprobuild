@@ -127,9 +127,9 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 .empty-state span{font-size:2.5rem;display:block;margin-bottom:.75rem}
 .empty-state p{font-size:.9rem}
 .fab{position:fixed;bottom:90px;right:1.25rem;width:56px;height:56px;background:var(--red);border-radius:50%;border:none;color:var(--white);font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(204,34,34,.5);z-index:90;display:flex;align-items:center;justify-content:center}
-.tabs{display:flex;background:var(--card);border-radius:10px;padding:.3rem;margin-bottom:1rem;gap:.3rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs{display:inline-flex;background:var(--card);border-radius:10px;padding:.3rem;margin-bottom:1rem;gap:.3rem;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:0 0 auto;padding:.5rem .9rem;border-radius:7px;border:none;background:none;color:var(--muted);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab{flex:0 0 auto;padding:.5rem 1.1rem;border-radius:7px;border:none;background:none;color:var(--muted);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
 .tab.active{background:var(--red);color:var(--white)}
 .profit-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem}
 .profit-bar h4{font-size:.8rem;color:var(--muted);margin-bottom:.5rem}
@@ -224,8 +224,8 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
   <!-- DOCUMENTS -->
   <div class="page" id="pageInvoices">
     <div class="tabs">
-      <button class="tab active" onclick="switchDocTab('invoices',this)">📋 Invoices</button>
-      <button class="tab" onclick="switchDocTab('estimates',this)">📝 Estimates</button>
+      <button class="tab active" onclick="switchDocTab('estimates',this)">📝 Estimates</button>
+      <button class="tab" onclick="switchDocTab('invoices',this)">📋 Invoices</button>
     </div>
     <div id="tabInvoices"><div id="invoicesList"></div></div>
     <div id="tabEstimates" style="display:none"><div id="estimatesList"></div></div>
@@ -415,12 +415,12 @@ function logout(){
 
 async function loadAll(){
   const [c,i,e,ex,l,p]=await Promise.all([
-    sb.from('clients').select('*').order('created_at',{ascending:false}),
-    sb.from('invoices').select('*').order('created_at',{ascending:false}),
-    sb.from('estimates').select('*').order('created_at',{ascending:false}),
-    sb.from('expenses').select('*').order('created_at',{ascending:false}),
-    sb.from('logs').select('*').order('created_at',{ascending:false}),
-    sb.from('photos').select('*')
+    sb.from('Clients').select('*').order('created_at',{ascending:false}),
+    sb.from('Invoices').select('*').order('created_at',{ascending:false}),
+    sb.from('Estimates').select('*').order('created_at',{ascending:false}),
+    sb.from('Expenses').select('*').order('created_at',{ascending:false}),
+    sb.from('Logs').select('*').order('created_at',{ascending:false}),
+    sb.from('Photos').select('*')
   ]);
   clients=c.data||[];invoices=i.data||[];estimates=e.data||[];
   expenses=ex.data||[];logs=l.data||[];
@@ -490,7 +490,7 @@ function renderDashboard(){
 
 function jobCard(c){
   return`<div class="job-card" onclick="openDetail('${c.id}')">
-    <div class="job-card-top"><h3>${c.name||''}${c.returning==='yes'?' ⭐':''}</h3><span class="status-badge status-${c.status}">${c.status}</span></div>
+    <div class="job-card-top"><h3>${c.name||''}${c.is_returning==='yes'?' ⭐':''}</h3><span class="status-badge status-${c.status}">${c.status}</span></div>
     <p>${c.service||''} • ${c.address||'No address'}</p>
     <div class="job-card-bottom"><span>${c.start_date?fmtDate(c.start_date):'No date'}</span>${c.quote_amount?`<strong>${fmtMoney(c.quote_amount)}</strong>`:'<span>No quote</span>'}</div>
   </div>`;
@@ -531,30 +531,38 @@ function removeNewPhoto(i){newClientPhotoData.splice(i,1);renderNewClientPhotos(
 async function saveClient(){
   const data={
     name:document.getElementById('cName').value||'Unnamed',
-    phone:document.getElementById('cPhone').value,
-    email:document.getElementById('cEmail').value,
-    address:document.getElementById('cAddress').value,
-    service:document.getElementById('cService').value,
-    status:document.getElementById('cStatus').value,
+    phone:document.getElementById('cPhone').value||null,
+    email:document.getElementById('cEmail').value||null,
+    address:document.getElementById('cAddress').value||null,
+    service:document.getElementById('cService').value||null,
+    status:document.getElementById('cStatus').value||'lead',
     start_date:document.getElementById('cStart').value||null,
     end_date:document.getElementById('cEnd').value||null,
     quote_amount:document.getElementById('cQuote').value||null,
-    returning:document.getElementById('cReturning').value,
-    notes:document.getElementById('cNotes').value
+    is_returning:document.getElementById('cReturning').value||'no',
+    notes:document.getElementById('cNotes').value||null
   };
-  let clientId=editingClientId;
-  if(editingClientId){
-    await sb.from('clients').update(data).eq('id',editingClientId);
-  } else {
-    const res=await sb.from('clients').insert(data).select();
-    if(res.data&&res.data[0])clientId=res.data[0].id;
+  try{
+    let clientId=editingClientId;
+    if(editingClientId){
+      await sb.from('clients').update(data).eq('id',editingClientId);
+    } else {
+      const res=await sb.from('clients').insert(data).select();
+      if(res.error) throw res.error;
+      if(res.data&&res.data[0]) clientId=res.data[0].id;
+    }
+    if(clientId&&newClientPhotoData.length){
+      for(const url of newClientPhotoData){
+        await sb.from('photos').insert({client_id:clientId,url});
+      }
+    }
+    newClientPhotoData=[];
+    closeModal('clientModal');
+    await loadAll();
+  } catch(err){
+    alert('Error saving client: '+err.message);
+    console.error(err);
   }
-  if(clientId&&newClientPhotoData.length){
-    await Promise.all(newClientPhotoData.map(url=>sb.from('photos').insert({client_id:clientId,url})));
-  }
-  newClientPhotoData=[];
-  closeModal('clientModal');
-  await loadAll();
 }
 
 function renderClients(filter=''){
@@ -574,7 +582,7 @@ async function openDetail(id){
   const totalExp=cExp.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
   const totalInv=cInv.reduce((s,i)=>s+(parseFloat(i.total)||0),0);
 
-  document.getElementById('detailName').textContent=c.name+(c.returning==='yes'?' ⭐':'');
+  document.getElementById('detailName').textContent=c.name+(c.is_returning==='yes'?' ⭐':'');
   document.getElementById('detailContent').innerHTML=`
     <div class="detail-section">
       <h4>Contact Info</h4>
@@ -635,7 +643,7 @@ async function handleEditPhotos(e){
   const files=Array.from(e.target.files);
   await Promise.all(files.map(f=>new Promise(res=>{
     const r=new FileReader();
-    r.onload=async ev=>{await sb.from('photos').insert({client_id:clientId,url:ev.target.result});res();};
+    r.onload=async ev=>{await sb.from('Photos').insert({client_id:clientId,url:ev.target.result});res();};
     r.readAsDataURL(f);
   })));
   e.target.value='';
@@ -656,7 +664,7 @@ function editClient(id){
   document.getElementById('cStart').value=c.start_date||'';
   document.getElementById('cEnd').value=c.end_date||'';
   document.getElementById('cQuote').value=c.quote_amount||'';
-  document.getElementById('cReturning').value=c.returning||'no';
+  document.getElementById('cReturning').value=c.is_returning||'no';
   document.getElementById('cNotes').value=c.notes||'';
   renderNewClientPhotos();
   closeModal('detailModal');
@@ -665,7 +673,7 @@ function editClient(id){
 
 async function deleteClient(id){
   if(!confirm('Delete this client? This cannot be undone.'))return;
-  await sb.from('clients').delete().eq('id',id);
+  await sb.from('Clients').delete().eq('id',id);
   closeModal('detailModal');
   await loadAll();
 }
@@ -685,11 +693,11 @@ function renderSchedule(){
 function switchDocTab(tab,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  ['tabInvoices','tabEstimates','tabNewEst','tabNewInv'].forEach(id=>document.getElementById(id).style.display='none');
+  ['tabInvoices','tabEstimates','tabNewEst','tabNewInv'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='none';
+  });
   const map={invoices:'tabInvoices',estimates:'tabEstimates',newEst:'tabNewEst',newInv:'tabNewInv'};
   document.getElementById(map[tab]).style.display='block';
-  if(tab==='newEst'){editingDocId=null;editingDocType=null;initDocForm('estimate');}
-  if(tab==='newInv'){editingDocId=null;editingDocType=null;initDocForm('invoice');}
 }
 
 function initDocForm(type,prefill=null){
@@ -808,14 +816,13 @@ async function saveDoc(type){
     total:d.total,balance:d.balance,
     notes:d.notes,include_hst:d.hstInclude
   };
-  const tbl=isEst?'estimates':'invoices';
+  const tbl=isEst?'Estimates':'Invoices';
   if(editingDocId&&editingDocType===type){
     await sb.from(tbl).update(payload).eq('id',editingDocId);
     editingDocId=null;editingDocType=null;
     alert((isEst?'Estimate':'Invoice')+' updated!');
   } else {
-    await sb.from(tbl).insert(payload);
-    alert((isEst?'Estimate':'Invoice')+' saved!');
+    await sb.from(tbl).insert(payload);    alert((isEst?'Estimate':'Invoice')+' saved!');
   }
   await loadAll();
 }
@@ -927,7 +934,7 @@ async function duplicateToInvoice(){
     total:est.total,balance:est.balance,
     notes:est.notes,include_hst:est.include_hst
   };
-  const res=await sb.from('invoices').insert(payload).select();
+  const res=await sb.from('Invoices').insert(payload).select();
   await loadAll();
   alert('Invoice '+newNum+' created! Original estimate kept.');
   closeModal('docViewModal');
@@ -962,7 +969,7 @@ function openExpModal(){
 }
 
 async function saveExpense(){
-  await sb.from('expenses').insert({
+  await sb.from('Expenses').insert({
     client_id:document.getElementById('expClient').value||null,
     description:document.getElementById('expDesc').value,
     category:document.getElementById('expCat').value,
@@ -1010,7 +1017,7 @@ function openLogFor(id){
 }
 
 async function saveLog(){
-  await sb.from('logs').insert({
+  await sb.from('Logs').insert({
     client_id:document.getElementById('logClient').value||null,
     type:document.getElementById('logType').value,
     notes:document.getElementById('logNotes').value,
