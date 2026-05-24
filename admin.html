@@ -1042,6 +1042,7 @@ function openDocView(id,type){
   addBtn('🖨️ Print / Save PDF','btn-secondary',printCurrentDoc);
   addBtn('📧 Send via Email','btn-blue',emailCurrentDoc);
   addBtn('✏️ Edit','btn-orange',editCurrentDoc);
+  addBtn('🗑️ Delete','btn-outline',deleteCurrentDoc);
 
   if(type==='estimate'){
     addBtn('📄 Duplicate as Invoice','btn-success',duplicateToInvoice);
@@ -1126,6 +1127,19 @@ function emailContractForm(){
   const fin=parseFloat(document.getElementById('conFinal').value)||0;
   const con={number:document.getElementById('conNum').value,start_date:document.getElementById('conStart').value,end_date:document.getElementById('conEnd').value,scope:document.getElementById('conScope').value,deposit_amount:dep,deposit_due:document.getElementById('conDepDue').value,progress_amount:prog,progress_due:document.getElementById('conProgDue').value,final_amount:fin,total:dep+prog+fin};
   openEmailLink(buildEmailLink(con,'contract',client));
+}
+
+async function deleteCurrentDoc(){
+  if(!currentViewDoc||!currentViewType)return;
+  const label=currentViewType==='estimate'?'estimate':currentViewType==='invoice'?'invoice':'contract';
+  if(!confirm(`Delete this ${label}? This cannot be undone.`))return;
+  const tbl=currentViewType==='estimate'?'estimates':currentViewType==='invoice'?'invoices':'contracts';
+  try{
+    const res=await sb.from(tbl).delete().eq('id',currentViewDoc.id);
+    if(res.error)throw res.error;
+    closeModal('docViewModal');
+    await loadAll();
+  }catch(err){alert('Error: '+err.message);}
 }
 
 function editCurrentDoc(){
