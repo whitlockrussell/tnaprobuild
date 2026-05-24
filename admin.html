@@ -723,7 +723,7 @@ function initDocForm(type,prefill=null){
     <div class="form-group"><label>Client</label><select id="${type}Client" onchange="fillDocClient('${type}')"><option value="">Select client...</option></select></div>
     <div class="form-group"><label>${isEst?'Estimate':'Invoice'} #</label><input type="text" id="${type}Num" value="${num}"/></div>
     <div class="form-group"><label>${isEst?'Project Date':'Invoice Date'}</label><input type="date" id="${type}Date" value="${prefill?prefill.date||today():today()}"/></div>
-    ${!isEst?`<div class="form-group"><label>Due Date</label><input type="date" id="${type}Due" value="${prefill?prefill.valid_until||'':''}" style="cursor:pointer;-webkit-appearance:none;appearance:none"/></div>`:''}
+    ${!isEst?`<div class="form-group"><label>Due Date</label><input type="date" id="${type}Due" value="${prefill?prefill.valid_until||'':''}"/></div>`:''}
     <div class="form-group"><label>Job Description</label><input type="text" id="${type}Desc" value="${prefill?prefill.description||'':''}" placeholder="e.g. Bathroom Renovation"/></div>
     <div class="section-title">Line Items</div>
     <div id="${type}Lines"></div>
@@ -935,19 +935,15 @@ function emailCurrentDoc(){
 
 function editCurrentDoc(){
   if(!currentViewDoc)return;
-  closeModal('docViewModal');
   const type=currentViewType;
   editingDocId=currentViewDoc.id;
   editingDocType=type;
-  if(type==='estimate'){
-    showPage('Invoices');
-    switchDocTab('newEst',document.querySelectorAll('.tab')[2]);
-    initDocForm('estimate',currentViewDoc);
-  } else {
-    showPage('Invoices');
-    switchDocTab('newInv',document.querySelectorAll('.tab')[3]);
-    initDocForm('invoice',currentViewDoc);
-  }
+  closeModal('docViewModal');
+  showPage('Invoices');
+  setTimeout(()=>{
+    showDocForm(type);
+    setTimeout(()=>initDocForm(type,currentViewDoc),100);
+  },100);
 }
 
 async function duplicateToInvoice(){
