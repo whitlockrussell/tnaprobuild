@@ -146,6 +146,8 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
 @media print{
   body>*{display:none!important}
   #printArea{display:block!important;position:fixed;inset:0;background:white;z-index:9999;padding:0;margin:0}
+  @page{margin:1cm;size:letter}
+  head title{display:none}
 }
 #printArea{display:none}
 
@@ -368,7 +370,18 @@ html,body{height:100%;background:var(--dark);color:#e8eaed;font-family:'Segoe UI
   </div>
 </div>
 
-<!-- CAMERA INPUTS -->
+<!-- NEW DOC MODAL -->
+<div class="modal-overlay" id="newDocModal">
+  <div class="modal" style="text-align:center">
+    <div class="modal-header">
+      <h3>Create New Document</h3>
+      <button class="modal-close" onclick="closeModal('newDocModal')">×</button>
+    </div>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.5rem">What would you like to create?</p>
+    <button class="btn btn-primary" onclick="closeModal('newDocModal');showDocForm('estimate')">📝 New Estimate</button>
+    <button class="btn btn-secondary" onclick="closeModal('newDocModal');showDocForm('invoice')">🧾 New Invoice</button>
+  </div>
+</div>
 <input type="file" id="cameraEdit" accept="image/*" capture="environment" style="display:none" multiple onchange="handleEditPhotos(event)"/>
 <input type="file" id="galleryEdit" accept="image/*" style="display:none" multiple onchange="handleEditPhotos(event)"/>
 
@@ -381,7 +394,7 @@ const SURL='https://mhbnsoyusypuiiqiikph.supabase.co';
 const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oYm5zb3l1c3lwdWlpcWlpa3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MjU1MjQsImV4cCI6MjA5NTIwMTUyNH0.QKVLFT661mY4UYuQMRs5cZZT3QGeAf1YjPt1x529Lig';
 const sb=supabase.createClient(SURL,SKEY);
 
-const CO={name:'TNA Pro Build',addr:'332 Sweetfern Cresc',city:'Orleans, ON',email:'tna.probuild@yahoo.com',phone:'613-252-5636',hst:'HST# 728609413RT0001',logo:'https://res.cloudinary.com/djg4tmkyb/image/upload/v1779635647/logo_aaf0ki.jpg'};
+const CO={name:'TNA Pro Build',addr:'332 Sweetfern Cresc',city:'Orleans, ON',email:'tna.probuild@yahoo.com',phone:'613-252-5636',hst:'HST# 728609413RT0001',logo:'https://tnaprobuild.ca/logo.jpg'};
 
 let clients=[],invoices=[],estimates=[],expenses=[],logs=[],clientPhotos={};
 let editingClientId=null,currentDetailId=null,currentViewDoc=null,currentViewType=null;
@@ -449,9 +462,9 @@ function openFAB(){
   const p=document.getElementById('pageTitle').textContent;
   if(p==='Expenses') openExpModal();
   else if(p==='Documents'){
-    const choice=confirm('Tap OK to create a New Estimate\nTap Cancel to create a New Invoice');
-    if(choice){showDocForm('estimate');}
-    else{showDocForm('invoice');}
+    const activeTab=document.querySelector('#pageInvoices .tab.active');
+    const type=activeTab&&activeTab.textContent.includes('Estimate')?'estimate':'invoice';
+    showDocForm(type);
   }
   else openNewClient();
 }
@@ -489,7 +502,7 @@ function renderDashboard(){
 }
 
 function jobCard(c){
-  return`<div class="job-card" onclick="openDetail('${c.id}')">
+  return`<div class="job-card" onclick="openDetail(${c.id})">
     <div class="job-card-top"><h3>${c.name||''}${c.is_returning==='yes'?' ⭐':''}</h3><span class="status-badge status-${c.status}">${c.status}</span></div>
     <p>${c.service||''} • ${c.address||'No address'}</p>
     <div class="job-card-bottom"><span>${c.start_date?fmtDate(c.start_date):'No date'}</span>${c.quote_amount?`<strong>${fmtMoney(c.quote_amount)}</strong>`:'<span>No quote</span>'}</div>
@@ -573,7 +586,7 @@ function searchClients(v){renderClients(v)}
 
 async function openDetail(id){
   currentDetailId=id;
-  const c=clients.find(cl=>cl.id===id);if(!c)return;
+  const c=clients.find(cl=>cl.id==id);if(!c)return;
   const cExp=expenses.filter(e=>e.client_id===id);
   const cInv=invoices.filter(i=>i.client_id===id);
   const cEst=estimates.filter(e=>e.client_id===id);
@@ -604,11 +617,11 @@ async function openDetail(id){
     </div>
     <div class="detail-section">
       <h4>Estimates (${cEst.length})</h4>
-      ${cEst.map(e=>`<div class="list-item" onclick="openDocView('${e.id}','estimate')"><div class="list-item-left"><h4>${e.number}<span class="tag tag-est">EST</span></h4><p>${e.description||''} • ${fmtDate(e.date)}</p></div><div class="list-item-right"><strong>${fmtMoney(e.total)}</strong></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No estimates</p>'}
+      ${cEst.map(e=>`<div class="list-item" onclick="openDocView(${e.id},'estimate')"><div class="list-item-left"><h4>${e.number}<span class="tag tag-est">EST</span></h4><p>${e.description||''} • ${fmtDate(e.date)}</p></div><div class="list-item-right"><strong>${fmtMoney(e.total)}</strong></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No estimates</p>'}
     </div>
     <div class="detail-section">
       <h4>Invoices (${cInv.length})</h4>
-      ${cInv.map(i=>`<div class="list-item" onclick="openDocView('${i.id}','invoice')"><div class="list-item-left"><h4>${i.number}<span class="tag tag-inv">INV</span></h4><p>${i.description||''} • ${fmtDate(i.date)}</p></div><div class="list-item-right"><strong class="amount-green">${fmtMoney(i.total)}</strong></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No invoices</p>'}
+      ${cInv.map(i=>`<div class="list-item" onclick="openDocView(${i.id},'invoice')"><div class="list-item-left"><h4>${i.number}<span class="tag tag-inv">INV</span></h4><p>${i.description||''} • ${fmtDate(i.date)}</p></div><div class="list-item-right"><strong class="amount-green">${fmtMoney(i.total)}</strong></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem;padding:.3rem 0">No invoices</p>'}
     </div>
     <div class="detail-section">
       <h4>📷 Photos (${cPhotos.length})</h4>
@@ -710,7 +723,7 @@ function initDocForm(type,prefill=null){
     <div class="form-group"><label>Client</label><select id="${type}Client" onchange="fillDocClient('${type}')"><option value="">Select client...</option></select></div>
     <div class="form-group"><label>${isEst?'Estimate':'Invoice'} #</label><input type="text" id="${type}Num" value="${num}"/></div>
     <div class="form-group"><label>${isEst?'Project Date':'Invoice Date'}</label><input type="date" id="${type}Date" value="${prefill?prefill.date||today():today()}"/></div>
-    ${!isEst?`<div class="form-group"><label>Due Date</label><input type="date" id="${type}Due" value="${prefill?prefill.valid_until||'':''}"/></div>`:''}
+    ${!isEst?`<div class="form-group"><label>Due Date</label><input type="date" id="${type}Due" value="${prefill?prefill.valid_until||'':''}" style="cursor:pointer;-webkit-appearance:none;appearance:none"/></div>`:''}
     <div class="form-group"><label>Job Description</label><input type="text" id="${type}Desc" value="${prefill?prefill.description||'':''}" placeholder="e.g. Bathroom Renovation"/></div>
     <div class="section-title">Line Items</div>
     <div id="${type}Lines"></div>
@@ -768,8 +781,10 @@ function addDocLine(type){
 
 function fillDocClient(type){
   const id=document.getElementById(type+'Client').value;
-  const c=clients.find(cl=>cl.id===id);
-  if(c&&c.service&&document.getElementById(type+'Desc'))document.getElementById(type+'Desc').value=c.service;
+  const c=clients.find(cl=>cl.id==id);
+  if(!c) return;
+  const descEl=document.getElementById(type+'Desc');
+  if(descEl&&c.service) descEl.value=c.service;
 }
 
 function getDocData(type){
@@ -782,7 +797,8 @@ function getDocData(type){
   const hstEl=document.getElementById(type+'HST');
   const hst=hstEl&&hstEl.value==='yes'?sub*0.13:0;
   const dep=parseFloat((document.getElementById(type+'Dep')||{}).value)||0;
-  const client=clients.find(c=>c.id===(document.getElementById(type+'Client')||{}).value);
+  const clientId=(document.getElementById(type+'Client')||{}).value||null;
+  const client=clients.find(c=>c.id==clientId);
   return{sub,items,hst,dep,total:sub+hst,balance:sub+hst-dep,
     number:(document.getElementById(type+'Num')||{}).value||'',
     date:(document.getElementById(type+'Date')||{}).value||'',
@@ -790,8 +806,7 @@ function getDocData(type){
     desc:(document.getElementById(type+'Desc')||{}).value||'',
     notes:(document.getElementById(type+'Notes')||{}).value||'',
     hstInclude:hstEl?hstEl.value:'yes',
-    clientId:(document.getElementById(type+'Client')||{}).value||null,
-    client};
+    clientId,client};
 }
 
 function calcDocTotals(type){
@@ -868,17 +883,16 @@ function printDocForm(type){
 function emailDocForm(type){
   const d=getDocData(type);
   const isEst=type==='estimate';
-  const to=d.client?d.client.email||'':'';
-  const subj=encodeURIComponent(`TNA Pro Build — ${isEst?'Estimate':'Invoice'} ${d.number}`);
-  const body=encodeURIComponent(`Hi ${d.client?d.client.name:''},\n\nPlease find your ${isEst?'estimate':'invoice'} details below.\n\nJob: ${d.desc}\n${d.items.map(i=>i.desc+': '+fmtMoney(i.amt)).join('\n')}\n\nSubtotal: ${fmtMoney(d.sub)}${d.hst>0?'\nHST (13%): '+fmtMoney(d.hst):''}${d.dep>0?'\nDeposit: '+fmtMoney(d.dep):''}\n${isEst?'Estimated Total':'Balance Owing'}: ${fmtMoney(d.balance)}\n\n${d.notes}\n\nThank you for choosing TNA Pro Build.\nQuality. Care. Trust.\n${CO.phone}`);
-  window.location.href=`mailto:${to}?subject=${subj}&body=${body}`;
+  const doc={number:d.number,date:d.date,valid_until:d.due,description:d.desc,items:d.items,subtotal:d.sub,hst:d.hst,deposit:d.dep,total:d.total,balance:d.balance,notes:d.notes};
+  const link=buildEmailLink(doc,type,d.client);
+  window.open(link,'_self');
 }
 
 function openDocView(id,type){
   const arr=type==='estimate'?estimates:invoices;
-  const doc=arr.find(d=>d.id===id);if(!doc)return;
+  const doc=arr.find(d=>d.id==id);if(!doc)return;
   currentViewDoc=doc;currentViewType=type;
-  const client=clients.find(c=>c.id===doc.client_id);
+  const client=clients.find(c=>c.id==doc.client_id);
   document.getElementById('docViewTitle').textContent=type==='estimate'?`Estimate ${doc.number}`:`Invoice ${doc.number}`;
   document.getElementById('docViewContent').innerHTML=buildDocPaper(doc,type,client);
   document.getElementById('dupToInvBtn').style.display=type==='estimate'?'flex':'none';
@@ -892,16 +906,31 @@ function printCurrentDoc(){
   window.print();
 }
 
-function emailCurrentDoc(){
-  if(!currentViewDoc)return;
-  const doc=currentViewDoc;const type=currentViewType;
+function buildEmailLink(doc, type, client){
   const isEst=type==='estimate';
-  const client=clients.find(c=>c.id===doc.client_id);
   const items=typeof doc.items==='string'?JSON.parse(doc.items||'[]'):doc.items||[];
   const to=client?client.email||'':'';
-  const subj=encodeURIComponent(`TNA Pro Build — ${isEst?'Estimate':'Invoice'} ${doc.number}`);
-  const body=encodeURIComponent(`Hi ${client?client.name:''},\n\nPlease find your ${isEst?'estimate':'invoice'} details below.\n\nJob: ${doc.description||''}\n${items.map(i=>i.desc+': '+fmtMoney(i.amt)).join('\n')}\n\nSubtotal: ${fmtMoney(doc.subtotal)}${parseFloat(doc.hst)>0?'\nHST (13%): '+fmtMoney(doc.hst):''}${parseFloat(doc.deposit)>0?'\nDeposit: '+fmtMoney(doc.deposit):''}\n${isEst?'Estimated Total':'Balance Owing'}: ${fmtMoney(doc.balance)}\n\n${doc.notes||''}\n\nThank you for choosing TNA Pro Build.\nQuality. Care. Trust.\n${CO.phone}`);
-  window.location.href=`mailto:${to}?subject=${subj}&body=${body}`;
+  const subj=encodeURIComponent(`TNA Pro Build — ${isEst?'Estimate':'Invoice'} ${doc.number||''}`);
+  const body=encodeURIComponent(
+    `Hi ${client?client.name:''},\n\n`+
+    `Please find your ${isEst?'estimate':'invoice'} details below.\n\n`+
+    `Job: ${doc.description||''}\n`+
+    items.map(i=>`${i.desc}: ${fmtMoney(i.amt)}`).join('\n')+'\n\n'+
+    `Subtotal: ${fmtMoney(doc.subtotal)}`+
+    (parseFloat(doc.hst)>0?`\nHST (13%): ${fmtMoney(doc.hst)}`:'')+
+    (parseFloat(doc.deposit)>0?`\nDeposit: ${fmtMoney(doc.deposit)}`:'')+
+    `\n${isEst?'Estimated Total':'Balance Owing'}: ${fmtMoney(doc.balance)}\n\n`+
+    (doc.notes?doc.notes+'\n\n':'')+
+    `Thank you for choosing TNA Pro Build.\nQuality. Care. Trust.\n${CO.phone}`
+  );
+  return `mailto:${to}?subject=${subj}&body=${body}`;
+}
+
+function emailCurrentDoc(){
+  if(!currentViewDoc)return;
+  const client=clients.find(c=>c.id==currentViewDoc.client_id);
+  const link=buildEmailLink(currentViewDoc,currentViewType,client);
+  window.open(link,'_self');
 }
 
 function editCurrentDoc(){
@@ -946,7 +975,7 @@ function renderInvoices(){
   populateClientSelect('invoiceClient');
   document.getElementById('invoicesList').innerHTML=invoices.length?invoices.map(inv=>{
     const c=clients.find(cl=>cl.id===inv.client_id);
-    return`<div class="list-item" onclick="openDocView('${inv.id}','invoice')">
+    return`<div class="list-item" onclick="openDocView(${inv.id},'invoice')">
       <div class="list-item-left"><h4>${inv.number}<span class="tag tag-inv">INV</span></h4><p>${inv.description||''} • ${fmtDate(inv.date)}</p></div>
       <div class="list-item-right"><strong class="amount-green">${fmtMoney(inv.total)}</strong><span>${c?c.name:'—'}</span></div>
     </div>`;
@@ -954,7 +983,7 @@ function renderInvoices(){
 
   document.getElementById('estimatesList').innerHTML=estimates.length?estimates.map(est=>{
     const c=clients.find(cl=>cl.id===est.client_id);
-    return`<div class="list-item" onclick="openDocView('${est.id}','estimate')">
+    return`<div class="list-item" onclick="openDocView(${est.id},'estimate')">
       <div class="list-item-left"><h4>${est.number}<span class="tag tag-est">EST</span></h4><p>${est.description||''} • ${fmtDate(est.date)}</p></div>
       <div class="list-item-right"><strong>${fmtMoney(est.total)}</strong><span>${c?c.name:'—'}</span></div>
     </div>`;
