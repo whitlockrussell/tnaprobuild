@@ -238,12 +238,19 @@ canvas#sigPad{width:100%;height:180px;border-radius:8px;display:block;touch-acti
   <div class="page" id="pageInvoices">
     <div class="tabs">
       <button class="tab active" onclick="switchDocTab('estimates',this)">📝 Estimates</button>
-      <button class="tab" onclick="switchDocTab('invoices',this)">📋 Invoices</button>
       <button class="tab" onclick="switchDocTab('contracts',this)">📄 Contracts</button>
+      <button class="tab" onclick="switchDocTab('invoices',this)">📋 Invoices</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+      <label style="font-size:.75rem;color:var(--muted);white-space:nowrap">Sort by:</label>
+      <select id="docSort" onchange="renderDocs()" style="background:var(--card);border:1px solid var(--border);color:var(--white);padding:.4rem .75rem;border-radius:7px;font-size:.8rem;flex:1">
+        <option value="date">Date (newest)</option>
+        <option value="client">Client Name</option>
+      </select>
     </div>
     <div id="tabEstimates"><div id="estimatesList"></div></div>
-    <div id="tabInvoices" style="display:none"><div id="invoicesList"></div></div>
     <div id="tabContracts" style="display:none"><div id="contractsList"></div></div>
+    <div id="tabInvoices" style="display:none"><div id="invoicesList"></div></div>
     <div id="tabNewEst" style="display:none"><div id="estForm"></div></div>
     <div id="tabNewInv" style="display:none"><div id="invForm"></div></div>
     <div id="tabNewCon" style="display:none"><div id="conForm"></div></div>
@@ -525,11 +532,18 @@ function renderDashboard(){
   const quoted=clients.filter(c=>c.status==='quoted');
   const leads=clients.filter(c=>c.status==='lead');
   const mo=thisMonth();const yr=thisYear();
-  const paidInvs=invoices.filter(i=>i.paid_date);
-  const monthRev=paidInvs.filter(i=>i.paid_date&&i.paid_date.startsWith(mo)).reduce((s,i)=>s+(parseFloat(i.total)||0),0);
-  const ytdRev=paidInvs.filter(i=>i.paid_date&&new Date(i.paid_date).getFullYear()===yr).reduce((s,i)=>s+(parseFloat(i.total)||0),0);
+
+  // This Month: paid invoices + deposits received this month
+  const monthRev=invoices.filter(i=>i.paid_date&&i.paid_date.startsWith(mo)).reduce((s,i)=>s+(parseFloat(i.total)||0),0)
+    +invoices.filter(i=>!i.paid_date&&i.deposit_date&&i.deposit_date.startsWith(mo)).reduce((s,i)=>s+(parseFloat(i.deposit_received)||0),0);
+
+  // YTD: paid invoices + deposits received this year
+  const ytdRev=invoices.filter(i=>i.paid_date&&new Date(i.paid_date).getFullYear()===thisYear()).reduce((s,i)=>s+(parseFloat(i.total)||0),0)
+    +invoices.filter(i=>!i.paid_date&&i.deposit_date&&new Date(i.deposit_date).getFullYear()===thisYear()).reduce((s,i)=>s+(parseFloat(i.deposit_received)||0),0);
+
+  // Outstanding: unpaid balance across all invoices
   const outstanding=invoices.filter(i=>!i.paid_date).reduce((s,i)=>s+(parseFloat(i.balance)||0),0);
-  const ytdExp=expenses.filter(e=>e.date&&new Date(e.date).getFullYear()===yr).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  const ytdExp=expenses.filter(e=>e.date&&new Date(e.date).getFullYear()===thisYear()).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
 
   document.getElementById('statActive').textContent=active.length;
   document.getElementById('statQuoted').textContent=quoted.length;
@@ -779,8 +793,7 @@ function initDocForm(type,prefill=null){
       <div class="detail-row"><span style="font-weight:700;color:var(--white)">${isEst?'Estimated Total':'Balance Owing'}</span><span id="${type}BalAmt" style="color:var(--red);font-weight:800">$0.00</span></div>
     </div>
     <button class="btn btn-primary" onclick="saveDoc('${type}')">💾 Save ${isEst?'Estimate':'Invoice'}</button>
-    <button class="btn btn-secondary" onclick="printDocForm('${type}')">🖨️ Print / PDF</button>
-    <button class="btn btn-blue" onclick="emailDocForm('${type}')">📧 Send via Email</button>`;
+    <button class="btn btn-secondary" onclick="printDocForm('${type}')">📄 Save as PDF</button>`;
   populateClientSelect(type+'Client');
   const items=prefill&&prefill.items?JSON.parse(prefill.items||'[]'):[];
   if(items.length){items.forEach(it=>{docLineCount++;const d=document.createElement('div');d.className='form-row';d.innerHTML=`<div class="form-group" style="flex:2"><label>Description</label><input type="text" id="${type}ld${docLineCount}" value="${it.desc||''}" oninput="calcDocTotals('${type}')"/></div><div class="form-group"><label>Amount ($)</label><input type="number" id="${type}la${docLineCount}" value="${it.amt||''}" oninput="calcDocTotals('${type}')"/></div>`;document.getElementById(type+'Lines').appendChild(d);});}
@@ -855,12 +868,13 @@ async function saveDoc(type){
       if(res.error)throw res.error;
       if(res.data&&res.data[0])savedId=res.data[0].id;
     }
-    // Auto status: lead -> quoted when estimate created
+    // Auto status: lead -> quoted when estimate created, also set start_date
     if(type==='estimate'&&savedId&&d.clientId){
       const cl=clients.find(c=>c.id==parseInt(d.clientId));
-      if(cl&&cl.status==='lead'){
-        await sb.from('clients').update({status:'quoted'}).eq('id',cl.id);
-      }
+      const updates={};
+      if(cl&&cl.status==='lead')updates.status='quoted';
+      if(cl&&!cl.start_date&&d.date)updates.start_date=d.date;
+      if(Object.keys(updates).length)await sb.from('clients').update(updates).eq('id',cl.id);
     }
     await loadAll();
     showPage('Invoices');
@@ -899,8 +913,7 @@ function initContractForm(prefill=null){
     <div class="form-group"><label>Terms & Conditions</label><textarea id="conTerms" style="min-height:150px" placeholder="Payment terms, cancellation policy, warranty, change order policy...">${prefill?prefill.terms||defaultTerms():defaultTerms()}</textarea></div>
     <div class="form-group"><label>Additional Notes</label><textarea id="conNotes" placeholder="Any other details...">${prefill?prefill.notes||'':''}</textarea></div>
     <button class="btn btn-primary" onclick="saveContract()">💾 Save Contract</button>
-    <button class="btn btn-secondary" onclick="printContractForm()">🖨️ Print / PDF</button>
-    <button class="btn btn-blue" onclick="emailContractForm()">📧 Send via Email</button>`;
+    <button class="btn btn-secondary" onclick="printContractForm()">📄 Save as PDF</button>`;
   populateClientSelect('conClient');
   if(prefill&&prefill.client_id){const sel=document.getElementById('conClient');if(sel)sel.value=prefill.client_id;}
   setTimeout(fixDateInputs,200);
@@ -1051,8 +1064,7 @@ function openDocView(id,type){
   actions.innerHTML='';
   const addBtn=(label,cls,fn)=>{const b=document.createElement('button');b.className=`btn ${cls}`;b.textContent=label;b.onclick=fn;actions.appendChild(b);};
 
-  addBtn('🖨️ Print / Save PDF','btn-secondary',printCurrentDoc);
-  addBtn('📧 Send via Email','btn-blue',emailCurrentDoc);
+  addBtn('📄 Save as PDF','btn-secondary',printCurrentDoc);
   addBtn('✏️ Edit','btn-orange',editCurrentDoc);
   addBtn('🗑️ Delete','btn-outline',deleteCurrentDoc);
 
@@ -1073,18 +1085,22 @@ function openDocView(id,type){
   openModal('docViewModal');
 }
 
+function triggerPrint(){
+  setTimeout(()=>window.print(),300);
+}
+
 function printCurrentDoc(){
   if(!currentViewDoc)return;
   const client=clients.find(c=>c.id==currentViewDoc.client_id);
   document.getElementById('printArea').innerHTML=currentViewType==='contract'?buildContractPaper(currentViewDoc,client):buildDocPaper(currentViewDoc,currentViewType,client);
-  window.print();
+  triggerPrint();
 }
 
 function printDocForm(type){
   const d=getDocData(type);
   const doc={number:d.number,date:d.date,valid_until:d.due,description:d.desc,items:d.items,subtotal:d.sub,hst:d.hst,deposit_received:d.dep,deposit_date:d.depDate,total:d.total,balance:d.balance,notes:d.notes};
   document.getElementById('printArea').innerHTML=buildDocPaper(doc,type,d.client);
-  window.print();
+  triggerPrint();
 }
 
 function printContractForm(){
@@ -1095,7 +1111,7 @@ function printContractForm(){
   const fin=parseFloat(document.getElementById('conFinal').value)||0;
   const con={number:document.getElementById('conNum').value,date:document.getElementById('conDate').value,start_date:document.getElementById('conStart').value,end_date:document.getElementById('conEnd').value,scope:document.getElementById('conScope').value,deposit_amount:dep,deposit_due:document.getElementById('conDepDue').value,progress_amount:prog,progress_due:document.getElementById('conProgDue').value,final_amount:fin,total:dep+prog+fin,terms:document.getElementById('conTerms').value,notes:document.getElementById('conNotes').value,status:'unsigned'};
   document.getElementById('printArea').innerHTML=buildContractPaper(con,client);
-  window.print();
+  triggerPrint();
 }
 
 function buildEmailLink(doc,type,client){
@@ -1281,23 +1297,37 @@ async function saveSig(){
 
 function renderDocs(){
   populateClientSelect('conClient');
-  document.getElementById('invoicesList').innerHTML=invoices.length?invoices.map(inv=>{
+  const sortEl=document.getElementById('docSort');
+  const sort=sortEl?sortEl.value:'date';
+
+  function sortDocs(arr){
+    if(sort==='client'){
+      return [...arr].sort((a,b)=>{
+        const ca=clients.find(c=>c.id==a.client_id);
+        const cb=clients.find(c=>c.id==b.client_id);
+        return(ca?ca.name:'').localeCompare(cb?cb.name:'');
+      });
+    }
+    return arr; // already ordered by created_at desc from DB
+  }
+
+  document.getElementById('invoicesList').innerHTML=invoices.length?sortDocs(invoices).map(inv=>{
     const c=clients.find(cl=>cl.id==inv.client_id);
     return`<div class="list-item" onclick="openDocView(${inv.id},'invoice')">
-      <div class="list-item-left"><h4>${inv.number}<span class="tag tag-inv">INV</span>${inv.paid_date?'<span class="tag tag-paid">PAID</span>':'<span class="tag tag-unpaid">UNPAID</span>'}</h4><p>${inv.description||''} • ${fmtDate(inv.date)}</p></div>
-      <div class="list-item-right"><strong class="amount-green">${fmtMoney(inv.total)}</strong><span>${c?c.name:'—'}</span></div>
+      <div class="list-item-left"><h4>${inv.number}<span class="tag tag-inv">INV</span>${inv.paid_date?'<span class="tag tag-paid">PAID</span>':'<span class="tag tag-unpaid">UNPAID</span>'}</h4><p>${c?c.name:'—'} • ${fmtDate(inv.date)}</p></div>
+      <div class="list-item-right"><strong class="amount-green">${fmtMoney(inv.total)}</strong>${inv.deposit_received>0&&!inv.paid_date?`<span style="color:var(--yellow);font-size:.7rem">Dep: ${fmtMoney(inv.deposit_received)}</span>`:''}</div>
     </div>`;
   }).join(''):'<div class="empty-state"><span>🧾</span><p>No invoices yet</p></div>';
 
-  document.getElementById('estimatesList').innerHTML=estimates.length?estimates.map(est=>{
+  document.getElementById('estimatesList').innerHTML=estimates.length?sortDocs(estimates).map(est=>{
     const c=clients.find(cl=>cl.id==est.client_id);
     return`<div class="list-item" onclick="openDocView(${est.id},'estimate')">
-      <div class="list-item-left"><h4>${est.number}<span class="tag tag-est">EST</span></h4><p>${est.description||''} • ${fmtDate(est.date)}</p></div>
-      <div class="list-item-right"><strong>${fmtMoney(est.total)}</strong><span>${c?c.name:'—'}</span></div>
+      <div class="list-item-left"><h4>${est.number}<span class="tag tag-est">EST</span></h4><p>${c?c.name:'—'} • ${fmtDate(est.date)}</p></div>
+      <div class="list-item-right"><strong>${fmtMoney(est.total)}</strong></div>
     </div>`;
   }).join(''):'<div class="empty-state"><span>📝</span><p>No estimates yet</p></div>';
 
-  document.getElementById('contractsList').innerHTML=contracts.length?contracts.map(con=>{
+  document.getElementById('contractsList').innerHTML=contracts.length?sortDocs(contracts).map(con=>{
     const c=clients.find(cl=>cl.id==con.client_id);
     return`<div class="list-item" onclick="openDocView(${con.id},'contract')">
       <div class="list-item-left"><h4>${con.number}<span class="tag tag-con">CONTRACT</span>${con.status==='signed'?'<span class="tag tag-paid">SIGNED</span>':'<span class="tag tag-unpaid">UNSIGNED</span>'}</h4><p>${c?c.name:'—'} • ${fmtDate(con.date)}</p></div>
