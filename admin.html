@@ -561,7 +561,7 @@ function jobCard(c){
   return`<div class="job-card" onclick="openDetail(${c.id})">
     <div class="job-card-top"><h3>${c.name||''}${c.is_returning==='yes'?' ⭐':''}</h3><span class="status-badge status-${c.status}">${c.status}</span></div>
     <p>${c.service||''} • ${c.address||'No address'}</p>
-    <div class="job-card-bottom"><span>${c.start_date?fmtDate(c.start_date):'No date'}</span>${c.quote_amount?`<strong>${fmtMoney(c.quote_amount)}</strong>`:'<span>No quote</span>'}</div>
+    <div class="job-card-bottom"><span>${c.start_date?fmtDate(c.start_date):'No date'}</span>${c.quote_amount?`<strong>${fmtMoney(c.quote_amount)}</strong>`:''}</div>
   </div>`;
 }
 
@@ -591,7 +591,10 @@ function renderNewClientPhotos(){
   ).join('');
 }
 
+let _saving=false;
+
 async function saveClient(){
+  if(_saving)return;_saving=true;
   const data={name:document.getElementById('cName').value||'Unnamed',phone:document.getElementById('cPhone').value||null,email:document.getElementById('cEmail').value||null,address:document.getElementById('cAddress').value||null,service:document.getElementById('cService').value||null,status:document.getElementById('cStatus').value||'lead',is_returning:document.getElementById('cReturning').value||'no',notes:document.getElementById('cNotes').value||null};
   try{
     let clientId=editingClientId;
@@ -610,6 +613,7 @@ async function saveClient(){
     closeModal('clientModal');
     await loadAll();
   }catch(err){alert('Error: '+err.message);}
+  finally{_saving=false;}
 }
 
 function renderClients(filter=''){
@@ -852,6 +856,7 @@ function calcDocTotals(type){
 }
 
 async function saveDoc(type){
+  if(_saving)return;_saving=true;
   const d=getDocData(type);
   const isEst=type==='estimate';
   const payload={client_id:d.clientId?parseInt(d.clientId):null,number:d.number,date:d.date||null,valid_until:isEst?null:d.due||null,description:d.desc,items:JSON.stringify(d.items),subtotal:d.sub,hst:d.hst,deposit:d.dep,deposit_received:d.dep,deposit_date:d.depDate||null,total:d.total,balance:d.balance,notes:d.notes,include_hst:d.hstInclude};
@@ -880,6 +885,7 @@ async function saveDoc(type){
     showPage('Invoices');
     if(savedId)setTimeout(()=>openDocView(savedId,type),300);
   }catch(err){alert('Error: '+err.message);}
+  finally{_saving=false;}
 }
 
 // CONTRACT FORM
@@ -931,6 +937,7 @@ function calcConTotal(){
 }
 
 async function saveContract(){
+  if(_saving)return;_saving=true;
   const clientId=document.getElementById('conClient').value||null;
   const dep=parseFloat(document.getElementById('conDep').value)||0;
   const prog=parseFloat(document.getElementById('conProg').value)||0;
@@ -973,6 +980,7 @@ async function saveContract(){
     showPage('Invoices');
     if(savedId)setTimeout(()=>openDocView(savedId,'contract'),300);
   }catch(err){alert('Error: '+err.message);}
+  finally{_saving=false;}
 }
 
 // DOC PAPER BUILDERS
