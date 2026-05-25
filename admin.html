@@ -433,6 +433,15 @@ function genNum(arr,prefix){return prefix+String((arr.length||0)+1).padStart(3,'
 function thisMonth(){const n=new Date();return`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`}
 function thisYear(){return new Date().getFullYear()}
 
+// Auto-login if previously authenticated
+(async function(){
+  if(localStorage.getItem('tna_auth')==='1'){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+    await loadAll();
+  }
+})();
+
 function fixDateInputs(){
   document.querySelectorAll('input[type="date"]').forEach(inp=>{
     inp.onclick=function(e){e.preventDefault();try{this.showPicker();}catch(ex){this.focus();}};
@@ -441,6 +450,7 @@ function fixDateInputs(){
 
 async function login(){
   if(document.getElementById('pwInput').value===PW){
+    localStorage.setItem('tna_auth','1');
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('app').style.display='block';
     await loadAll();
@@ -449,6 +459,7 @@ async function login(){
   }
 }
 function logout(){
+  localStorage.removeItem('tna_auth');
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('app').style.display='none';
   document.getElementById('pwInput').value='';
